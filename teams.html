@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Teams & Players | EsportO</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #0b0f19;
+      color: white;
+    }
+
+    header {
+      padding: 20px;
+      background: #111827;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: bold;
+      color: #00e5ff;
+    }
+
+    .back {
+      color: white;
+      text-decoration: none;
+      background: #1f2937;
+      padding: 10px 16px;
+      border-radius: 8px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 45px 20px 30px;
+    }
+
+    .hero h1 {
+      font-size: 38px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: #9ca3af;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .search {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .teams {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .team-card {
+      background: #111827;
+      border: 1px solid #263244;
+      border-radius: 15px;
+      padding: 22px;
+      transition: 0.2s;
+    }
+
+    .team-card:hover {
+      transform: translateY(-4px);
+      border-color: #00e5ff;
+    }
+
+    .team-logo {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+      font-size: 25px;
+    }
+
+    .team-name {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .team-id {
+      color: #9ca3af;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .players {
+      border-top: 1px solid #263244;
+      padding-top: 15px;
+    }
+
+    .players p {
+      margin: 7px 0;
+      color: #d1d5db;
+    }
+
+    .status {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      background: #064e3b;
+      color: #6ee7b7;
+      font-size: 13px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 35px 20px;
+      color: #6b7280;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">EsportO</div>
+  <a href="index.html" class="back">← Home</a>
+</header>
+
+<section class="hero">
+  <h1>Teams & Players</h1>
+  <p>EsportO ke registered teams aur players dekho</p>
+</section>
+
+<div class="container">
+
+  <input
+    type="text"
+    id="search"
+    class="search"
+    placeholder="Search team..."
+    onkeyup="searchTeams()"
+  >
+
+  <div class="teams" id="teams">
+
+    <div class="team-card">
+      <div class="team-logo">🔥</div>
+
+      <div class="team-name">Team Alpha</div>
+
+      <div class="team-id">Team ID: ESP001</div>
+
+      <div class="players">
+        <p>👤 Player 1</p>
+        <p>👤 Player 2</p>
+        <p>👤 Player 3</p>
+      </div>
+
+      <span class="status">Registered</span>
+    </div>
+
+
+    <div class="team-card">
+      <div class="team-logo">⚡</div>
+
+      <div class="team-name">Team Thunder</div>
+
+      <div class="team-id">Team ID: ESP002</div>
+
+      <div class="players">
+        <p>👤 Player 1</p>
+        <p>👤 Player 2</p>
+        <p>👤 Player 3</p>
+      </div>
+
+      <span class="status">Registered</span>
+    </div>
+
+
+    <div class="team-card">
+      <div class="team-logo">👑</div>
+
+      <div class="team-name">Royal Esports</div>
+
+      <div class="team-id">Team ID: ESP003</div>
+
+      <div class="players">
+        <p>👤 Player 1</p>
+        <p>👤 Player 2</p>
+        <p>👤 Player 3</p>
+      </div>
+
+      <span class="status">Registered</span>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  © 2026 EsportO — All Rights Reserved
+</footer>
+
+
+<script>
+
+function searchTeams() {
+
+  let input = document
+    .getElementById("search")
+    .value
+    .toLowerCase();
+
+  let teams = document
+    .getElementsByClassName("team-card");
+
+  for (let i = 0; i < teams.length; i++) {
+
+    let name = teams[i]
+      .getElementsByClassName("team-name")[0]
+      .innerText
+      .toLowerCase();
+
+    if (name.includes(input)) {
+      teams[i].style.display = "";
+    } else {
+      teams[i].style.display = "none";
+    }
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
