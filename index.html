@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EsportO — Tournaments</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="logo">ESPORT<span>O</span></div>
+  <nav>
+    <a href="#tournaments">Tournaments</a>
+    <a href="#games">Games</a>
+    <a href="#leaderboard">Leaderboard</a>
+    <a href="#rules">Rules</a>
+  </nav>
+  <a class="btn small" href="#register">Register</a>
+</header>
+
+<section class="hero">
+  <div>
+    <p class="eyebrow">YOUR GAME. YOUR ARENA.</p>
+    <h1>PLAY. COMPETE.<br><span>WIN.</span></h1>
+    <p class="sub">Join EsportO tournaments, compete with players, and fight for the prize pool.</p>
+    <div class="actions">
+      <a class="btn" href="#tournaments">Explore Tournaments</a>
+      <a class="btn ghost" href="#register">Register a Team</a>
+    </div>
+  </div>
+  <div class="hero-card">
+    <div class="live">● LIVE PLATFORM</div>
+    <h3>Next Tournament</h3>
+    <h2>ESPORTO OPEN #01</h2>
+    <p>FC Mobile • 1v1</p>
+    <div class="stats"><div><b>₹5,000</b><small>Prize Pool</small></div><div><b>32</b><small>Slots</small></div></div>
+  </div>
+</section>
+
+<section id="tournaments" class="section">
+  <div class="section-head"><div><p class="eyebrow">COMPETE NOW</p><h2>Upcoming Tournaments</h2></div></div>
+  <div class="grid">
+    <article class="card"><div class="tag">FC MOBILE</div><h3>EsportO Open #01</h3><p>1v1 Knockout • 32 Slots</p><div class="row"><b>₹5,000</b><span>Entry ₹50</span></div><a class="btn full" href="#register">Register</a></article>
+    <article class="card"><div class="tag">MOBA</div><h3>EsportO 5v5 Cup</h3><p>Team Battle • 16 Teams</p><div class="row"><b>₹10,000</b><span>Entry ₹250/team</span></div><a class="btn full" href="#register">Register</a></article>
+    <article class="card"><div class="tag">BGMI</div><h3>EsportO Battle #01</h3><p>Squad • 24 Teams</p><div class="row"><b>₹15,000</b><span>Entry ₹400/team</span></div><a class="btn full" href="#register">Register</a></article>
+  </div>
+</section>
+
+<section id="games" class="section dark">
+  <p class="eyebrow">SUPPORTED GAMES</p><h2>Choose Your Game</h2>
+  <div class="game-grid">
+    <div>⚽<b>FC Mobile</b><span>Football</span></div>
+    <div>🎯<b>BGMI</b><span>Battle Royale</span></div>
+    <div>⚔️<b>MOBA Legends</b><span>5v5 MOBA</span></div>
+    <div>🏎️<b>More Coming</b><span>Stay tuned</span></div>
+  </div>
+</section>
+
+<section id="leaderboard" class="section">
+  <p class="eyebrow">TOP PLAYERS</p><h2>Leaderboard</h2>
+  <div class="table-wrap"><table><tr><th>#</th><th>Player / Team</th><th>Wins</th><th>Points</th></tr>
+  <tr><td>1</td><td>Coming Soon</td><td>—</td><td>—</td></tr>
+  <tr><td>2</td><td>Coming Soon</td><td>—</td><td>—</td></tr>
+  <tr><td>3</td><td>Coming Soon</td><td>—</td><td>—</td></tr></table></div>
+</section>
+
+<section id="register" class="section register">
+  <div><p class="eyebrow">JOIN THE ARENA</p><h2>Register for a Tournament</h2>
+  <p class="muted">This demo form opens your email app. For real registrations and payments, connect a backend later.</p></div>
+  <form onsubmit="submitForm(event)">
+    <input id="name" placeholder="Player / Team Name" required>
+    <input id="game" placeholder="Game" required>
+    <input id="contact" placeholder="Contact / Discord / WhatsApp" required>
+    <select id="tournament" required><option value="">Select Tournament</option><option>EsportO Open #01</option><option>EsportO 5v5 Cup</option><option>EsportO Battle #01</option></select>
+    <button class="btn" type="submit">Submit Registration</button>
+  </form>
+</section>
+
+<section id="rules" class="section dark">
+  <p class="eyebrow">FAIR PLAY</p><h2>Basic Rules</h2>
+  <div class="rules"><p>01 — No cheating, exploits or third-party unfair tools.</p><p>02 — Players must follow the tournament schedule.</p><p>03 — Match screenshots/results may be required.</p><p>04 — Organiser decisions apply to disputes.</p></div>
+</section>
+
+<footer><div class="logo">ESPORT<span>O</span></div><p>© 2026 EsportO. Built for competitive gaming.</p></footer>
+<script src="script.js"></script>
+</body>
+</html>
