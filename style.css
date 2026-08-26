@@ -18,12 +18,24 @@ a{
   color:inherit;
 }
 
+button,
+input,
+select{
+  font-family:inherit;
+}
+
+
+/* =====================================
+   HEADER
+===================================== */
+
 header{
-  height:74px;
+  min-height:74px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:0 6%;
+  gap:20px;
+  padding:12px 6%;
   border-bottom:1px solid #20232d;
   background:#090a0f;
   position:sticky;
@@ -35,6 +47,7 @@ header{
   font-size:24px;
   font-weight:900;
   letter-spacing:-1px;
+  white-space:nowrap;
 }
 
 .logo span,
@@ -53,6 +66,44 @@ nav a:hover{
   color:#fff;
 }
 
+
+/* HEADER ACTIONS */
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.wallet-header-btn{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  background:#151821;
+  color:#fff;
+  border:1px solid #303440;
+  padding:10px 13px;
+  border-radius:7px;
+  font-weight:800;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.wallet-header-btn:hover{
+  border-color:#8dff00;
+  color:#8dff00;
+}
+
+.wallet-header-btn span{
+  color:#8dff00;
+  font-size:13px;
+}
+
+
+/* =====================================
+   BUTTONS
+===================================== */
+
 .btn{
   display:inline-block;
   background:#8dff00;
@@ -67,6 +118,7 @@ nav a:hover{
 
 .btn:hover{
   transform:translateY(-1px);
+  box-shadow:0 8px 25px #8dff0025;
 }
 
 .btn.small{
@@ -79,6 +131,16 @@ nav a:hover{
   border:1px solid #353947;
   margin-left:8px;
 }
+
+.btn.full{
+  width:100%;
+  text-align:center;
+}
+
+
+/* =====================================
+   HERO
+===================================== */
 
 .hero{
   min-height:610px;
@@ -160,6 +222,11 @@ nav a:hover{
   color:#8e93a2;
 }
 
+
+/* =====================================
+   SECTIONS
+===================================== */
+
 .section{
   padding:90px 8%;
 }
@@ -173,10 +240,24 @@ nav a:hover{
   margin:8px 0 35px;
 }
 
+
+/* =====================================
+   TOURNAMENT CARDS
+===================================== */
+
 .grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:20px;
+}
+
+.card{
+  transition:.2s;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+  border-color:#39402f;
 }
 
 .tag{
@@ -211,10 +292,10 @@ nav a:hover{
   color:#9297a6;
 }
 
-.full{
-  width:100%;
-  text-align:center;
-}
+
+/* =====================================
+   GAMES
+===================================== */
 
 .game-grid{
   display:grid;
@@ -242,6 +323,11 @@ nav a:hover{
   font-size:13px;
   color:#8e93a2;
 }
+
+
+/* =====================================
+   LEADERBOARD
+===================================== */
 
 .table-wrap{
   overflow:auto;
@@ -273,6 +359,11 @@ td{
   color:#c9ccd6;
 }
 
+
+/* =====================================
+   REGISTER
+===================================== */
+
 .register{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -296,11 +387,20 @@ select{
   font-size:15px;
 }
 
+input::placeholder{
+  color:#777d8d;
+}
+
 input:focus,
 select:focus{
   outline:none;
   border-color:#8dff00;
 }
+
+
+/* =====================================
+   RULES
+===================================== */
 
 .rules{
   display:grid;
@@ -315,6 +415,11 @@ select:focus{
   color:#b7bbc6;
 }
 
+
+/* =====================================
+   FOOTER
+===================================== */
+
 footer{
   padding:35px 8%;
   display:flex;
@@ -325,26 +430,29 @@ footer{
 
 
 /* =====================================
-   PLAYER LOGIN / SIGNUP SYSTEM
-   ===================================== */
+   LOGIN / SIGNUP MODAL
+===================================== */
 
-.auth-modal{
+.auth-modal,
+.wallet-modal{
   display:none;
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.78);
-  backdrop-filter:blur(6px);
+  background:rgba(0,0,0,.80);
+  backdrop-filter:blur(7px);
   z-index:100;
   align-items:center;
   justify-content:center;
   padding:20px;
 }
 
-.auth-modal.active{
+.auth-modal.active,
+.wallet-modal.active{
   display:flex;
 }
 
-.auth-box{
+.auth-box,
+.wallet-box{
   position:relative;
   width:100%;
   max-width:430px;
@@ -353,9 +461,12 @@ footer{
   border-radius:16px;
   padding:35px;
   box-shadow:0 25px 80px #000;
+  max-height:90vh;
+  overflow-y:auto;
 }
 
-.auth-box h2{
+.auth-box h2,
+.wallet-box h2{
   font-size:32px;
   margin:8px 0 10px;
 }
@@ -429,17 +540,161 @@ footer{
 
 
 /* =====================================
+   WALLET
+===================================== */
+
+.wallet-box{
+  max-width:460px;
+}
+
+.small-wallet-box{
+  max-width:430px;
+}
+
+.wallet-balance-card{
+  margin:25px 0 18px;
+  padding:25px;
+  border-radius:13px;
+  border:1px solid #303b25;
+  background:linear-gradient(
+    135deg,
+    #172000,
+    #10130e
+  );
+}
+
+.wallet-balance-card span{
+  display:block;
+  color:#9297a6;
+  font-size:13px;
+  margin-bottom:8px;
+}
+
+.wallet-balance-card strong{
+  display:block;
+  color:#8dff00;
+  font-size:36px;
+}
+
+.wallet-add-btn{
+  margin-bottom:25px;
+}
+
+.wallet-history-title{
+  border-top:1px solid #292d38;
+  padding-top:22px;
+  margin-top:10px;
+}
+
+.transaction-list{
+  display:grid;
+  gap:10px;
+}
+
+.transaction-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  padding:14px;
+  background:#151821;
+  border:1px solid #292d38;
+  border-radius:9px;
+}
+
+.transaction-info strong{
+  display:block;
+  font-size:14px;
+}
+
+.transaction-info small{
+  display:block;
+  color:#777d8d;
+  margin-top:4px;
+}
+
+.transaction-amount{
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.transaction-amount.credit{
+  color:#8dff00;
+}
+
+.transaction-amount.debit{
+  color:#ff7070;
+}
+
+.empty-wallet{
+  color:#777d8d;
+  text-align:center;
+  padding:20px;
+  background:#151821;
+  border-radius:9px;
+}
+
+
+/* =====================================
+   JOIN TOURNAMENT
+===================================== */
+
+.join-info{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin:25px 0;
+}
+
+.join-info div{
+  background:#151821;
+  border:1px solid #292d38;
+  border-radius:9px;
+  padding:15px;
+  color:#9297a6;
+  font-size:13px;
+}
+
+.join-info strong{
+  display:block;
+  color:#fff;
+  font-size:19px;
+  margin-top:7px;
+}
+
+.join-note{
+  text-align:center;
+  font-size:12px;
+  margin-top:16px;
+}
+
+
+/* =====================================
    MOBILE
-   ===================================== */
+===================================== */
 
 @media(max-width:800px){
+
+  header{
+    padding:10px 5%;
+    gap:10px;
+  }
 
   nav{
     display:none;
   }
 
-  header{
-    padding:0 6%;
+  .header-actions{
+    margin-left:auto;
+  }
+
+  .wallet-header-btn{
+    padding:9px 10px;
+    font-size:12px;
+  }
+
+  .wallet-header-btn span{
+    display:none;
   }
 
   .hero{
@@ -482,7 +737,8 @@ footer{
     gap:8px;
   }
 
-  .auth-box{
+  .auth-box,
+  .wallet-box{
     padding:28px 22px;
   }
 
@@ -492,6 +748,10 @@ footer{
 
   .player-name{
     display:none;
+  }
+
+  .join-info{
+    grid-template-columns:1fr;
   }
 
 }
