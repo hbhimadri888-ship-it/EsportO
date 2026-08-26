@@ -11,9 +11,9 @@
 
 <body>
 
-<!-- ================================
+<!-- =====================================
      HEADER
-================================= -->
+===================================== -->
 
 <header>
 
@@ -54,9 +54,9 @@
 </header>
 
 
-<!-- ================================
+<!-- =====================================
      HERO
-================================= -->
+===================================== -->
 
 <section class="hero">
 
@@ -134,9 +134,362 @@
 </section>
 
 
-<!-- ================================
+<!-- =====================================
+     PLAYER DASHBOARD
+===================================== -->
+
+<section
+  id="dashboard"
+  class="section dashboard-section"
+>
+
+  <div class="dashboard-header">
+
+    <div>
+
+      <p class="eyebrow">
+        PLAYER AREA
+      </p>
+
+      <h2>
+        Player Dashboard
+      </h2>
+
+    </div>
+
+    <button
+      class="btn"
+      onclick="openWallet()"
+    >
+      💰 Open Wallet
+    </button>
+
+  </div>
+
+
+  <!-- PLAYER PROFILE -->
+
+  <div class="dashboard-profile">
+
+    <div class="profile-avatar">
+      👤
+    </div>
+
+    <div class="profile-main">
+
+      <h3 id="dashboardPlayerName">
+        Player
+      </h3>
+
+      <p id="dashboardPlayerMobile">
+        Mobile number
+      </p>
+
+      <span class="profile-status">
+        ● EsportO Player
+      </span>
+
+    </div>
+
+    <button
+      class="dashboard-logout"
+      onclick="logoutPlayer()"
+    >
+      Logout
+    </button>
+
+  </div>
+
+
+  <!-- DASHBOARD STATS -->
+
+  <div class="dashboard-stats">
+
+    <div class="dashboard-stat">
+
+      <span class="stat-icon">
+        💰
+      </span>
+
+      <div>
+
+        <small>
+          Wallet Balance
+        </small>
+
+        <strong id="dashboardWallet">
+          ₹0.00
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="dashboard-stat">
+
+      <span class="stat-icon">
+        🏆
+      </span>
+
+      <div>
+
+        <small>
+          Tournament Wins
+        </small>
+
+        <strong id="dashboardWins">
+          0
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="dashboard-stat">
+
+      <span class="stat-icon">
+        🎮
+      </span>
+
+      <div>
+
+        <small>
+          Tournaments
+        </small>
+
+        <strong id="dashboardTournaments">
+          0
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="dashboard-stat">
+
+      <span class="stat-icon">
+        ⭐
+      </span>
+
+      <div>
+
+        <small>
+          Points
+        </small>
+
+        <strong id="dashboardPoints">
+          0
+        </strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- DASHBOARD CONTENT -->
+
+  <div class="dashboard-grid">
+
+
+    <!-- MY TOURNAMENTS -->
+
+    <div class="dashboard-panel">
+
+      <div class="panel-heading">
+
+        <div>
+
+          <p class="eyebrow">
+            COMPETITION
+          </p>
+
+          <h3>
+            My Tournaments
+          </h3>
+
+        </div>
+
+        <a
+          href="#tournaments"
+          class="panel-link"
+        >
+          Browse
+        </a>
+
+      </div>
+
+
+      <div
+        id="myTournaments"
+        class="my-tournaments"
+      >
+
+        <div class="dashboard-empty">
+
+          <div>
+            🎮
+          </div>
+
+          <p>
+            You haven't joined any tournaments yet.
+          </p>
+
+          <a
+            href="#tournaments"
+            class="btn small"
+          >
+            Find Tournament
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- RECENT TRANSACTIONS -->
+
+    <div class="dashboard-panel">
+
+      <div class="panel-heading">
+
+        <div>
+
+          <p class="eyebrow">
+            WALLET
+          </p>
+
+          <h3>
+            Recent Transactions
+          </h3>
+
+        </div>
+
+        <button
+          class="panel-link"
+          onclick="openWallet()"
+        >
+          View All
+        </button>
+
+      </div>
+
+
+      <div
+        id="dashboardTransactions"
+        class="dashboard-transactions"
+      >
+
+        <div class="dashboard-empty">
+
+          <div>
+            💳
+          </div>
+
+          <p>
+            No wallet transactions yet.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- QUICK ACTIONS -->
+
+  <div class="quick-actions">
+
+    <h3>
+      Quick Actions
+    </h3>
+
+    <div class="quick-action-grid">
+
+      <a
+        href="#tournaments"
+        class="quick-action"
+      >
+
+        <span>
+          🏆
+        </span>
+
+        <div>
+          <strong>
+            Join Tournament
+          </strong>
+
+          <small>
+            Find your next competition
+          </small>
+        </div>
+
+      </a>
+
+
+      <button
+        class="quick-action"
+        onclick="openWallet()"
+      >
+
+        <span>
+          💰
+        </span>
+
+        <div>
+          <strong>
+            My Wallet
+          </strong>
+
+          <small>
+            View balance & transactions
+          </small>
+        </div>
+
+      </button>
+
+
+      <a
+        href="#leaderboard"
+        class="quick-action"
+      >
+
+        <span>
+          📊
+        </span>
+
+        <div>
+          <strong>
+            Leaderboard
+          </strong>
+
+          <small>
+            Check your competition
+          </small>
+        </div>
+
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================
      TOURNAMENTS
-================================= -->
+===================================== -->
 
 <section
   id="tournaments"
@@ -162,8 +515,6 @@
 
   <div class="grid">
 
-
-    <!-- TOURNAMENT 1 -->
 
     <article class="card tournament-card">
 
@@ -204,8 +555,6 @@
     </article>
 
 
-    <!-- TOURNAMENT 2 -->
-
     <article class="card tournament-card">
 
       <div class="tag">
@@ -244,8 +593,6 @@
 
     </article>
 
-
-    <!-- TOURNAMENT 3 -->
 
     <article class="card tournament-card">
 
@@ -290,9 +637,9 @@
 </section>
 
 
-<!-- ================================
+<!-- =====================================
      GAMES
-================================= -->
+===================================== -->
 
 <section
   id="games"
@@ -311,62 +658,27 @@
   <div class="game-grid">
 
     <div>
-
       ⚽
-
-      <b>
-        FC Mobile
-      </b>
-
-      <span>
-        Football
-      </span>
-
+      <b>FC Mobile</b>
+      <span>Football</span>
     </div>
 
-
     <div>
-
       🎯
-
-      <b>
-        BGMI
-      </b>
-
-      <span>
-        Battle Royale
-      </span>
-
+      <b>BGMI</b>
+      <span>Battle Royale</span>
     </div>
 
-
     <div>
-
       ⚔️
-
-      <b>
-        MOBA Legends
-      </b>
-
-      <span>
-        5v5 MOBA
-      </span>
-
+      <b>MOBA Legends</b>
+      <span>5v5 MOBA</span>
     </div>
 
-
     <div>
-
       🏎️
-
-      <b>
-        More Coming
-      </b>
-
-      <span>
-        Stay tuned
-      </span>
-
+      <b>More Coming</b>
+      <span>Stay tuned</span>
     </div>
 
   </div>
@@ -374,9 +686,9 @@
 </section>
 
 
-<!-- ================================
+<!-- =====================================
      LEADERBOARD
-================================= -->
+===================================== -->
 
 <section
   id="leaderboard"
@@ -397,86 +709,31 @@
     <table>
 
       <tr>
-
-        <th>
-          #
-        </th>
-
-        <th>
-          Player / Team
-        </th>
-
-        <th>
-          Wins
-        </th>
-
-        <th>
-          Points
-        </th>
-
+        <th>#</th>
+        <th>Player / Team</th>
+        <th>Wins</th>
+        <th>Points</th>
       </tr>
 
-
       <tr>
-
-        <td>
-          1
-        </td>
-
-        <td>
-          Coming Soon
-        </td>
-
-        <td>
-          —
-        </td>
-
-        <td>
-          —
-        </td>
-
+        <td>1</td>
+        <td>Coming Soon</td>
+        <td>—</td>
+        <td>—</td>
       </tr>
 
-
       <tr>
-
-        <td>
-          2
-        </td>
-
-        <td>
-          Coming Soon
-        </td>
-
-        <td>
-          —
-        </td>
-
-        <td>
-          —
-        </td>
-
+        <td>2</td>
+        <td>Coming Soon</td>
+        <td>—</td>
+        <td>—</td>
       </tr>
 
-
       <tr>
-
-        <td>
-          3
-        </td>
-
-        <td>
-          Coming Soon
-        </td>
-
-        <td>
-          —
-        </td>
-
-        <td>
-          —
-        </td>
-
+        <td>3</td>
+        <td>Coming Soon</td>
+        <td>—</td>
+        <td>—</td>
       </tr>
 
     </table>
@@ -486,9 +743,9 @@
 </section>
 
 
-<!-- ================================
-     TOURNAMENT REGISTRATION
-================================= -->
+<!-- =====================================
+     REGISTER
+===================================== -->
 
 <section
   id="register"
@@ -506,9 +763,8 @@
     </h2>
 
     <p class="muted">
-      Create your player account first,
-      then join tournaments using your
-      EsportO account.
+      Create your EsportO player account,
+      then join tournaments from the platform.
     </p>
 
   </div>
@@ -524,20 +780,17 @@
       required
     >
 
-
     <input
       id="game"
       placeholder="Game"
       required
     >
 
-
     <input
       id="contact"
       placeholder="Contact / WhatsApp"
       required
     >
-
 
     <select
       id="tournament"
@@ -562,7 +815,6 @@
 
     </select>
 
-
     <button
       class="btn"
       type="submit"
@@ -575,9 +827,9 @@
 </section>
 
 
-<!-- ================================
+<!-- =====================================
      RULES
-================================= -->
+===================================== -->
 
 <section
   id="rules"
@@ -620,9 +872,9 @@
 </section>
 
 
-<!-- ================================
-     PLAYER AUTH MODAL
-================================= -->
+<!-- =====================================
+     AUTH MODAL
+===================================== -->
 
 <div
   id="authModal"
@@ -643,8 +895,6 @@
       ESPORT<span>O</span>
     </div>
 
-
-    <!-- LOGIN -->
 
     <div id="loginBox">
 
@@ -674,14 +924,12 @@
           required
         >
 
-
         <input
           id="loginPassword"
           type="password"
           placeholder="Password"
           required
         >
-
 
         <button
           class="btn full"
@@ -707,8 +955,6 @@
 
     </div>
 
-
-    <!-- SIGN UP -->
 
     <div
       id="signupBox"
@@ -738,7 +984,6 @@
           required
         >
 
-
         <input
           id="signupMobile"
           type="tel"
@@ -748,7 +993,6 @@
           required
         >
 
-
         <input
           id="signupPassword"
           type="password"
@@ -756,7 +1000,6 @@
           minlength="6"
           required
         >
-
 
         <button
           class="btn full"
@@ -787,9 +1030,9 @@
 </div>
 
 
-<!-- ================================
+<!-- =====================================
      WALLET MODAL
-================================= -->
+===================================== -->
 
 <div
   id="walletModal"
@@ -822,7 +1065,7 @@
       </span>
 
       <strong id="walletBalance">
-        ₹0
+        ₹0.00
       </strong>
 
     </div>
@@ -857,9 +1100,9 @@
 </div>
 
 
-<!-- ================================
-     ADD MONEY DEMO MODAL
-================================= -->
+<!-- =====================================
+     ADD MONEY
+===================================== -->
 
 <div
   id="addMoneyModal"
@@ -903,7 +1146,6 @@
         required
       >
 
-
       <button
         class="btn full"
         type="submit"
@@ -918,9 +1160,9 @@
 </div>
 
 
-<!-- ================================
-     JOIN TOURNAMENT MODAL
-================================= -->
+<!-- =====================================
+     JOIN TOURNAMENT
+===================================== -->
 
 <div
   id="joinModal"
@@ -982,9 +1224,9 @@
 </div>
 
 
-<!-- ================================
+<!-- =====================================
      FOOTER
-================================= -->
+===================================== -->
 
 <footer>
 
@@ -998,8 +1240,6 @@
 
 </footer>
 
-
-<!-- JAVASCRIPT -->
 
 <script src="script.js"></script>
 
