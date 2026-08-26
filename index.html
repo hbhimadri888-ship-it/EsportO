@@ -17,15 +17,228 @@
   href="style.css"
 >
 
+<style>
+
+/* =========================================
+   DYNAMIC TOURNAMENT CARDS
+========================================= */
+
+.tournament-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.tournament-card{
+  background:#11131a;
+  border:1px solid #292d38;
+  border-radius:14px;
+  padding:24px;
+  transition:.2s ease;
+}
+
+.tournament-card:hover{
+  transform:translateY(-3px);
+  border-color:#566d20;
+}
+
+.tournament-card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.game-tag{
+  color:#8dff00;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.open-tag{
+  background:#182400;
+  color:#8dff00;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:10px;
+  font-weight:900;
+}
+
+.closed-tag{
+  background:#2a1518;
+  color:#ff7777;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:10px;
+  font-weight:900;
+}
+
+.tournament-card h3{
+  font-size:22px;
+  margin:16px 0 8px;
+}
+
+.tournament-card-description{
+  color:#9297a6;
+  min-height:42px;
+  line-height:1.5;
+}
+
+.tournament-info{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:20px 0;
+}
+
+.info-box{
+  background:#0b0d12;
+  border:1px solid #242832;
+  border-radius:8px;
+  padding:12px;
+}
+
+.info-box small{
+  display:block;
+  color:#777d8d;
+  font-size:11px;
+  margin-bottom:5px;
+}
+
+.info-box strong{
+  font-size:16px;
+}
+
+.slot-bar{
+  height:7px;
+  background:#292d38;
+  border-radius:20px;
+  overflow:hidden;
+  margin:10px 0 15px;
+}
+
+.slot-progress{
+  height:100%;
+  background:#8dff00;
+  width:0%;
+  transition:.3s;
+}
+
+.slot-text{
+  color:#9297a6;
+  font-size:12px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.no-tournaments{
+  grid-column:1/-1;
+  padding:55px 20px;
+  text-align:center;
+  background:#11131a;
+  border:1px dashed #303440;
+  border-radius:14px;
+  color:#9297a6;
+}
+
+.no-tournaments-icon{
+  font-size:42px;
+  margin-bottom:12px;
+}
+
+.home-stat-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-top:25px;
+}
+
+.home-stat{
+  background:#11131a;
+  border:1px solid #292d38;
+  border-radius:12px;
+  padding:20px;
+}
+
+.home-stat small{
+  display:block;
+  color:#9297a6;
+  margin-bottom:7px;
+}
+
+.home-stat strong{
+  font-size:28px;
+}
+
+.leaderboard-row{
+  display:grid;
+  grid-template-columns:70px 1fr 100px 100px;
+  gap:10px;
+  padding:18px;
+  border-bottom:1px solid #292d38;
+  align-items:center;
+}
+
+.leaderboard-row:last-child{
+  border-bottom:0;
+}
+
+.rank{
+  color:#8dff00;
+  font-weight:900;
+}
+
+.leaderboard-name{
+  font-weight:800;
+}
+
+.leaderboard-muted{
+  color:#9297a6;
+}
+
+.home-message{
+  margin-top:15px;
+  color:#9297a6;
+  font-size:13px;
+}
+
+@media(max-width:900px){
+
+  .tournament-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:650px){
+
+  .tournament-grid{
+    grid-template-columns:1fr;
+  }
+
+  .home-stat-grid{
+    grid-template-columns:1fr;
+  }
+
+  .leaderboard-row{
+    grid-template-columns:45px 1fr 70px 70px;
+    font-size:13px;
+  }
+
+}
+
+</style>
+
 </head>
 
 
 <body>
 
 
-<!-- =====================================
+<!-- =========================================
      HEADER
-===================================== -->
+========================================= -->
 
 <header>
 
@@ -55,42 +268,20 @@
   </nav>
 
 
-  <div class="header-actions">
-
-    <button
-      class="wallet-header-btn"
-      onclick="openWallet()"
-    >
-
-      💰 Wallet
-
-      <span id="headerBalance">
-        ₹0
-      </span>
-
-    </button>
-
-
-    <div id="authArea">
-
-      <button
-        class="btn small"
-        onclick="openAuth('login')"
-      >
-        Login
-      </button>
-
-    </div>
-
-  </div>
+  <a
+    class="btn small"
+    href="player.html"
+  >
+    Player Login
+  </a>
 
 </header>
 
 
 
-<!-- =====================================
+<!-- =========================================
      HERO
-===================================== -->
+========================================= -->
 
 <section class="hero">
 
@@ -102,15 +293,18 @@
 
 
     <h1>
-      PLAY. COMPETE.<br>
+      PLAY.
+      COMPETE.<br>
       <span>WIN.</span>
     </h1>
 
 
     <p class="sub">
-      Join EsportO tournaments, compete
-      with players, submit match results,
-      and fight for the top.
+
+      Join EsportO tournaments,
+      compete with players,
+      and fight for the top spot.
+
     </p>
 
 
@@ -124,12 +318,12 @@
       </a>
 
 
-      <button
+      <a
         class="btn ghost"
-        onclick="openAuth('signup')"
+        href="player.html"
       >
-        Create Player Account
-      </button>
+        Join EsportO
+      </a>
 
     </div>
 
@@ -137,7 +331,12 @@
 
 
 
-  <div class="hero-card">
+  <!-- HERO TOURNAMENT -->
+
+  <div
+    class="hero-card"
+    id="heroTournament"
+  >
 
     <div class="live">
       ● LIVE PLATFORM
@@ -149,13 +348,13 @@
     </h3>
 
 
-    <h2>
-      ESPORTO OPEN #01
+    <h2 id="heroTournamentName">
+      Loading...
     </h2>
 
 
-    <p>
-      FC Mobile • 1v1
+    <p id="heroTournamentGame">
+      Loading tournaments...
     </p>
 
 
@@ -163,8 +362,8 @@
 
       <div>
 
-        <b>
-          ₹5,000
+        <b id="heroPrize">
+          ₹0
         </b>
 
         <small>
@@ -176,8 +375,8 @@
 
       <div>
 
-        <b>
-          32
+        <b id="heroSlots">
+          0
         </b>
 
         <small>
@@ -194,385 +393,9 @@
 
 
 
-<!-- =====================================
-     PLAYER DASHBOARD
-===================================== -->
-
-<section
-  id="dashboard"
-  class="section dashboard-section"
->
-
-  <div class="dashboard-header">
-
-    <div>
-
-      <p class="eyebrow">
-        PLAYER AREA
-      </p>
-
-      <h2>
-        Player Dashboard
-      </h2>
-
-    </div>
-
-
-    <button
-      class="btn small"
-      onclick="openWallet()"
-    >
-      Open Wallet
-    </button>
-
-  </div>
-
-
-
-  <!-- PLAYER PROFILE -->
-
-  <div class="dashboard-profile">
-
-    <div class="profile-avatar">
-      👤
-    </div>
-
-
-    <div class="profile-main">
-
-      <h3 id="dashboardPlayerName">
-        Player
-      </h3>
-
-
-      <p id="dashboardPlayerMobile">
-        Login to view your account
-      </p>
-
-
-      <span class="profile-status">
-        ● PLAYER ACCOUNT
-      </span>
-
-    </div>
-
-
-    <button
-      class="dashboard-logout"
-      onclick="logoutPlayer()"
-    >
-      Logout
-    </button>
-
-  </div>
-
-
-
-  <!-- PLAYER STATS -->
-
-  <div class="dashboard-stats">
-
-
-    <div class="dashboard-stat">
-
-      <div class="stat-icon">
-        💰
-      </div>
-
-      <div>
-
-        <small>
-          Wallet Balance
-        </small>
-
-        <strong id="dashboardWallet">
-          ₹0.00
-        </strong>
-
-      </div>
-
-    </div>
-
-
-
-    <div class="dashboard-stat">
-
-      <div class="stat-icon">
-        🏆
-      </div>
-
-      <div>
-
-        <small>
-          Wins
-        </small>
-
-        <strong id="dashboardWins">
-          0
-        </strong>
-
-      </div>
-
-    </div>
-
-
-
-    <div class="dashboard-stat">
-
-      <div class="stat-icon">
-        🎮
-      </div>
-
-      <div>
-
-        <small>
-          Tournaments
-        </small>
-
-        <strong id="dashboardTournaments">
-          0
-        </strong>
-
-      </div>
-
-    </div>
-
-
-
-    <div class="dashboard-stat">
-
-      <div class="stat-icon">
-        ⭐
-      </div>
-
-      <div>
-
-        <small>
-          Points
-        </small>
-
-        <strong id="dashboardPoints">
-          0
-        </strong>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- DASHBOARD PANELS -->
-
-  <div class="dashboard-grid">
-
-
-    <!-- MY TOURNAMENTS -->
-
-    <div class="dashboard-panel">
-
-      <div class="panel-heading">
-
-        <div>
-
-          <p class="eyebrow">
-            MY ACTIVITY
-          </p>
-
-          <h3>
-            My Tournaments
-          </h3>
-
-        </div>
-
-
-        <a
-          class="panel-link"
-          href="#tournaments"
-        >
-          Browse
-        </a>
-
-      </div>
-
-
-      <div id="myTournaments">
-
-        <div class="dashboard-empty">
-
-          <div>
-            🎮
-          </div>
-
-          <p>
-            You haven't joined any
-            tournaments yet.
-          </p>
-
-          <a
-            href="#tournaments"
-            class="btn small"
-          >
-            Find Tournament
-          </a>
-
-        </div>
-
-      </div>
-
-    </div>
-
-
-
-    <!-- TRANSACTIONS -->
-
-    <div class="dashboard-panel">
-
-      <div class="panel-heading">
-
-        <div>
-
-          <p class="eyebrow">
-            WALLET
-          </p>
-
-          <h3>
-            Recent Transactions
-          </h3>
-
-        </div>
-
-
-        <button
-          class="panel-link"
-          onclick="openWallet()"
-        >
-          View Wallet
-        </button>
-
-      </div>
-
-
-      <div id="dashboardTransactions">
-
-        <div class="dashboard-empty">
-
-          <div>
-            💳
-          </div>
-
-          <p>
-            No wallet transactions yet.
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- QUICK ACTIONS -->
-
-  <div class="quick-actions">
-
-    <h3>
-      Quick Actions
-    </h3>
-
-
-    <div class="quick-action-grid">
-
-
-      <button
-        class="quick-action"
-        onclick="openWallet()"
-      >
-
-        <span>
-          💰
-        </span>
-
-        <div>
-
-          <strong>
-            My Wallet
-          </strong>
-
-          <small>
-            View wallet activity
-          </small>
-
-        </div>
-
-      </button>
-
-
-
-      <a
-        class="quick-action"
-        href="#tournaments"
-      >
-
-        <span>
-          🏆
-        </span>
-
-        <div>
-
-          <strong>
-            Join Tournament
-          </strong>
-
-          <small>
-            Find an upcoming match
-          </small>
-
-        </div>
-
-      </a>
-
-
-
-      <button
-        class="quick-action"
-        onclick="openAuth('login')"
-      >
-
-        <span>
-          👤
-        </span>
-
-        <div>
-
-          <strong>
-            Account
-          </strong>
-
-          <small>
-            Login or create account
-          </small>
-
-        </div>
-
-      </button>
-
-
-    </div>
-
-  </div>
-
-</section>
-
-
-
-<!-- =====================================
+<!-- =========================================
      TOURNAMENTS
-===================================== -->
+========================================= -->
 
 <section
   id="tournaments"
@@ -596,146 +419,18 @@
   </div>
 
 
+  <!-- DYNAMIC TOURNAMENT GRID -->
 
-  <div class="grid">
-
-
-    <!-- TOURNAMENT 1 -->
-
-    <article class="card">
-
-      <div class="tag">
-        FC MOBILE
-      </div>
+  <div
+    id="tournamentGrid"
+    class="tournament-grid"
+  ></div>
 
 
-      <h3>
-        EsportO Open #01
-      </h3>
+  <div class="home-message">
 
-
-      <p>
-        1v1 Knockout • 32 Slots
-      </p>
-
-
-      <div class="row">
-
-        <b>
-          ₹640
-        </b>
-
-        <span>
-          Entry ₹20
-        </span>
-
-      </div>
-
-
-      <button
-        class="btn full"
-        onclick="joinTournament(
-          'EsportO Open #01',
-          20
-        )"
-      >
-        Join Tournament
-      </button>
-
-    </article>
-
-
-
-    <!-- TOURNAMENT 2 -->
-
-    <article class="card">
-
-      <div class="tag">
-        MOBA
-      </div>
-
-
-      <h3>
-        EsportO 5v5 Cup
-      </h3>
-
-
-      <p>
-        Team Battle • 8 Teams
-      </p>
-
-
-      <div class="row">
-
-        <b>
-          ₹800
-        </b>
-
-        <span>
-          Entry ₹100/team
-        </span>
-
-      </div>
-
-
-      <button
-        class="btn full"
-        onclick="joinTournament(
-          'EsportO 5v5 Cup',
-          100
-        )"
-      >
-        Join Tournament
-      </button>
-
-    </article>
-
-
-
-    <!-- TOURNAMENT 3 -->
-
-    <article class="card">
-
-      <div class="tag">
-        BGMI
-      </div>
-
-
-      <h3>
-        EsportO Battle #01
-      </h3>
-
-
-      <p>
-        Squad • 24 Teams
-      </p>
-
-
-      <div class="row">
-
-        <b>
-          ₹2400
-        </b>
-
-        <span>
-          Entry ₹100/team
-        </span>
-
-      </div>
-
-
-      <button
-        class="btn full"
-        onclick="joinTournament(
-          'EsportO Battle #01',
-          100
-        )"
-      >
-        Join Tournament
-      </button>
-
-    </article>
-
+    Tournament information is managed
+    by the EsportO Admin Dashboard.
 
   </div>
 
@@ -743,9 +438,70 @@
 
 
 
-<!-- =====================================
+<!-- =========================================
+     PLATFORM STATS
+========================================= -->
+
+<section class="section dark">
+
+  <p class="eyebrow">
+    ESPORTO PLATFORM
+  </p>
+
+  <h2>
+    Competition Starts Here
+  </h2>
+
+
+  <div class="home-stat-grid">
+
+    <div class="home-stat">
+
+      <small>
+        Active Tournaments
+      </small>
+
+      <strong id="activeTournamentCount">
+        0
+      </strong>
+
+    </div>
+
+
+    <div class="home-stat">
+
+      <small>
+        Total Registrations
+      </small>
+
+      <strong id="totalRegistrationCount">
+        0
+      </strong>
+
+    </div>
+
+
+    <div class="home-stat">
+
+      <small>
+        Available Games
+      </small>
+
+      <strong id="gameCount">
+        0
+      </strong>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================================
      GAMES
-===================================== -->
+========================================= -->
 
 <section
   id="games"
@@ -756,14 +512,15 @@
     SUPPORTED GAMES
   </p>
 
-
   <h2>
     Choose Your Game
   </h2>
 
 
-  <div class="game-grid">
-
+  <div
+    id="gameGrid"
+    class="game-grid"
+  >
 
     <div>
 
@@ -824,16 +581,15 @@
 
     </div>
 
-
   </div>
 
 </section>
 
 
 
-<!-- =====================================
+<!-- =========================================
      LEADERBOARD
-===================================== -->
+========================================= -->
 
 <section
   id="leaderboard"
@@ -844,101 +600,98 @@
     TOP PLAYERS
   </p>
 
-
   <h2>
     Leaderboard
   </h2>
 
 
-  <div class="table-wrap">
+  <div
+    id="leaderboardContainer"
+    class="table-wrap"
+  >
 
-    <table>
+    <div class="leaderboard-row">
 
-      <tr>
+      <div class="rank">
+        #
+      </div>
 
-        <th>
-          #
-        </th>
+      <div class="leaderboard-name">
+        Player / Team
+      </div>
 
-        <th>
-          Player / Team
-        </th>
+      <div>
+        Wins
+      </div>
 
-        <th>
-          Wins
-        </th>
+      <div>
+        Points
+      </div>
 
-        <th>
-          Points
-        </th>
-
-      </tr>
-
-
-      <tr>
-
-        <td>
-          1
-        </td>
-
-        <td>
-          Coming Soon
-        </td>
-
-        <td>
-          —
-        </td>
-
-        <td>
-          —
-        </td>
-
-      </tr>
+    </div>
 
 
-      <tr>
+    <div class="leaderboard-row">
 
-        <td>
-          2
-        </td>
+      <div class="rank">
+        1
+      </div>
 
-        <td>
-          Coming Soon
-        </td>
+      <div class="leaderboard-muted">
+        Coming Soon
+      </div>
 
-        <td>
-          —
-        </td>
+      <div>
+        —
+      </div>
 
-        <td>
-          —
-        </td>
+      <div>
+        —
+      </div>
 
-      </tr>
-
-
-      <tr>
-
-        <td>
-          3
-        </td>
-
-        <td>
-          Coming Soon
-        </td>
-
-        <td>
-          —
-        </td>
-
-        <td>
-          —
-        </td>
-
-      </tr>
+    </div>
 
 
-    </table>
+    <div class="leaderboard-row">
+
+      <div class="rank">
+        2
+      </div>
+
+      <div class="leaderboard-muted">
+        Coming Soon
+      </div>
+
+      <div>
+        —
+      </div>
+
+      <div>
+        —
+      </div>
+
+    </div>
+
+
+    <div class="leaderboard-row">
+
+      <div class="rank">
+        3
+      </div>
+
+      <div class="leaderboard-muted">
+        Coming Soon
+      </div>
+
+      <div>
+        —
+      </div>
+
+      <div>
+        —
+      </div>
+
+    </div>
 
   </div>
 
@@ -946,9 +699,9 @@
 
 
 
-<!-- =====================================
+<!-- =========================================
      REGISTER
-===================================== -->
+========================================= -->
 
 <section
   id="register"
@@ -961,86 +714,69 @@
       JOIN THE ARENA
     </p>
 
-
     <h2>
       Register for a Tournament
     </h2>
 
-
     <p class="muted">
-      Select your tournament and submit
-      your player information.
+
+      Create your EsportO player account
+      and join available tournaments
+      from your Player Dashboard.
+
     </p>
+
+
+    <a
+      href="player.html"
+      class="btn"
+    >
+      Open Player Dashboard
+    </a>
 
   </div>
 
 
+  <div class="hero-card">
 
-  <form
-    onsubmit="submitForm(event)"
-  >
-
-    <input
-      id="name"
-      placeholder="Player / Team Name"
-      required
-    >
+    <h3>
+      How it works
+    </h3>
 
 
-    <input
-      id="game"
-      placeholder="Game"
-      required
-    >
+    <p class="muted">
+      01 — Create your player account.
+    </p>
 
+    <p class="muted">
+      02 — Open an available tournament.
+    </p>
 
-    <input
-      id="contact"
-      placeholder="Contact / Discord / WhatsApp"
-      required
-    >
+    <p class="muted">
+      03 — Join the tournament.
+    </p>
 
+    <p class="muted">
+      04 — Play your match.
+    </p>
 
-    <select
-      id="tournament"
-      required
-    >
+    <p class="muted">
+      05 — Submit your result and screenshot.
+    </p>
 
-      <option value="">
-        Select Tournament
-      </option>
+    <p class="muted">
+      06 — Admin verifies the result.
+    </p>
 
-      <option>
-        EsportO Open #01
-      </option>
-
-      <option>
-        EsportO 5v5 Cup
-      </option>
-
-      <option>
-        EsportO Battle #01
-      </option>
-
-    </select>
-
-
-    <button
-      class="btn"
-      type="submit"
-    >
-      Submit Registration
-    </button>
-
-  </form>
+  </div>
 
 </section>
 
 
 
-<!-- =====================================
+<!-- =========================================
      RULES
-===================================== -->
+========================================= -->
 
 <section
   id="rules"
@@ -1051,7 +787,6 @@
     FAIR PLAY
   </p>
 
-
   <h2>
     Basic Rules
   </h2>
@@ -1060,26 +795,23 @@
   <div class="rules">
 
     <p>
-      01 — No cheating, exploits or
-      third-party unfair tools.
+      01 — No cheating, exploits
+      or third-party unfair tools.
     </p>
-
 
     <p>
-      02 — Players must follow the
-      tournament schedule.
+      02 — Players must follow
+      the tournament schedule.
     </p>
-
 
     <p>
       03 — Match screenshots/results
       may be required.
     </p>
 
-
     <p>
       04 — Organiser decisions apply
-      to disputes.
+      to tournament disputes.
     </p>
 
   </div>
@@ -1088,898 +820,15 @@
 
 
 
-<!-- =====================================
-     ADMIN DASHBOARD
-===================================== -->
-
-<section
-  id="admin"
-  class="section dashboard-section"
->
-
-  <div class="dashboard-header">
-
-    <div>
-
-      <p class="eyebrow">
-        ESPORTO CONTROL CENTER
-      </p>
-
-      <h2>
-        Admin Dashboard
-      </h2>
-
-    </div>
-
-
-    <button
-      class="btn small"
-      onclick="openAdminLogin()"
-    >
-      Admin Login
-    </button>
-
-  </div>
-
-
-
-  <!-- ADMIN LOGIN -->
-
-  <div
-    id="adminLoginPanel"
-    class="dashboard-panel"
-    style="display:none;margin-bottom:20px;"
-  >
-
-    <div class="panel-heading">
-
-      <div>
-
-        <p class="eyebrow">
-          ADMIN ACCESS
-        </p>
-
-        <h3>
-          Administrator Login
-        </h3>
-
-      </div>
-
-
-      <button
-        class="panel-link"
-        onclick="closeAdminLogin()"
-      >
-        Close
-      </button>
-
-    </div>
-
-
-    <form
-      onsubmit="adminLogin(event)"
-    >
-
-      <input
-        id="adminUsername"
-        placeholder="Admin Username"
-        required
-      >
-
-
-      <input
-        id="adminPassword"
-        type="password"
-        placeholder="Admin Password"
-        required
-      >
-
-
-      <button
-        class="btn"
-        type="submit"
-      >
-        Enter Admin Panel
-      </button>
-
-    </form>
-
-  </div>
-
-
-
-  <!-- ADMIN CONTROL CENTER -->
-
-  <div
-    id="adminPanel"
-    style="display:none;"
-  >
-
-
-    <!-- ADMIN STATS -->
-
-    <div class="dashboard-stats">
-
-
-      <div class="dashboard-stat">
-
-        <div class="stat-icon">
-          👥
-        </div>
-
-        <div>
-
-          <small>
-            Players
-          </small>
-
-          <strong id="adminPlayers">
-            0
-          </strong>
-
-        </div>
-
-      </div>
-
-
-
-      <div class="dashboard-stat">
-
-        <div class="stat-icon">
-          🏆
-        </div>
-
-        <div>
-
-          <small>
-            Tournaments
-          </small>
-
-          <strong id="adminTournaments">
-            0
-          </strong>
-
-        </div>
-
-      </div>
-
-
-
-      <div class="dashboard-stat">
-
-        <div class="stat-icon">
-          📋
-        </div>
-
-        <div>
-
-          <small>
-            Pending Results
-          </small>
-
-          <strong id="adminPendingResults">
-            0
-          </strong>
-
-        </div>
-
-      </div>
-
-
-
-      <div class="dashboard-stat">
-
-        <div class="stat-icon">
-          🟢
-        </div>
-
-        <div>
-
-          <small>
-            Active Tournaments
-          </small>
-
-          <strong id="adminActiveTournaments">
-            0
-          </strong>
-
-        </div>
-
-      </div>
-
-
-    </div>
-
-
-
-    <!-- ADMIN GRID -->
-
-    <div class="dashboard-grid">
-
-
-      <!-- CREATE TOURNAMENT -->
-
-      <div class="dashboard-panel">
-
-        <div class="panel-heading">
-
-          <div>
-
-            <p class="eyebrow">
-              TOURNAMENT MANAGEMENT
-            </p>
-
-            <h3>
-              Create Tournament
-            </h3>
-
-          </div>
-
-        </div>
-
-
-        <form
-          onsubmit="createTournament(event)"
-        >
-
-          <input
-            id="adminTournamentName"
-            placeholder="Tournament Name"
-            required
-          >
-
-
-          <input
-            id="adminTournamentGame"
-            placeholder="Game"
-            required
-          >
-
-
-          <input
-            id="adminTournamentEntry"
-            type="number"
-            min="0"
-            placeholder="Entry Fee"
-            required
-          >
-
-
-          <input
-            id="adminTournamentPrize"
-            type="number"
-            min="0"
-            placeholder="Prize Pool"
-            required
-          >
-
-
-          <input
-            id="adminTournamentSlots"
-            type="number"
-            min="1"
-            placeholder="Slots / Teams"
-            required
-          >
-
-
-          <input
-            id="adminTournamentDate"
-            type="datetime-local"
-            required
-          >
-
-
-          <button
-            class="btn"
-            type="submit"
-          >
-            Create Tournament
-          </button>
-
-        </form>
-
-      </div>
-
-
-
-      <!-- TOURNAMENT LIST -->
-
-      <div class="dashboard-panel">
-
-        <div class="panel-heading">
-
-          <div>
-
-            <p class="eyebrow">
-              LIVE MANAGEMENT
-            </p>
-
-            <h3>
-              Tournament List
-            </h3>
-
-          </div>
-
-        </div>
-
-
-        <div id="adminTournamentList">
-
-          <div class="dashboard-empty">
-
-            <div>
-              🏆
-            </div>
-
-            <p>
-              No tournaments created yet.
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-
-      <!-- PLAYERS -->
-
-      <div class="dashboard-panel">
-
-        <div class="panel-heading">
-
-          <div>
-
-            <p class="eyebrow">
-              PLAYER MANAGEMENT
-            </p>
-
-            <h3>
-              Registered Players
-            </h3>
-
-          </div>
-
-        </div>
-
-
-        <div id="adminPlayerList">
-
-          <div class="dashboard-empty">
-
-            <div>
-              👥
-            </div>
-
-            <p>
-              No players registered yet.
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-
-      <!-- RESULT REVIEW -->
-
-      <div class="dashboard-panel">
-
-        <div class="panel-heading">
-
-          <div>
-
-            <p class="eyebrow">
-              RESULT CONTROL
-            </p>
-
-            <h3>
-              Result Review
-            </h3>
-
-          </div>
-
-        </div>
-
-
-        <div id="adminResultList">
-
-          <div class="dashboard-empty">
-
-            <div>
-              📸
-            </div>
-
-            <p>
-              No pending results.
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-    </div>
-
-
-
-    <!-- ADMIN LOGOUT -->
-
-    <div
-      style="
-        margin-top:20px;
-        text-align:right;
-      "
-    >
-
-      <button
-        class="dashboard-logout"
-        onclick="adminLogout()"
-      >
-        Logout Admin
-      </button>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-
-<!-- =====================================
-     LOGIN / SIGNUP MODAL
-===================================== -->
-
-<div
-  id="authModal"
-  class="auth-modal"
->
-
-
-  <!-- LOGIN -->
-
-  <div
-    id="loginBox"
-    class="auth-box"
-  >
-
-    <button
-      class="close-auth"
-      onclick="closeAuth()"
-    >
-      ×
-    </button>
-
-
-    <div class="auth-logo">
-
-      <div class="logo">
-        ESPORT<span>O</span>
-      </div>
-
-    </div>
-
-
-    <p class="eyebrow">
-      PLAYER LOGIN
-    </p>
-
-
-    <h2>
-      Welcome Back
-    </h2>
-
-
-    <p class="muted">
-      Login using your registered
-      mobile number.
-    </p>
-
-
-    <form
-      onsubmit="loginPlayer(event)"
-    >
-
-      <input
-        id="loginMobile"
-        type="tel"
-        inputmode="numeric"
-        maxlength="10"
-        placeholder="10 Digit Mobile Number"
-        required
-      >
-
-
-      <input
-        id="loginPassword"
-        type="password"
-        placeholder="Password"
-        required
-      >
-
-
-      <button
-        class="btn"
-        type="submit"
-      >
-        Login
-      </button>
-
-    </form>
-
-
-    <div class="auth-switch">
-
-      Don't have an account?
-
-      <button
-        onclick="showSignup()"
-      >
-        Create Account
-      </button>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- SIGNUP -->
-
-  <div
-    id="signupBox"
-    class="auth-box"
-    style="display:none;"
-  >
-
-    <button
-      class="close-auth"
-      onclick="closeAuth()"
-    >
-      ×
-    </button>
-
-
-    <div class="auth-logo">
-
-      <div class="logo">
-        ESPORT<span>O</span>
-      </div>
-
-    </div>
-
-
-    <p class="eyebrow">
-      JOIN ESPORTO
-    </p>
-
-
-    <h2>
-      Create Player Account
-    </h2>
-
-
-    <p class="muted">
-      Use your mobile number to
-      create your player account.
-    </p>
-
-
-    <form
-      onsubmit="signupPlayer(event)"
-    >
-
-      <input
-        id="signupName"
-        placeholder="Player Name"
-        required
-      >
-
-
-      <input
-        id="signupMobile"
-        type="tel"
-        inputmode="numeric"
-        maxlength="10"
-        placeholder="10 Digit Mobile Number"
-        required
-      >
-
-
-      <input
-        id="signupPassword"
-        type="password"
-        placeholder="Create Password"
-        minlength="6"
-        required
-      >
-
-
-      <button
-        class="btn"
-        type="submit"
-      >
-        Create Account
-      </button>
-
-    </form>
-
-
-    <div class="auth-switch">
-
-      Already have an account?
-
-      <button
-        onclick="showLogin()"
-      >
-        Login
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-
-<!-- =====================================
-     WALLET MODAL
-===================================== -->
-
-<div
-  id="walletModal"
-  class="wallet-modal"
->
-
-  <div class="wallet-box">
-
-    <button
-      class="close-auth"
-      onclick="closeWallet()"
-    >
-      ×
-    </button>
-
-
-    <p class="eyebrow">
-      PLAYER WALLET
-    </p>
-
-
-    <h2>
-      My Wallet
-    </h2>
-
-
-    <div class="wallet-balance-card">
-
-      <span>
-        Available Balance
-      </span>
-
-      <strong id="walletBalance">
-        ₹0.00
-      </strong>
-
-    </div>
-
-
-    <button
-      class="btn full wallet-add-btn"
-      onclick="openAddMoney()"
-    >
-      Add Demo Balance
-    </button>
-
-
-    <h3 class="wallet-history-title">
-      Transaction History
-    </h3>
-
-
-    <div
-      id="transactionList"
-      class="transaction-list"
-    >
-
-      <p class="empty-wallet">
-        No transactions yet.
-      </p>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-
-<!-- =====================================
-     ADD MONEY MODAL
-===================================== -->
-
-<div
-  id="addMoneyModal"
-  class="wallet-modal"
->
-
-  <div class="wallet-box small-wallet-box">
-
-    <button
-      class="close-auth"
-      onclick="closeAddMoney()"
-    >
-      ×
-    </button>
-
-
-    <p class="eyebrow">
-      DEMO WALLET
-    </p>
-
-
-    <h2>
-      Add Balance
-    </h2>
-
-
-    <p class="muted">
-      This is a frontend demo balance.
-      Real payment processing will require
-      a secure backend and payment system.
-    </p>
-
-
-    <form
-      onsubmit="addDemoMoney(event)"
-    >
-
-      <input
-        id="demoAmount"
-        type="number"
-        min="1"
-        max="10000"
-        placeholder="Enter Amount"
-        required
-      >
-
-
-      <button
-        class="btn"
-        type="submit"
-      >
-        Add Demo Balance
-      </button>
-
-    </form>
-
-  </div>
-
-</div>
-
-
-
-<!-- =====================================
-     JOIN TOURNAMENT MODAL
-===================================== -->
-
-<div
-  id="joinModal"
-  class="wallet-modal"
->
-
-  <div class="wallet-box">
-
-    <button
-      class="close-auth"
-      onclick="closeJoinModal()"
-    >
-      ×
-    </button>
-
-
-    <p class="eyebrow">
-      TOURNAMENT ENTRY
-    </p>
-
-
-    <h2>
-      Confirm Join
-    </h2>
-
-
-    <div class="join-info">
-
-
-      <div>
-
-        Tournament
-
-        <strong
-          id="joinTournamentName"
-        >
-          —
-        </strong>
-
-      </div>
-
-
-      <div>
-
-        Entry Fee
-
-        <strong
-          id="joinEntryFee"
-        >
-          ₹0
-        </strong>
-
-      </div>
-
-
-      <div>
-
-        Wallet Balance
-
-        <strong
-          id="joinWalletBalance"
-        >
-          ₹0
-        </strong>
-
-      </div>
-
-
-      <div>
-
-        Payment
-
-        <strong>
-          Wallet
-        </strong>
-
-      </div>
-
-
-    </div>
-
-
-    <button
-      class="btn full"
-      onclick="confirmTournamentJoin()"
-    >
-      Confirm Tournament Entry
-    </button>
-
-
-    <p class="muted join-note">
-      Demo wallet system only.
-    </p>
-
-  </div>
-
-</div>
-
-
-
-<!-- =====================================
+<!-- =========================================
      FOOTER
-===================================== -->
+========================================= -->
 
 <footer>
 
   <div class="logo">
     ESPORT<span>O</span>
   </div>
-
 
   <p>
     © 2026 EsportO.
@@ -1990,11 +839,668 @@
 
 
 
-<!-- =====================================
-     JAVASCRIPT
-===================================== -->
+<!-- =========================================
+     SCRIPT
+========================================= -->
 
 <script src="script.js"></script>
+
+
+<script>
+
+
+/* =========================================
+   GET TOURNAMENTS
+========================================= */
+
+function getHomeTournaments(){
+
+  try{
+
+    return JSON.parse(
+      localStorage.getItem(
+        "esporto_tournaments"
+      ) || "[]"
+    );
+
+  }catch(error){
+
+    return [];
+
+  }
+
+}
+
+
+/* =========================================
+   GET REGISTRATIONS
+========================================= */
+
+function getHomeRegistrations(){
+
+  try{
+
+    return JSON.parse(
+      localStorage.getItem(
+        "esporto_registrations"
+      ) || "[]"
+    );
+
+  }catch(error){
+
+    return [];
+
+  }
+
+}
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function homeEscapeHTML(value){
+
+  if(
+    value === null ||
+    value === undefined
+  ){
+
+    return "";
+
+  }
+
+
+  return String(value)
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =========================================
+   FORMAT DATE
+========================================= */
+
+function homeFormatDate(date){
+
+  if(!date){
+
+    return "Date TBA";
+
+  }
+
+
+  const parsed =
+    new Date(date);
+
+
+  if(
+    Number.isNaN(
+      parsed.getTime()
+    )
+  ){
+
+    return String(date);
+
+  }
+
+
+  return parsed.toLocaleDateString(
+    "en-IN",
+    {
+      day:"2-digit",
+      month:"short",
+      year:"numeric"
+    }
+  );
+
+}
+
+
+/* =========================================
+   MONEY
+========================================= */
+
+function homeMoney(value){
+
+  const number =
+    Number(value || 0);
+
+
+  return "₹" +
+    number.toLocaleString(
+      "en-IN"
+    );
+
+}
+
+
+/* =========================================
+   RENDER TOURNAMENTS
+========================================= */
+
+function renderHomeTournaments(){
+
+  const grid =
+    document.getElementById(
+      "tournamentGrid"
+    );
+
+
+  const tournaments =
+    getHomeTournaments();
+
+
+  const registrations =
+    getHomeRegistrations();
+
+
+  const openTournaments =
+    tournaments.filter(
+      tournament =>
+        String(
+          tournament.status ||
+          "Open"
+        ).toLowerCase() ===
+        "open"
+    );
+
+
+  document.getElementById(
+    "activeTournamentCount"
+  ).textContent =
+    openTournaments.length;
+
+
+  if(!tournaments.length){
+
+    grid.innerHTML = `
+
+      <div class="no-tournaments">
+
+        <div class="no-tournaments-icon">
+          🏆
+        </div>
+
+        <h3>
+          No Tournaments Yet
+        </h3>
+
+        <p>
+          New tournaments will appear here
+          when the EsportO Admin creates them.
+        </p>
+
+      </div>
+
+    `;
+
+    updateHomeStats(
+      registrations
+    );
+
+    updateHero(
+      null
+    );
+
+    return;
+
+  }
+
+
+  grid.innerHTML =
+    tournaments.map(
+      tournament => {
+
+        const name =
+          tournament.name ||
+          tournament.title ||
+          "Untitled Tournament";
+
+
+        const game =
+          tournament.game ||
+          "Gaming";
+
+
+        const entryFee =
+          Number(
+            tournament.entryFee ||
+            tournament.entry ||
+            0
+          );
+
+
+        const prizePool =
+          Number(
+            tournament.prizePool ||
+            tournament.prize ||
+            0
+          );
+
+
+        const slots =
+          Number(
+            tournament.slots ||
+            tournament.maxSlots ||
+            0
+          );
+
+
+        const status =
+          tournament.status ||
+          "Open";
+
+
+        const registered =
+          registrations.filter(
+            registration =>
+              registration.tournament ===
+              name
+          ).length;
+
+
+        let percentage = 0;
+
+
+        if(slots > 0){
+
+          percentage =
+            Math.min(
+              100,
+              Math.round(
+                (
+                  registered /
+                  slots
+                ) * 100
+              )
+            );
+
+        }
+
+
+        const isOpen =
+          String(
+            status
+          ).toLowerCase() ===
+          "open";
+
+
+        return `
+
+          <article
+            class="tournament-card"
+          >
+
+            <div
+              class="tournament-card-top"
+            >
+
+              <span class="game-tag">
+
+                ${homeEscapeHTML(
+                  game
+                ).toUpperCase()}
+
+              </span>
+
+
+              ${
+                isOpen
+
+                ?
+
+                `
+                <span class="open-tag">
+                  OPEN
+                </span>
+                `
+
+                :
+
+                `
+                <span class="closed-tag">
+                  ${homeEscapeHTML(
+                    status
+                  ).toUpperCase()}
+                </span>
+                `
+
+              }
+
+            </div>
+
+
+            <h3>
+              ${homeEscapeHTML(
+                name
+              )}
+            </h3>
+
+
+            <p class="tournament-card-description">
+
+              ${homeEscapeHTML(
+                tournament.description ||
+                "Competitive EsportO tournament."
+              )}
+
+            </p>
+
+
+            <div class="tournament-info">
+
+              <div class="info-box">
+
+                <small>
+                  Prize Pool
+                </small>
+
+                <strong>
+                  ${homeMoney(
+                    prizePool
+                  )}
+                </strong>
+
+              </div>
+
+
+              <div class="info-box">
+
+                <small>
+                  Entry
+                </small>
+
+                <strong>
+                  ${homeMoney(
+                    entryFee
+                  )}
+                </strong>
+
+              </div>
+
+
+              <div class="info-box">
+
+                <small>
+                  Date
+                </small>
+
+                <strong>
+                  ${homeFormatDate(
+                    tournament.date
+                  )}
+                </strong>
+
+              </div>
+
+
+              <div class="info-box">
+
+                <small>
+                  Slots
+                </small>
+
+                <strong>
+                  ${registered}/${slots || "∞"}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <div class="slot-text">
+
+              <span>
+                Registration
+              </span>
+
+              <span>
+                ${registered}/${slots || "∞"}
+              </span>
+
+            </div>
+
+
+            <div class="slot-bar">
+
+              <div
+                class="slot-progress"
+                style="width:${percentage}%"
+              ></div>
+
+            </div>
+
+
+            ${
+              isOpen
+
+              ?
+
+              `
+
+              <a
+                class="btn full"
+                href="player.html"
+              >
+                Join Tournament
+              </a>
+
+              `
+
+              :
+
+              `
+
+              <button
+                class="btn full"
+                disabled
+                style="
+                  opacity:.45;
+                  cursor:not-allowed;
+                "
+              >
+                Registration Closed
+              </button>
+
+              `
+
+            }
+
+          </article>
+
+        `;
+
+      }
+    ).join("");
+
+
+  updateHomeStats(
+    registrations
+  );
+
+
+  updateHero(
+    openTournaments[0] ||
+    tournaments[0]
+  );
+
+}
+
+
+/* =========================================
+   HERO
+========================================= */
+
+function updateHero(tournament){
+
+  const name =
+    document.getElementById(
+      "heroTournamentName"
+    );
+
+
+  const game =
+    document.getElementById(
+      "heroTournamentGame"
+    );
+
+
+  const prize =
+    document.getElementById(
+      "heroPrize"
+    );
+
+
+  const slots =
+    document.getElementById(
+      "heroSlots"
+    );
+
+
+  if(!tournament){
+
+    name.textContent =
+      "COMING SOON";
+
+    game.textContent =
+      "New tournaments are coming.";
+
+    prize.textContent =
+      "₹0";
+
+    slots.textContent =
+      "0";
+
+    return;
+
+  }
+
+
+  name.textContent =
+    tournament.name ||
+    tournament.title ||
+    "EsportO Tournament";
+
+
+  game.textContent =
+    tournament.game ||
+    "Gaming";
+
+
+  prize.textContent =
+    homeMoney(
+      tournament.prizePool ||
+      tournament.prize ||
+      0
+    );
+
+
+  slots.textContent =
+    tournament.slots ||
+    tournament.maxSlots ||
+    "—";
+
+}
+
+
+/* =========================================
+   HOME STATS
+========================================= */
+
+function updateHomeStats(
+  registrations
+){
+
+  document.getElementById(
+    "totalRegistrationCount"
+  ).textContent =
+    registrations.length;
+
+
+  const tournaments =
+    getHomeTournaments();
+
+
+  const games =
+    new Set();
+
+
+  tournaments.forEach(
+    tournament => {
+
+      if(tournament.game){
+
+        games.add(
+          tournament.game
+        );
+
+      }
+
+    }
+  );
+
+
+  document.getElementById(
+    "gameCount"
+  ).textContent =
+    Math.max(
+      games.size,
+      3
+    );
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    renderHomeTournaments();
+
+  }
+);
+
+
+/* =========================================
+   AUTO REFRESH
+========================================= */
+
+window.addEventListener(
+  "focus",
+  function(){
+
+    renderHomeTournaments();
+
+  }
+);
+
+
+</script>
 
 
 </body>
