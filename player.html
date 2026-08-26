@@ -2,262 +2,309 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>EsportO — Player Dashboard</title>
+<meta charset="UTF-8">
 
-  <link rel="stylesheet" href="style.css">
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
 
-  <style>
-    /* ================================
-       PLAYER DASHBOARD
-    ================================= */
+<title>EsportO — Player Dashboard</title>
 
-    .player-hero {
-      background:
-        radial-gradient(circle at 85% 35%, #183000 0%, #08090d 45%);
-    }
+<link rel="stylesheet" href="style.css">
 
-    .player-profile {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      padding: 24px;
-      background: #11131a;
-      border: 1px solid #292d38;
-      border-radius: 14px;
-      margin-top: 25px;
-    }
+<style>
 
-    .player-avatar {
-      width: 65px;
-      height: 65px;
-      border-radius: 50%;
-      background: #8dff00;
-      color: #08090d;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 27px;
-      font-weight: 900;
-    }
+.player-page{
+  min-height:100vh;
+}
 
-    .player-profile h3 {
-      margin: 0 0 5px;
-      font-size: 22px;
-    }
+.player-hero{
+  background:
+  radial-gradient(
+    circle at 80% 35%,
+    #183000 0%,
+    #08090d 45%
+  );
+}
 
-    .player-profile p {
-      margin: 0;
-      color: #9297a6;
-    }
+.player-profile{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  margin-top:25px;
+  padding:24px;
+  background:#11131a;
+  border:1px solid #292d38;
+  border-radius:14px;
+}
 
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-    }
+.player-avatar{
+  width:65px;
+  height:65px;
+  border-radius:50%;
+  background:#8dff00;
+  color:#08090d;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:27px;
+  font-weight:900;
+}
 
-    .dashboard-card {
-      background: #11131a;
-      border: 1px solid #292d38;
-      border-radius: 14px;
-      padding: 22px;
-    }
+.player-profile h3{
+  margin:0 0 6px;
+}
 
-    .dashboard-card small {
-      display: block;
-      color: #9297a6;
-      margin-bottom: 8px;
-    }
+.player-profile p{
+  margin:0;
+  color:#9297a6;
+}
 
-    .dashboard-card strong {
-      font-size: 27px;
-    }
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+}
 
-    .wallet-card {
-      border-color: #5f8500;
-      background:
-        linear-gradient(135deg, #141b0d, #11131a);
-    }
+.dashboard-card{
+  background:#11131a;
+  border:1px solid #292d38;
+  border-radius:14px;
+  padding:22px;
+}
 
-    .wallet-balance {
-      font-size: 32px;
-      font-weight: 900;
-      margin: 10px 0 18px;
-    }
+.dashboard-card small{
+  display:block;
+  color:#9297a6;
+  margin-bottom:10px;
+}
 
-    .wallet-note {
-      color: #9297a6;
-      font-size: 12px;
-      line-height: 1.5;
-    }
+.dashboard-card strong{
+  font-size:28px;
+}
 
-    .wallet-demo {
-      color: #8dff00;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 1px;
-    }
+.wallet-card{
+  border-color:#5f8500;
+  background:
+  linear-gradient(
+    135deg,
+    #141b0d,
+    #11131a
+  );
+}
 
-    .tournament-list {
-      display: grid;
-      gap: 15px;
-    }
+.wallet-balance{
+  font-size:32px;
+  font-weight:900;
+  margin:10px 0;
+}
 
-    .player-tournament {
-      background: #11131a;
-      border: 1px solid #292d38;
-      border-radius: 13px;
-      padding: 22px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-    }
+.demo-label{
+  color:#8dff00;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1px;
+}
 
-    .player-tournament h3 {
-      margin: 5px 0 8px;
-    }
+.tournament-list{
+  display:grid;
+  gap:15px;
+}
 
-    .player-tournament p {
-      color: #9297a6;
-      margin: 0;
-      line-height: 1.6;
-    }
+.player-tournament{
+  background:#11131a;
+  border:1px solid #292d38;
+  border-radius:13px;
+  padding:22px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+}
 
-    .tournament-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+.player-tournament h3{
+  margin:8px 0;
+}
 
-    .danger-btn {
-      background: #2a1518;
-      color: #ff7d7d;
-      border: 1px solid #55252a;
-      padding: 11px 15px;
-      border-radius: 7px;
-      cursor: pointer;
-      font-weight: 800;
-    }
+.player-tournament p{
+  color:#9297a6;
+  line-height:1.6;
+  margin:0;
+}
 
-    .secondary-btn {
-      background: transparent;
-      color: #fff;
-      border: 1px solid #353947;
-      padding: 11px 15px;
-      border-radius: 7px;
-      cursor: pointer;
-      font-weight: 800;
-    }
+.status{
+  display:inline-block;
+  padding:5px 10px;
+  border-radius:20px;
+  background:#182400;
+  color:#8dff00;
+  font-size:11px;
+  font-weight:900;
+}
 
-    .empty-box {
-      text-align: center;
-      padding: 45px 20px;
-      background: #11131a;
-      border: 1px dashed #303440;
-      border-radius: 13px;
-      color: #9297a6;
-    }
+.empty-box{
+  padding:45px 20px;
+  text-align:center;
+  background:#11131a;
+  border:1px dashed #303440;
+  border-radius:13px;
+  color:#9297a6;
+}
 
-    .empty-box div {
-      font-size: 35px;
-      margin-bottom: 10px;
-    }
+.empty-box div{
+  font-size:36px;
+  margin-bottom:10px;
+}
 
-    .player-form-card {
-      max-width: 700px;
-      background: #11131a;
-      border: 1px solid #292d38;
-      border-radius: 14px;
-      padding: 25px;
-    }
+.player-form-card{
+  max-width:700px;
+  background:#11131a;
+  border:1px solid #292d38;
+  border-radius:14px;
+  padding:25px;
+}
 
-    .player-form {
-      display: grid;
-      gap: 14px;
-    }
+.player-form{
+  display:grid;
+  gap:14px;
+}
 
-    .player-form label {
-      color: #c9ccd6;
-      font-size: 13px;
-      font-weight: 700;
-    }
+.player-form label{
+  color:#c9ccd6;
+  font-size:13px;
+  font-weight:800;
+}
 
-    .player-form textarea {
-      width: 100%;
-      min-height: 110px;
-      resize: vertical;
-      padding: 15px;
-      background: #11131a;
-      border: 1px solid #303440;
-      border-radius: 7px;
-      color: #fff;
-      font-size: 15px;
-      font-family: inherit;
-    }
+.player-form textarea{
+  width:100%;
+  min-height:110px;
+  resize:vertical;
+  padding:15px;
+  background:#11131a;
+  border:1px solid #303440;
+  border-radius:7px;
+  color:#fff;
+  font-size:15px;
+  font-family:inherit;
+}
 
-    .player-form input[type="file"] {
-      padding: 12px;
-    }
+.player-form input[type="file"]{
+  padding:12px;
+}
 
-    .status-badge {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 800;
-      background: #182400;
-      color: #8dff00;
-    }
+.auth-box{
+  max-width:500px;
+  margin:auto;
+  background:#11131a;
+  border:1px solid #292d38;
+  border-radius:14px;
+  padding:30px;
+}
 
-    .result-card {
-      background: #11131a;
-      border: 1px solid #292d38;
-      border-radius: 13px;
-      padding: 20px;
-      margin-bottom: 12px;
-    }
+.auth-box form{
+  display:grid;
+  gap:13px;
+}
 
-    .result-card h3 {
-      margin-top: 0;
-    }
+.auth-switch{
+  text-align:center;
+  margin-top:18px;
+  color:#9297a6;
+}
 
-    .result-card p {
-      color: #9297a6;
-      line-height: 1.5;
-    }
+.auth-switch button{
+  background:none;
+  border:0;
+  color:#8dff00;
+  cursor:pointer;
+  font-weight:800;
+}
 
-    .contact-box {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-    }
+.modal{
+  position:fixed;
+  inset:0;
+  background:#000b;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:100;
+}
 
-    @media(max-width: 850px) {
-      .dashboard-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+.modal.active{
+  display:flex;
+}
 
-      .player-tournament {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
+.modal-box{
+  width:100%;
+  max-width:480px;
+  background:#11131a;
+  border:1px solid #303440;
+  border-radius:14px;
+  padding:25px;
+}
 
-    @media(max-width: 600px) {
-      .dashboard-grid,
-      .contact-box {
-        grid-template-columns: 1fr;
-      }
+.modal-box h2{
+  margin-top:0;
+}
 
-      .player-profile {
-        align-items: flex-start;
-      }
-    }
-  </style>
+.modal-actions{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.secondary-btn{
+  background:transparent;
+  color:#fff;
+  border:1px solid #353947;
+  padding:12px 18px;
+  border-radius:7px;
+  cursor:pointer;
+  font-weight:800;
+}
+
+.result-card{
+  background:#11131a;
+  border:1px solid #292d38;
+  border-radius:13px;
+  padding:20px;
+  margin-bottom:12px;
+}
+
+.result-card p{
+  color:#9297a6;
+  line-height:1.6;
+}
+
+@media(max-width:850px){
+
+  .dashboard-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .player-tournament{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+}
+
+@media(max-width:600px){
+
+  .dashboard-grid{
+    grid-template-columns:1fr;
+  }
+
+  .player-profile{
+    align-items:flex-start;
+  }
+
+}
+
+</style>
 
 </head>
 
@@ -265,9 +312,7 @@
 <body>
 
 
-<!-- =========================================
-     HEADER
-========================================= -->
+<!-- HEADER -->
 
 <header>
 
@@ -276,15 +321,26 @@
   </div>
 
   <nav>
-    <a href="index.html">Home</a>
-    <a href="index.html#tournaments">Tournaments</a>
-    <a href="index.html#games">Games</a>
-    <a href="admin.html">Admin</a>
+
+    <a href="index.html">
+      Home
+    </a>
+
+    <a href="index.html#tournaments">
+      Tournaments
+    </a>
+
+    <a href="admin.html">
+      Admin
+    </a>
+
   </nav>
 
   <button
+    id="headerLogout"
     class="btn small"
-    onclick="playerLogout()"
+    style="display:none;"
+    onclick="logoutPlayer(); showLoginPage();"
   >
     Logout
   </button>
@@ -293,55 +349,57 @@
 
 
 
-<!-- =========================================
-     PLAYER LOGIN
-========================================= -->
+<!-- PLAYER AUTH -->
 
 <section
-  id="playerLoginScreen"
+  id="playerAuth"
   class="section"
 >
 
-  <div class="player-form-card">
+  <div class="auth-box">
 
     <p class="eyebrow">
-      PLAYER AREA
+      ESPORTO PLAYER
     </p>
 
-    <h1>
+    <h1 id="authTitle">
       Player Login
     </h1>
 
     <p class="muted">
-      Login using your player name and contact number.
+      Use your mobile number to access your player account.
     </p>
 
 
+    <!-- LOGIN -->
+
     <form
-      class="player-form"
-      onsubmit="playerLogin(event)"
+      id="playerLoginForm"
+      onsubmit="loginPlayer(event); return false;"
     >
 
       <label>
-        Player Name
+        Mobile Number
       </label>
 
       <input
-        id="loginPlayerName"
-        type="text"
-        placeholder="Enter your player name"
+        id="loginMobile"
+        type="tel"
+        inputmode="numeric"
+        maxlength="10"
+        placeholder="10 digit mobile number"
         required
       >
 
 
       <label>
-        Contact Number
+        Password
       </label>
 
       <input
-        id="loginPlayerContact"
-        type="tel"
-        placeholder="Enter your contact number"
+        id="loginPassword"
+        type="password"
+        placeholder="Enter password"
         required
       >
 
@@ -350,10 +408,83 @@
         class="btn"
         type="submit"
       >
-        Enter Player Dashboard
+        Login
       </button>
 
     </form>
+
+
+    <!-- SIGNUP -->
+
+    <form
+      id="playerSignupForm"
+      onsubmit="signupPlayer(event); return false;"
+      style="display:none;"
+    >
+
+      <label>
+        Player Name
+      </label>
+
+      <input
+        id="signupName"
+        type="text"
+        placeholder="Enter player name"
+        required
+      >
+
+
+      <label>
+        Mobile Number
+      </label>
+
+      <input
+        id="signupMobile"
+        type="tel"
+        inputmode="numeric"
+        maxlength="10"
+        placeholder="10 digit mobile number"
+        required
+      >
+
+
+      <label>
+        Password
+      </label>
+
+      <input
+        id="signupPassword"
+        type="password"
+        placeholder="Minimum 6 characters"
+        required
+      >
+
+
+      <button
+        class="btn"
+        type="submit"
+      >
+        Create Player Account
+      </button>
+
+    </form>
+
+
+    <div class="auth-switch">
+
+      <span id="switchText">
+        Don't have an account?
+      </span>
+
+      <button
+        type="button"
+        onclick="toggleAuthMode()"
+        id="switchButton"
+      >
+        Create Account
+      </button>
+
+    </div>
 
   </div>
 
@@ -361,19 +492,16 @@
 
 
 
-<!-- =========================================
-     PLAYER DASHBOARD
-========================================= -->
+<!-- PLAYER DASHBOARD -->
 
 <main
-  id="playerDashboard"
+  id="playerPage"
+  class="player-page"
   style="display:none;"
 >
 
 
-<!-- =========================================
-     PLAYER HERO
-========================================= -->
+<!-- HERO -->
 
 <section class="section player-hero">
 
@@ -383,14 +511,14 @@
 
   <h1>
     Welcome,
-    <span id="welcomePlayerName">
+    <span id="dashboardPlayerName">
       Player
     </span>
   </h1>
 
   <p class="sub">
-    Join tournaments, track your matches,
-    submit results and manage your EsportO profile.
+    Manage your tournaments, wallet,
+    results and player account from one place.
   </p>
 
 
@@ -405,12 +533,12 @@
 
     <div>
 
-      <h3 id="profilePlayerName">
+      <h3 id="profileName">
         Player
       </h3>
 
-      <p id="profilePlayerContact">
-        Contact
+      <p id="dashboardPlayerMobile">
+        Mobile
       </p>
 
     </div>
@@ -421,9 +549,7 @@
 
 
 
-<!-- =========================================
-     PLAYER STATS
-========================================= -->
+<!-- STATS -->
 
 <section class="section">
 
@@ -433,10 +559,10 @@
     <div class="dashboard-card">
 
       <small>
-        🏆 Tournaments Joined
+        🏆 Tournaments
       </small>
 
-      <strong id="joinedCount">
+      <strong id="dashboardTournaments">
         0
       </strong>
 
@@ -449,7 +575,7 @@
         🥇 Wins
       </small>
 
-      <strong id="winCount">
+      <strong id="dashboardWins">
         0
       </strong>
 
@@ -459,10 +585,10 @@
     <div class="dashboard-card">
 
       <small>
-        📸 Results Submitted
+        ⭐ Points
       </small>
 
-      <strong id="resultCount">
+      <strong id="dashboardPoints">
         0
       </strong>
 
@@ -471,19 +597,19 @@
 
     <div class="dashboard-card wallet-card">
 
-      <span class="wallet-demo">
+      <span class="demo-label">
         DEMO WALLET
       </span>
 
       <div
         class="wallet-balance"
-        id="walletBalance"
+        id="walletBalanceTop"
       >
-        ₹0
+        ₹0.00
       </div>
 
       <small>
-        Available Demo Credits
+        Wallet Balance
       </small>
 
     </div>
@@ -495,44 +621,52 @@
 
 
 
-<!-- =========================================
-     WALLET
-========================================= -->
+<!-- WALLET -->
 
 <section class="section dark">
 
   <p class="eyebrow">
-    PLAYER WALLET
+    WALLET
   </p>
 
   <h2>
-    Wallet
+    EsportO Wallet
   </h2>
 
   <div class="dashboard-card wallet-card">
 
-    <span class="wallet-demo">
-      DEMO CREDITS ONLY
+    <span class="demo-label">
+      DEMO MODE
     </span>
 
     <div
       class="wallet-balance"
-      id="walletBalanceLarge"
+      id="walletBalance"
     >
-      ₹0
+      ₹0.00
     </div>
 
-    <p class="wallet-note">
-      This wallet is currently a demonstration
-      feature. It does not accept real money,
-      process payments, or support withdrawals.
+    <p class="muted">
+      Wallet functionality is currently a demo.
+      Real-money deposits and withdrawals require
+      a secure backend and payment system.
     </p>
+
 
     <button
       class="btn"
-      onclick="showWalletMessage()"
+      onclick="openAddMoney()"
     >
-      Wallet Information
+      Add Demo Balance
+    </button>
+
+
+    <button
+      class="secondary-btn"
+      onclick="openWallet()"
+      style="margin-left:8px;"
+    >
+      Transactions
     </button>
 
   </div>
@@ -541,9 +675,7 @@
 
 
 
-<!-- =========================================
-     AVAILABLE TOURNAMENTS
-========================================= -->
+<!-- AVAILABLE TOURNAMENTS -->
 
 <section class="section">
 
@@ -559,19 +691,13 @@
   <div
     id="availableTournaments"
     class="tournament-list"
-  >
-
-    <!-- JavaScript will load tournaments here -->
-
-  </div>
+  ></div>
 
 </section>
 
 
 
-<!-- =========================================
-     MY TOURNAMENTS
-========================================= -->
+<!-- MY TOURNAMENTS -->
 
 <section class="section dark">
 
@@ -586,20 +712,13 @@
 
   <div
     id="myTournaments"
-    class="tournament-list"
-  >
-
-    <!-- JavaScript will load joined tournaments -->
-
-  </div>
+  ></div>
 
 </section>
 
 
 
-<!-- =========================================
-     RESULT SUBMISSION
-========================================= -->
+<!-- RESULT SUBMISSION -->
 
 <section class="section">
 
@@ -608,12 +727,12 @@
   </p>
 
   <h2>
-    Submit Tournament Result
+    Submit Result
   </h2>
 
   <p class="muted">
-    After your tournament match, submit your result
-    and screenshot for admin verification.
+    After your match, submit the result and
+    screenshot for admin verification.
   </p>
 
 
@@ -623,7 +742,6 @@
       class="player-form"
       onsubmit="submitPlayerResult(event)"
     >
-
 
       <label>
         Tournament
@@ -642,7 +760,7 @@
 
 
       <label>
-        Your Result
+        Match Result
       </label>
 
       <input
@@ -659,13 +777,13 @@
 
       <textarea
         id="resultDetails"
-        placeholder="Enter opponent name, score, or other match details..."
+        placeholder="Opponent name, score, match details..."
         required
       ></textarea>
 
 
       <label>
-        Upload Result Screenshot
+        Result Screenshot
       </label>
 
       <input
@@ -680,7 +798,7 @@
         class="btn"
         type="submit"
       >
-        Submit Result for Review
+        Submit Result
       </button>
 
     </form>
@@ -691,9 +809,7 @@
 
 
 
-<!-- =========================================
-     MY RESULTS
-========================================= -->
+<!-- RESULT HISTORY -->
 
 <section class="section dark">
 
@@ -702,9 +818,8 @@
   </p>
 
   <h2>
-    My Submitted Results
+    My Results
   </h2>
-
 
   <div id="myResults">
 
@@ -726,81 +841,37 @@
 
 
 
-<!-- =========================================
-     PLAYER PROFILE
-========================================= -->
+<!-- WALLET TRANSACTION PREVIEW -->
 
 <section class="section">
 
   <p class="eyebrow">
-    ACCOUNT
+    WALLET HISTORY
   </p>
 
   <h2>
-    My Profile
+    Recent Transactions
   </h2>
 
+  <div id="dashboardTransactions">
 
-  <div class="player-form-card">
+    <div class="empty-box">
 
-    <form
-      class="player-form"
-      onsubmit="updatePlayerProfile(event)"
-    >
-
-
-      <div class="contact-box">
-
-        <div>
-
-          <label>
-            Player Name
-          </label>
-
-          <input
-            id="profileEditName"
-            type="text"
-            required
-          >
-
-        </div>
-
-
-        <div>
-
-          <label>
-            Contact Number
-          </label>
-
-          <input
-            id="profileEditContact"
-            type="tel"
-            required
-          >
-
-        </div>
-
+      <div>
+        💳
       </div>
 
+      <p>
+        No wallet transactions yet.
+      </p>
 
-      <button
-        class="btn"
-        type="submit"
-      >
-        Save Profile
-      </button>
-
-    </form>
+    </div>
 
   </div>
 
 </section>
 
 
-
-<!-- =========================================
-     FOOTER
-========================================= -->
 
 <footer>
 
@@ -814,208 +885,296 @@
 
 </footer>
 
-
 </main>
 
 
 
-<!-- =========================================
-     PLAYER JAVASCRIPT
-========================================= -->
+<!-- JOIN TOURNAMENT MODAL -->
+
+<div
+  id="joinModal"
+  class="modal"
+>
+
+  <div class="modal-box">
+
+    <p class="eyebrow">
+      TOURNAMENT ENTRY
+    </p>
+
+    <h2 id="joinTournamentName">
+      Tournament
+    </h2>
+
+    <p class="muted">
+      Entry Fee:
+      <strong id="joinEntryFee">
+        ₹0.00
+      </strong>
+    </p>
+
+    <p class="muted">
+      Your Wallet:
+      <strong id="joinWalletBalance">
+        ₹0.00
+      </strong>
+    </p>
+
+    <div class="modal-actions">
+
+      <button
+        class="btn"
+        onclick="confirmTournamentJoin()"
+      >
+        Confirm Join
+      </button>
+
+      <button
+        class="secondary-btn"
+        onclick="closeJoinModal()"
+      >
+        Cancel
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- WALLET MODAL -->
+
+<div
+  id="walletModal"
+  class="modal"
+>
+
+  <div class="modal-box">
+
+    <p class="eyebrow">
+      WALLET
+    </p>
+
+    <h2>
+      Wallet Transactions
+    </h2>
+
+    <div
+      id="transactionList"
+    ></div>
+
+    <button
+      class="secondary-btn"
+      onclick="closeWallet()"
+    >
+      Close
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<!-- ADD DEMO MONEY -->
+
+<div
+  id="addMoneyModal"
+  class="modal"
+>
+
+  <div class="modal-box">
+
+    <p class="eyebrow">
+      DEMO WALLET
+    </p>
+
+    <h2>
+      Add Demo Balance
+    </h2>
+
+    <p class="muted">
+      This only adds demonstration credits.
+      No real payment is processed.
+    </p>
+
+
+    <form
+      class="player-form"
+      onsubmit="addDemoMoney(event)"
+    >
+
+      <label>
+        Amount
+      </label>
+
+      <input
+        id="demoAmount"
+        type="number"
+        min="1"
+        max="10000"
+        placeholder="Example: 500"
+        required
+      >
+
+
+      <button
+        class="btn"
+        type="submit"
+      >
+        Add Demo Balance
+      </button>
+
+    </form>
+
+
+    <button
+      class="secondary-btn"
+      onclick="closeAddMoney()"
+      style="margin-top:12px;"
+    >
+      Cancel
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<!-- SHARED WEBSITE SCRIPT -->
+
+<script src="script.js"></script>
+
+
+
+<!-- PLAYER PAGE SCRIPT -->
 
 <script>
 
-const PLAYER_KEY = "esporto_player";
-const TOURNAMENT_KEY = "esporto_tournaments";
-const RESULT_KEY = "esporto_results";
-
 
 /* =========================================
-   LOGIN
+   AUTH MODE
 ========================================= */
 
-function playerLogin(event) {
+function toggleAuthMode(){
 
-  event.preventDefault();
+  const login =
+    document.getElementById(
+      "playerLoginForm"
+    );
 
-  const name =
-    document.getElementById("loginPlayerName").value.trim();
+  const signup =
+    document.getElementById(
+      "playerSignupForm"
+    );
 
-  const contact =
-    document.getElementById("loginPlayerContact").value.trim();
+  const title =
+    document.getElementById(
+      "authTitle"
+    );
 
-  if (!name || !contact) {
-    alert("Please enter your player name and contact number.");
-    return;
+  const text =
+    document.getElementById(
+      "switchText"
+    );
+
+  const button =
+    document.getElementById(
+      "switchButton"
+    );
+
+
+  if(login.style.display !== "none"){
+
+    login.style.display = "none";
+
+    signup.style.display = "grid";
+
+    title.textContent =
+      "Create Player Account";
+
+    text.textContent =
+      "Already have an account?";
+
+    button.textContent =
+      "Login";
+
+  }else{
+
+    login.style.display = "grid";
+
+    signup.style.display = "none";
+
+    title.textContent =
+      "Player Login";
+
+    text.textContent =
+      "Don't have an account?";
+
+    button.textContent =
+      "Create Account";
+
   }
-
-  const player = {
-
-    name: name,
-
-    contact: contact,
-
-    wallet: 0,
-
-    wins: 0,
-
-    joined: [],
-
-    createdAt: new Date().toISOString()
-
-  };
-
-  localStorage.setItem(
-    PLAYER_KEY,
-    JSON.stringify(player)
-  );
-
-  showPlayerDashboard();
 
 }
 
 
 /* =========================================
-   SHOW DASHBOARD
+   SHOW LOGIN
 ========================================= */
 
-function showPlayerDashboard() {
-
-  const playerData =
-    localStorage.getItem(PLAYER_KEY);
-
-  if (!playerData) {
-    return;
-  }
-
-  const player =
-    JSON.parse(playerData);
+function showLoginPage(){
 
   document.getElementById(
-    "playerLoginScreen"
+    "playerAuth"
+  ).style.display = "block";
+
+  document.getElementById(
+    "playerPage"
   ).style.display = "none";
 
   document.getElementById(
-    "playerDashboard"
+    "headerLogout"
+  ).style.display = "none";
+
+}
+
+
+/* =========================================
+   SHOW PLAYER DASHBOARD
+========================================= */
+
+function showPlayerPage(){
+
+  document.getElementById(
+    "playerAuth"
+  ).style.display = "none";
+
+  document.getElementById(
+    "playerPage"
   ).style.display = "block";
 
-
   document.getElementById(
-    "welcomePlayerName"
-  ).textContent = player.name;
+    "headerLogout"
+  ).style.display = "inline-block";
 
 
-  document.getElementById(
-    "profilePlayerName"
-  ).textContent = player.name;
+  renderPlayer();
 
+  renderWallet();
 
-  document.getElementById(
-    "profilePlayerContact"
-  ).textContent = player.contact;
-
-
-  document.getElementById(
-    "profileEditName"
-  ).value = player.name;
-
-
-  document.getElementById(
-    "profileEditContact"
-  ).value = player.contact;
-
-
-  const firstLetter =
-    player.name.charAt(0).toUpperCase();
-
-  document.getElementById(
-    "playerAvatar"
-  ).textContent = firstLetter;
-
-
-  updatePlayerStats();
-
-  renderAvailableTournaments();
+  renderDashboardTransactions();
 
   renderMyTournaments();
 
-  renderResultTournamentOptions();
+  renderAvailableTournaments();
+
+  renderResultOptions();
 
   renderMyResults();
-
-}
-
-
-/* =========================================
-   STATS
-========================================= */
-
-function updatePlayerStats() {
-
-  const playerData =
-    localStorage.getItem(PLAYER_KEY);
-
-  if (!playerData) return;
-
-  const player =
-    JSON.parse(playerData);
-
-  const results =
-    JSON.parse(
-      localStorage.getItem(RESULT_KEY) || "[]"
-    );
-
-
-  const playerResults =
-    results.filter(
-      result =>
-        result.playerContact === player.contact
-    );
-
-
-  document.getElementById(
-    "joinedCount"
-  ).textContent =
-    player.joined ? player.joined.length : 0;
-
-
-  document.getElementById(
-    "winCount"
-  ).textContent =
-    player.wins || 0;
-
-
-  document.getElementById(
-    "resultCount"
-  ).textContent =
-    playerResults.length;
-
-
-  document.getElementById(
-    "walletBalance"
-  ).textContent =
-    "₹" + (player.wallet || 0);
-
-
-  document.getElementById(
-    "walletBalanceLarge"
-  ).textContent =
-    "₹" + (player.wallet || 0);
-
-}
-
-
-/* =========================================
-   LOAD TOURNAMENTS
-========================================= */
-
-function getTournaments() {
-
-  return JSON.parse(
-    localStorage.getItem(
-      TOURNAMENT_KEY
-    ) || "[]"
-  );
 
 }
 
@@ -1024,28 +1183,58 @@ function getTournaments() {
    AVAILABLE TOURNAMENTS
 ========================================= */
 
-function renderAvailableTournaments() {
+function renderAvailableTournaments(){
 
   const container =
     document.getElementById(
       "availableTournaments"
     );
 
-  const tournaments =
-    getTournaments();
+  if(!container) return;
 
 
-  if (!tournaments.length) {
+  let list = [];
+
+  try{
+
+    list =
+      JSON.parse(
+        localStorage.getItem(
+          "esporto_tournaments"
+        ) || "[]"
+      );
+
+  }catch(error){
+
+    list = [];
+
+  }
+
+
+  list =
+    list.filter(
+      tournament =>
+        tournament.status === "Open"
+    );
+
+
+  if(!list.length){
 
     container.innerHTML = `
 
       <div class="empty-box">
 
-        <div>🏆</div>
+        <div>
+          🏆
+        </div>
 
         <p>
-          No tournaments are available right now.
+          No open tournaments right now.
         </p>
+
+        <small>
+          Admin can create a tournament from the Admin Dashboard.
+        </small>
 
       </div>
 
@@ -1056,322 +1245,122 @@ function renderAvailableTournaments() {
   }
 
 
-  container.innerHTML = "";
+  container.innerHTML =
+    list.map(
+      tournament => {
+
+        let registrations = [];
+
+        try{
+
+          registrations =
+            JSON.parse(
+              localStorage.getItem(
+                "esporto_registrations"
+              ) || "[]"
+            );
+
+        }catch(error){
+
+          registrations = [];
+
+        }
 
 
-  tournaments.forEach(
-    tournament => {
-
-      const card =
-        document.createElement("div");
-
-      card.className =
-        "player-tournament";
+        const registered =
+          registrations.filter(
+            registration =>
+              registration.tournament ===
+              tournament.name
+          ).length;
 
 
-      card.innerHTML = `
+        return `
 
-        <div>
+          <div class="player-tournament">
 
-          <span class="status-badge">
-            ${tournament.status || "OPEN"}
-          </span>
+            <div>
 
-          <h3>
-            ${escapeHTML(tournament.name)}
-          </h3>
+              <span class="status">
+                OPEN
+              </span>
 
-          <p>
-            🎮 ${escapeHTML(tournament.game)}
-            <br>
+              <h3>
+                ${escapeHTML(
+                  tournament.name
+                )}
+              </h3>
 
-            💰 Entry:
-            ₹${tournament.entry || 0}
+              <p>
 
-            &nbsp; • &nbsp;
+                🎮
+                ${escapeHTML(
+                  tournament.game
+                )}
 
-            🏆 Prize:
-            ₹${tournament.prize || 0}
+                <br>
 
-            <br>
+                💰 Entry:
+                ₹${Number(
+                  tournament.entryFee || 0
+                ).toFixed(2)}
 
-            👥 Slots:
-            ${tournament.slots || 0}
+                &nbsp; • &nbsp;
 
-            <br>
+                🏆 Prize:
+                ₹${Number(
+                  tournament.prizePool || 0
+                ).toFixed(2)}
 
-            📅
-            ${tournament.date || "Date not set"}
+                <br>
 
-          </p>
+                👥 Slots:
+                ${registered}/${tournament.slots}
 
-        </div>
+                <br>
 
+                📅
+                ${formatDate(
+                  tournament.date
+                )}
 
-        <div class="tournament-actions">
+              </p>
 
-          <button
-            class="btn"
-            onclick="joinTournament('${tournament.id}')"
-          >
-            Join Tournament
-          </button>
-
-        </div>
-
-      `;
+            </div>
 
 
-      container.appendChild(card);
+            <button
+              class="btn"
+              onclick="joinTournament(
+                '${escapeJS(tournament.name)}',
+                ${Number(tournament.entryFee || 0)}
+              )"
+            >
+              Join Tournament
+            </button>
 
-    }
-  );
+          </div>
+
+        `;
+
+      }
+    ).join("");
 
 }
 
 
 /* =========================================
-   JOIN TOURNAMENT
+   RESULT TOURNAMENT OPTIONS
 ========================================= */
 
-function joinTournament(id) {
-
-  const playerData =
-    localStorage.getItem(PLAYER_KEY);
-
-  if (!playerData) {
-
-    alert(
-      "Please login first."
-    );
-
-    return;
-
-  }
-
-
-  const player =
-    JSON.parse(playerData);
-
-
-  const tournaments =
-    getTournaments();
-
-
-  const tournament =
-    tournaments.find(
-      item => String(item.id) === String(id)
-    );
-
-
-  if (!tournament) {
-
-    alert(
-      "Tournament not found."
-    );
-
-    return;
-
-  }
-
-
-  if (!player.joined) {
-    player.joined = [];
-  }
-
-
-  const alreadyJoined =
-    player.joined.some(
-      item =>
-        String(item.id) === String(id)
-    );
-
-
-  if (alreadyJoined) {
-
-    alert(
-      "You have already joined this tournament."
-    );
-
-    return;
-
-  }
-
-
-  /*
-    DEMO ONLY
-
-    No real-money payment is processed here.
-  */
-
-
-  player.joined.push({
-
-    id: tournament.id,
-
-    name: tournament.name,
-
-    game: tournament.game,
-
-    joinedAt: new Date().toISOString()
-
-  });
-
-
-  localStorage.setItem(
-    PLAYER_KEY,
-    JSON.stringify(player)
-  );
-
-
-  alert(
-    "Tournament joined successfully! This is currently a demo registration."
-  );
-
-
-  updatePlayerStats();
-
-  renderAvailableTournaments();
-
-  renderMyTournaments();
-
-  renderResultTournamentOptions();
-
-}
-
-
-/* =========================================
-   MY TOURNAMENTS
-========================================= */
-
-function renderMyTournaments() {
-
-  const container =
-    document.getElementById(
-      "myTournaments"
-    );
-
-
-  const playerData =
-    localStorage.getItem(PLAYER_KEY);
-
-
-  if (!playerData) return;
-
-
-  const player =
-    JSON.parse(playerData);
-
-
-  const joined =
-    player.joined || [];
-
-
-  if (!joined.length) {
-
-    container.innerHTML = `
-
-      <div class="empty-box">
-
-        <div>🎮</div>
-
-        <p>
-          You haven't joined any tournaments yet.
-        </p>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  container.innerHTML = "";
-
-
-  joined.forEach(
-    tournament => {
-
-      const card =
-        document.createElement("div");
-
-      card.className =
-        "player-tournament";
-
-
-      card.innerHTML = `
-
-        <div>
-
-          <span class="status-badge">
-            REGISTERED
-          </span>
-
-          <h3>
-            ${escapeHTML(tournament.name)}
-          </h3>
-
-          <p>
-            🎮 ${escapeHTML(tournament.game)}
-            <br>
-            Joined:
-            ${new Date(
-              tournament.joinedAt
-            ).toLocaleString()}
-          </p>
-
-        </div>
-
-
-        <div class="tournament-actions">
-
-          <button
-            class="secondary-btn"
-            onclick="prepareResult('${tournament.id}')"
-          >
-            Submit Result
-          </button>
-
-        </div>
-
-      `;
-
-
-      container.appendChild(card);
-
-    }
-  );
-
-}
-
-
-/* =========================================
-   RESULT OPTIONS
-========================================= */
-
-function renderResultTournamentOptions() {
+function renderResultOptions(){
 
   const select =
     document.getElementById(
       "resultTournament"
     );
 
-
-  const playerData =
-    localStorage.getItem(PLAYER_KEY);
-
-
-  if (!playerData) return;
-
-
-  const player =
-    JSON.parse(playerData);
-
-
-  const joined =
-    player.joined || [];
+  if(!select) return;
 
 
   select.innerHTML = `
@@ -1383,17 +1372,52 @@ function renderResultTournamentOptions() {
   `;
 
 
-  joined.forEach(
-    tournament => {
+  if(typeof player === "undefined" || !player){
+
+    return;
+
+  }
+
+
+  let registrations = [];
+
+  try{
+
+    registrations =
+      JSON.parse(
+        localStorage.getItem(
+          "esporto_registrations"
+        ) || "[]"
+      );
+
+  }catch(error){
+
+    registrations = [];
+
+  }
+
+
+  const mine =
+    registrations.filter(
+      registration =>
+        registration.playerId ===
+        player.id
+    );
+
+
+  mine.forEach(
+    registration => {
 
       const option =
-        document.createElement("option");
+        document.createElement(
+          "option"
+        );
 
       option.value =
-        tournament.id;
+        registration.tournament;
 
       option.textContent =
-        tournament.name;
+        registration.tournament;
 
       select.appendChild(option);
 
@@ -1404,46 +1428,18 @@ function renderResultTournamentOptions() {
 
 
 /* =========================================
-   PREPARE RESULT
-========================================= */
-
-function prepareResult(id) {
-
-  document.getElementById(
-    "resultTournament"
-  ).value = id;
-
-
-  window.scrollTo({
-
-    top:
-      document.getElementById(
-        "resultTournament"
-      ).getBoundingClientRect().top
-      + window.scrollY
-      - 100,
-
-    behavior: "smooth"
-
-  });
-
-}
-
-
-/* =========================================
    SUBMIT RESULT
 ========================================= */
 
-function submitPlayerResult(event) {
+function submitPlayerResult(event){
 
   event.preventDefault();
 
 
-  const playerData =
-    localStorage.getItem(PLAYER_KEY);
-
-
-  if (!playerData) {
+  if(
+    typeof player === "undefined" ||
+    !player
+  ){
 
     alert(
       "Please login first."
@@ -1454,11 +1450,7 @@ function submitPlayerResult(event) {
   }
 
 
-  const player =
-    JSON.parse(playerData);
-
-
-  const tournamentId =
+  const tournament =
     document.getElementById(
       "resultTournament"
     ).value;
@@ -1476,18 +1468,18 @@ function submitPlayerResult(event) {
     ).value.trim();
 
 
-  const screenshot =
+  const file =
     document.getElementById(
       "resultScreenshot"
     ).files[0];
 
 
-  if (
-    !tournamentId ||
+  if(
+    !tournament ||
     !resultText ||
     !details ||
-    !screenshot
-  ) {
+    !file
+  ){
 
     alert(
       "Please complete all result fields."
@@ -1498,35 +1490,14 @@ function submitPlayerResult(event) {
   }
 
 
-  if (
-    !screenshot.type.startsWith("image/")
-  ) {
+  if(
+    !file.type.startsWith(
+      "image/"
+    )
+  ){
 
     alert(
       "Please upload an image screenshot."
-    );
-
-    return;
-
-  }
-
-
-  const tournaments =
-    getTournaments();
-
-
-  const tournament =
-    tournaments.find(
-      item =>
-        String(item.id) ===
-        String(tournamentId)
-    );
-
-
-  if (!tournament) {
-
-    alert(
-      "Tournament not found."
     );
 
     return;
@@ -1538,33 +1509,43 @@ function submitPlayerResult(event) {
     new FileReader();
 
 
-  reader.onload = function () {
+  reader.onload = function(){
 
-    const results =
-      JSON.parse(
-        localStorage.getItem(
-          RESULT_KEY
-        ) || "[]"
-      );
+    let results = [];
+
+    try{
+
+      results =
+        JSON.parse(
+          localStorage.getItem(
+            "esporto_results"
+          ) || "[]"
+        );
+
+    }catch(error){
+
+      results = [];
+
+    }
 
 
-    const newResult = {
+    results.push({
 
       id:
-        "result_" +
+        "RESULT-" +
         Date.now(),
 
-      tournamentId:
-        tournament.id,
-
-      tournamentName:
-        tournament.name,
+      playerId:
+        player.id,
 
       playerName:
         player.name,
 
-      playerContact:
-        player.contact,
+      mobile:
+        player.mobile,
+
+      tournament:
+        tournament,
 
       result:
         resultText,
@@ -1576,19 +1557,16 @@ function submitPlayerResult(event) {
         reader.result,
 
       status:
-        "Pending",
+        "Pending Review",
 
-      submittedAt:
+      date:
         new Date().toISOString()
 
-    };
-
-
-    results.push(newResult);
+    });
 
 
     localStorage.setItem(
-      RESULT_KEY,
+      "esporto_results",
       JSON.stringify(results)
     );
 
@@ -1599,70 +1577,79 @@ function submitPlayerResult(event) {
 
 
     document.querySelector(
-      ".player-form"
+      "#playerPage .player-form"
     ).reset();
 
-
-    updatePlayerStats();
 
     renderMyResults();
 
   };
 
 
-  reader.readAsDataURL(
-    screenshot
-  );
+  reader.readAsDataURL(file);
 
 }
 
 
 /* =========================================
-   RESULT HISTORY
+   MY RESULTS
 ========================================= */
 
-function renderMyResults() {
+function renderMyResults(){
 
   const container =
     document.getElementById(
       "myResults"
     );
 
-
-  const playerData =
-    localStorage.getItem(PLAYER_KEY);
+  if(!container) return;
 
 
-  if (!playerData) return;
+  if(
+    typeof player === "undefined" ||
+    !player
+  ){
+
+    return;
+
+  }
 
 
-  const player =
-    JSON.parse(playerData);
+  let results = [];
+
+  try{
+
+    results =
+      JSON.parse(
+        localStorage.getItem(
+          "esporto_results"
+        ) || "[]"
+      );
+
+  }catch(error){
+
+    results = [];
+
+  }
 
 
-  const results =
-    JSON.parse(
-      localStorage.getItem(
-        RESULT_KEY
-      ) || "[]"
-    );
-
-
-  const playerResults =
+  const mine =
     results.filter(
       result =>
-        result.playerContact ===
-        player.contact
-    );
+        result.playerId ===
+        player.id
+    ).reverse();
 
 
-  if (!playerResults.length) {
+  if(!mine.length){
 
     container.innerHTML = `
 
       <div class="empty-box">
 
-        <div>📸</div>
+        <div>
+          📸
+        </div>
 
         <p>
           No results submitted yet.
@@ -1677,146 +1664,107 @@ function renderMyResults() {
   }
 
 
-  container.innerHTML = "";
-
-
-  playerResults
-    .slice()
-    .reverse()
-    .forEach(
+  container.innerHTML =
+    mine.map(
       result => {
 
-        const card =
-          document.createElement("div");
+        return `
 
-        card.className =
-          "result-card";
+          <div class="result-card">
 
+            <span class="status">
+              ${escapeHTML(
+                result.status
+              )}
+            </span>
 
-        card.innerHTML = `
+            <h3>
+              ${escapeHTML(
+                result.tournament
+              )}
+            </h3>
 
-          <span class="status-badge">
-            ${escapeHTML(result.status)}
-          </span>
+            <p>
 
-          <h3>
-            ${escapeHTML(result.tournamentName)}
-          </h3>
+              <strong>
+                Result:
+              </strong>
 
-          <p>
-            <strong>Result:</strong>
-            ${escapeHTML(result.result)}
-            <br><br>
+              ${escapeHTML(
+                result.result
+              )}
 
-            <strong>Details:</strong>
-            ${escapeHTML(result.details)}
-            <br><br>
+              <br><br>
 
-            Submitted:
-            ${new Date(
-              result.submittedAt
-            ).toLocaleString()}
-          </p>
+              <strong>
+                Details:
+              </strong>
+
+              ${escapeHTML(
+                result.details
+              )}
+
+              <br><br>
+
+              Submitted:
+              ${formatDate(
+                result.date
+              )}
+
+            </p>
+
+          </div>
 
         `;
 
-
-        container.appendChild(card);
-
       }
-    );
+    ).join("");
 
 }
 
 
 /* =========================================
-   PROFILE UPDATE
+   UPDATE PAGE DATA
 ========================================= */
 
-function updatePlayerProfile(event) {
+function refreshPlayerPage(){
 
-  event.preventDefault();
+  if(
+    typeof player === "undefined" ||
+    !player
+  ){
 
+    showLoginPage();
 
-  const playerData =
-    localStorage.getItem(PLAYER_KEY);
+    return;
 
-
-  if (!playerData) return;
-
-
-  const player =
-    JSON.parse(playerData);
+  }
 
 
-  player.name =
-    document.getElementById(
-      "profileEditName"
-    ).value.trim();
-
-
-  player.contact =
-    document.getElementById(
-      "profileEditContact"
-    ).value.trim();
-
-
-  localStorage.setItem(
-    PLAYER_KEY,
-    JSON.stringify(player)
-  );
-
-
-  showPlayerDashboard();
-
-
-  alert(
-    "Profile updated successfully."
-  );
+  showPlayerPage();
 
 }
 
 
 /* =========================================
-   WALLET INFO
+   SAFE JS STRING
 ========================================= */
 
-function showWalletMessage() {
-
-  alert(
-    "EsportO Wallet is currently in demo mode. Real-money deposits, payments and withdrawals are not enabled."
-  );
-
-}
-
-
-/* =========================================
-   LOGOUT
-========================================= */
-
-function playerLogout() {
-
-  localStorage.removeItem(
-    PLAYER_KEY
-  );
-
-  location.reload();
-
-}
-
-
-/* =========================================
-   HTML SECURITY HELPER
-========================================= */
-
-function escapeHTML(value) {
+function escapeJS(value){
 
   return String(value || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replace(
+      /\\/g,
+      "\\\\"
+    )
+    .replace(
+      /'/g,
+      "\\'"
+    )
+    .replace(
+      /\n/g,
+      "\\n"
+    );
 
 }
 
@@ -1827,17 +1775,47 @@ function escapeHTML(value) {
 
 document.addEventListener(
   "DOMContentLoaded",
-  function () {
+  function(){
 
-    const player =
-      localStorage.getItem(
-        PLAYER_KEY
-      );
+    setTimeout(
+      function(){
+
+        refreshPlayerPage();
+
+      },
+      100
+    );
+
+  }
+);
 
 
-    if (player) {
+/* =========================================
+   REFRESH WHEN TAB RETURNS
+========================================= */
 
-      showPlayerDashboard();
+window.addEventListener(
+  "focus",
+  function(){
+
+    if(
+      typeof player !== "undefined" &&
+      player
+    ){
+
+      renderPlayer();
+
+      renderWallet();
+
+      renderDashboardTransactions();
+
+      renderMyTournaments();
+
+      renderAvailableTournaments();
+
+      renderResultOptions();
+
+      renderMyResults();
 
     }
 
