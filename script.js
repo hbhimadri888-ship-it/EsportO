@@ -1,157 +1,90 @@
-/* =====================================
-   ESPORTO PLAYER SYSTEM
-   Demo / Frontend Version
-===================================== */
+/* =========================================================
+   ESPORTO — PLAYER + ADMIN DASHBOARD
+   FRONTEND DEMO VERSION
+========================================================= */
 
 
-/* =====================================
-   STORAGE KEYS
-===================================== */
+/* =========================================================
+   STORAGE
+========================================================= */
 
-const PLAYERS_KEY = "esportoPlayers";
-const CURRENT_USER_KEY = "esportoCurrentUser";
+const STORAGE_KEYS = {
+  player: "esporto_player",
+  tournaments: "esporto_tournaments",
+  registrations: "esporto_registrations",
+  transactions: "esporto_transactions",
+  results: "esporto_results",
+  admin: "esporto_admin_logged"
+};
 
 
-/* =====================================
-   BASIC HELPERS
-===================================== */
+/* =========================================================
+   DEFAULT DATA
+========================================================= */
 
-function getPlayers() {
+function getData(key, fallback) {
   try {
-    return JSON.parse(localStorage.getItem(PLAYERS_KEY)) || {};
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : fallback;
   } catch (error) {
-    return {};
+    return fallback;
   }
 }
 
 
-function savePlayers(players) {
-  localStorage.setItem(
-    PLAYERS_KEY,
-    JSON.stringify(players)
-  );
+function saveData(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
 }
 
 
-function getCurrentUser() {
-  try {
-    return JSON.parse(
-      localStorage.getItem(CURRENT_USER_KEY)
-    );
-  } catch (error) {
-    return null;
-  }
-}
+/* =========================================================
+   PLAYER
+========================================================= */
 
+let player = getData(STORAGE_KEYS.player, null);
 
-function saveCurrentUser(user) {
-  localStorage.setItem(
-    CURRENT_USER_KEY,
-    JSON.stringify(user)
-  );
-}
+let tournaments = getData(STORAGE_KEYS.tournaments, []);
 
+let registrations = getData(
+  STORAGE_KEYS.registrations,
+  []
+);
 
-function removeCurrentUser() {
-  localStorage.removeItem(CURRENT_USER_KEY);
-}
+let transactions = getData(
+  STORAGE_KEYS.transactions,
+  []
+);
 
-
-function formatMoney(amount) {
-  return "₹" + Number(amount || 0).toFixed(2);
-}
-
-
-function getDateTime() {
-  return new Date().toLocaleString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-}
-
-
-/* =====================================
-   PLAYER DATA
-===================================== */
-
-function createDefaultPlayer(name, mobile, password) {
-
-  return {
-    name: name,
-    mobile: mobile,
-    password: password,
-
-    balance: 0,
-
-    wins: 0,
-
-    points: 0,
-
-    tournaments: [],
-
-    transactions: [],
-
-    createdAt: getDateTime()
-  };
-}
-
-
-/* =====================================
-   INITIAL PAGE LOAD
-===================================== */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  function () {
-
-    updateUI();
-
-    updateDashboard();
-
-    updateWalletUI();
-
-    setupMobileInputs();
-
-  }
+let results = getData(
+  STORAGE_KEYS.results,
+  []
 );
 
 
-/* =====================================
-   MOBILE INPUT
-===================================== */
+/* =========================================================
+   INITIALIZE
+========================================================= */
 
-function setupMobileInputs() {
+document.addEventListener("DOMContentLoaded", function () {
 
-  const mobileInputs = document.querySelectorAll(
-    'input[type="tel"]'
-  );
+  renderPlayer();
 
-  mobileInputs.forEach(function (input) {
+  renderWallet();
 
-    input.addEventListener(
-      "input",
-      function () {
+  renderDashboardTransactions();
 
-        this.value = this.value
-          .replace(/\D/g, "")
-          .slice(0, 10);
+  renderMyTournaments();
 
-      }
-    );
+  renderAdminData();
 
-  });
-
-}
+});
 
 
-/* =====================================
+/* =========================================================
    AUTH MODAL
-===================================== */
+========================================================= */
 
-function openAuth(mode = "login") {
+function openAuth(type) {
 
   const modal =
     document.getElementById("authModal");
@@ -160,7 +93,7 @@ function openAuth(mode = "login") {
 
   modal.classList.add("active");
 
-  if (mode === "signup") {
+  if (type === "signup") {
     showSignup();
   } else {
     showLogin();
@@ -174,27 +107,8 @@ function closeAuth() {
   const modal =
     document.getElementById("authModal");
 
-  if (!modal) return;
-
-  modal.classList.remove("active");
-
-}
-
-
-function showSignup() {
-
-  const loginBox =
-    document.getElementById("loginBox");
-
-  const signupBox =
-    document.getElementById("signupBox");
-
-  if (loginBox) {
-    loginBox.style.display = "none";
-  }
-
-  if (signupBox) {
-    signupBox.style.display = "block";
+  if (modal) {
+    modal.classList.remove("active");
   }
 
 }
@@ -202,26 +116,29 @@ function showSignup() {
 
 function showLogin() {
 
-  const loginBox =
-    document.getElementById("loginBox");
+  document.getElementById("loginBox").style.display =
+    "block";
 
-  const signupBox =
-    document.getElementById("signupBox");
-
-  if (loginBox) {
-    loginBox.style.display = "block";
-  }
-
-  if (signupBox) {
-    signupBox.style.display = "none";
-  }
+  document.getElementById("signupBox").style.display =
+    "none";
 
 }
 
 
-/* =====================================
-   CREATE PLAYER ACCOUNT
-===================================== */
+function showSignup() {
+
+  document.getElementById("loginBox").style.display =
+    "none";
+
+  document.getElementById("signupBox").style.display =
+    "block";
+
+}
+
+
+/* =========================================================
+   PLAYER SIGNUP
+========================================================= */
 
 function signupPlayer(event) {
 
@@ -236,15 +153,6 @@ function signupPlayer(event) {
   const password =
     document.getElementById("signupPassword").value;
 
-  if (name.length < 2) {
-
-    alert("Please enter a valid player name.");
-
-    return;
-
-  }
-
-
   if (!/^\d{10}$/.test(mobile)) {
 
     alert(
@@ -252,91 +160,67 @@ function signupPlayer(event) {
     );
 
     return;
-
   }
 
 
   if (password.length < 6) {
 
     alert(
-      "Password must be at least 6 characters."
+      "Password must contain at least 6 characters."
     );
 
     return;
-
   }
 
 
-  const players = getPlayers();
+  player = {
+
+    id:
+      "PLAYER-" +
+      Date.now(),
+
+    name: name,
+
+    mobile: mobile,
+
+    password: password,
+
+    wallet: 0,
+
+    wins: 0,
+
+    tournaments: 0,
+
+    points: 0,
+
+    createdAt:
+      new Date().toISOString()
+
+  };
 
 
-  if (players[mobile]) {
-
-    alert(
-      "An account already exists with this mobile number."
-    );
-
-    showLogin();
-
-    document.getElementById(
-      "loginMobile"
-    ).value = mobile;
-
-    return;
-
-  }
-
-
-  const player =
-    createDefaultPlayer(
-      name,
-      mobile,
-      password
-    );
-
-
-  players[mobile] = player;
-
-  savePlayers(players);
-
-  saveCurrentUser(player);
-
-
-  alert(
-    "Account created successfully! Welcome to EsportO."
+  saveData(
+    STORAGE_KEYS.player,
+    player
   );
-
-
-  document.getElementById(
-    "signupName"
-  ).value = "";
-
-  document.getElementById(
-    "signupMobile"
-  ).value = "";
-
-  document.getElementById(
-    "signupPassword"
-  ).value = "";
 
 
   closeAuth();
 
-  updateUI();
+  renderPlayer();
 
-  updateDashboard();
+  renderWallet();
 
-  updateWalletUI();
-
-
-  scrollToDashboard();
+  alert(
+    "Player account created successfully!"
+  );
 
 }
 
 
-/* =====================================
+/* =========================================================
    PLAYER LOGIN
-===================================== */
+========================================================= */
 
 function loginPlayer(event) {
 
@@ -349,521 +233,202 @@ function loginPlayer(event) {
     document.getElementById("loginPassword").value;
 
 
-  if (!/^\d{10}$/.test(mobile)) {
+  const savedPlayer =
+    getData(STORAGE_KEYS.player, null);
+
+
+  if (!savedPlayer) {
 
     alert(
-      "Please enter your 10 digit mobile number."
+      "No player account found. Please create an account first."
     );
 
     return;
-
   }
 
 
-  const players = getPlayers();
-
-  const player = players[mobile];
-
-
-  if (!player) {
+  if (
+    savedPlayer.mobile !== mobile ||
+    savedPlayer.password !== password
+  ) {
 
     alert(
-      "No EsportO account found with this mobile number."
+      "Incorrect mobile number or password."
     );
 
     return;
-
   }
 
 
-  if (player.password !== password) {
-
-    alert(
-      "Incorrect password. Please try again."
-    );
-
-    return;
-
-  }
-
-
-  saveCurrentUser(player);
-
-
-  document.getElementById(
-    "loginPassword"
-  ).value = "";
-
+  player = savedPlayer;
 
   closeAuth();
 
-  updateUI();
+  renderPlayer();
 
-  updateDashboard();
+  renderWallet();
 
-  updateWalletUI();
-
+  renderMyTournaments();
 
   alert(
-    "Login successful. Welcome back, " +
+    "Welcome back, " +
     player.name +
     "!"
   );
 
-
-  scrollToDashboard();
-
 }
 
 
-/* =====================================
-   LOGOUT
-===================================== */
+/* =========================================================
+   PLAYER LOGOUT
+========================================================= */
 
 function logoutPlayer() {
 
-  const user = getCurrentUser();
+  player = null;
 
-  if (!user) return;
+  localStorage.removeItem(
+    STORAGE_KEYS.player
+  );
 
+  renderPlayer();
 
-  const confirmLogout =
-    confirm(
-      "Are you sure you want to logout?"
-    );
+  renderWallet();
 
-
-  if (!confirmLogout) return;
-
-
-  removeCurrentUser();
-
-
-  updateUI();
-
-  updateDashboard();
-
-  updateWalletUI();
-
+  renderMyTournaments();
 
   alert(
     "You have been logged out."
   );
 
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
 }
 
 
-/* =====================================
-   UPDATE HEADER
-===================================== */
+/* =========================================================
+   PLAYER UI
+========================================================= */
 
-function updateUI() {
+function renderPlayer() {
 
-  const authArea =
-    document.getElementById("authArea");
-
-  const headerBalance =
-    document.getElementById("headerBalance");
-
-  const user = getCurrentUser();
-
-
-  if (headerBalance) {
-
-    headerBalance.textContent =
-      user
-        ? formatMoney(user.balance)
-        : "₹0";
-
-  }
-
-
-  if (!authArea) return;
-
-
-  if (!user) {
-
-    authArea.innerHTML = `
-      <button
-        class="btn small"
-        onclick="openAuth('login')"
-      >
-        Login
-      </button>
-    `;
-
-    return;
-
-  }
-
-
-  authArea.innerHTML = `
-    <div class="player-badge">
-
-      <span class="player-name">
-        ${escapeHTML(user.name)}
-      </span>
-
-      <button
-        class="logout-btn"
-        onclick="logoutPlayer()"
-      >
-        Logout
-      </button>
-
-    </div>
-  `;
-
-}
-
-
-/* =====================================
-   UPDATE DASHBOARD
-===================================== */
-
-function updateDashboard() {
-
-  const user = getCurrentUser();
-
-
-  const dashboardName =
+  const nameElement =
     document.getElementById(
       "dashboardPlayerName"
     );
 
-  const dashboardMobile =
+  const mobileElement =
     document.getElementById(
       "dashboardPlayerMobile"
     );
 
-  const dashboardWallet =
+  const walletElement =
     document.getElementById(
       "dashboardWallet"
     );
 
-  const dashboardWins =
+  const winsElement =
     document.getElementById(
       "dashboardWins"
     );
 
-  const dashboardTournaments =
+  const tournamentElement =
     document.getElementById(
       "dashboardTournaments"
     );
 
-  const dashboardPoints =
+  const pointsElement =
     document.getElementById(
       "dashboardPoints"
     );
 
 
-  if (!user) {
+  if (!player) {
 
-    if (dashboardName) {
-      dashboardName.textContent =
-        "Player";
-    }
+    if (nameElement)
+      nameElement.textContent = "Player";
 
-    if (dashboardMobile) {
-      dashboardMobile.textContent =
+    if (mobileElement)
+      mobileElement.textContent =
         "Login to view your account";
-    }
 
-    if (dashboardWallet) {
-      dashboardWallet.textContent =
+    if (walletElement)
+      walletElement.textContent =
         "₹0.00";
-    }
 
-    if (dashboardWins) {
-      dashboardWins.textContent =
-        "0";
-    }
+    if (winsElement)
+      winsElement.textContent = "0";
 
-    if (dashboardTournaments) {
-      dashboardTournaments.textContent =
-        "0";
-    }
+    if (tournamentElement)
+      tournamentElement.textContent = "0";
 
-    if (dashboardPoints) {
-      dashboardPoints.textContent =
-        "0";
-    }
-
-    renderMyTournaments([]);
-
-    renderDashboardTransactions([]);
+    if (pointsElement)
+      pointsElement.textContent = "0";
 
     return;
-
   }
 
 
-  if (dashboardName) {
-
-    dashboardName.textContent =
-      user.name;
-
-  }
+  if (nameElement)
+    nameElement.textContent =
+      player.name;
 
 
-  if (dashboardMobile) {
-
-    dashboardMobile.textContent =
-      maskMobile(user.mobile);
-
-  }
+  if (mobileElement)
+    mobileElement.textContent =
+      "Mobile: " +
+      player.mobile;
 
 
-  if (dashboardWallet) {
-
-    dashboardWallet.textContent =
-      formatMoney(user.balance);
-
-  }
+  if (walletElement)
+    walletElement.textContent =
+      "₹" +
+      Number(player.wallet || 0).toFixed(2);
 
 
-  if (dashboardWins) {
-
-    dashboardWins.textContent =
-      user.wins || 0;
-
-  }
+  if (winsElement)
+    winsElement.textContent =
+      player.wins || 0;
 
 
-  if (dashboardTournaments) {
-
-    dashboardTournaments.textContent =
-      (user.tournaments || []).length;
-
-  }
+  if (tournamentElement)
+    tournamentElement.textContent =
+      player.tournaments || 0;
 
 
-  if (dashboardPoints) {
-
-    dashboardPoints.textContent =
-      user.points || 0;
-
-  }
+  if (pointsElement)
+    pointsElement.textContent =
+      player.points || 0;
 
 
-  renderMyTournaments(
-    user.tournaments || []
-  );
-
-
-  renderDashboardTransactions(
-    user.transactions || []
-  );
-
-}
-
-
-/* =====================================
-   MASK MOBILE NUMBER
-===================================== */
-
-function maskMobile(mobile) {
-
-  if (!mobile) return "";
-
-  return (
-    mobile.substring(0, 2) +
-    "******" +
-    mobile.substring(8)
-  );
-
-}
-
-
-/* =====================================
-   DASHBOARD TOURNAMENTS
-===================================== */
-
-function renderMyTournaments(tournaments) {
-
-  const container =
+  const headerBalance =
     document.getElementById(
-      "myTournaments"
+      "headerBalance"
     );
 
-  if (!container) return;
+  if (headerBalance) {
 
-
-  if (!tournaments || tournaments.length === 0) {
-
-    container.innerHTML = `
-      <div class="dashboard-empty">
-
-        <div>
-          🎮
-        </div>
-
-        <p>
-          You haven't joined any tournaments yet.
-        </p>
-
-        <a
-          href="#tournaments"
-          class="btn small"
-        >
-          Find Tournament
-        </a>
-
-      </div>
-    `;
-
-    return;
+    headerBalance.textContent =
+      "₹" +
+      Number(player.wallet || 0).toFixed(2);
 
   }
-
-
-  container.innerHTML =
-    tournaments
-      .slice()
-      .reverse()
-      .map(function (tournament) {
-
-        return `
-          <div class="my-tournament-card">
-
-            <div class="my-tournament-info">
-
-              <strong>
-                ${escapeHTML(
-                  tournament.name
-                )}
-              </strong>
-
-              <small>
-                Entry ${formatMoney(
-                  tournament.entryFee
-                )}
-                •
-                ${escapeHTML(
-                  tournament.joinedAt
-                )}
-              </small>
-
-            </div>
-
-            <span class="tournament-status">
-              JOINED
-            </span>
-
-          </div>
-        `;
-
-      })
-      .join("");
 
 }
 
 
-/* =====================================
-   DASHBOARD TRANSACTIONS
-===================================== */
-
-function renderDashboardTransactions(
-  transactions
-) {
-
-  const container =
-    document.getElementById(
-      "dashboardTransactions"
-    );
-
-  if (!container) return;
-
-
-  if (!transactions || transactions.length === 0) {
-
-    container.innerHTML = `
-      <div class="dashboard-empty">
-
-        <div>
-          💳
-        </div>
-
-        <p>
-          No wallet transactions yet.
-        </p>
-
-      </div>
-    `;
-
-    return;
-
-  }
-
-
-  container.innerHTML =
-    transactions
-      .slice()
-      .reverse()
-      .slice(0, 5)
-      .map(function (transaction) {
-
-        const isCredit =
-          transaction.type === "credit";
-
-        return `
-          <div class="dashboard-transaction">
-
-            <div class="dashboard-transaction-info">
-
-              <strong>
-                ${escapeHTML(
-                  transaction.title
-                )}
-              </strong>
-
-              <small>
-                ${escapeHTML(
-                  transaction.date
-                )}
-              </small>
-
-            </div>
-
-            <div
-              class="
-                dashboard-transaction-amount
-                ${isCredit
-                  ? "credit"
-                  : "debit"}
-              "
-            >
-              ${isCredit ? "+" : "-"}
-              ${formatMoney(
-                transaction.amount
-              )}
-            </div>
-
-          </div>
-        `;
-
-      })
-      .join("");
-
-}
-
-
-/* =====================================
+/* =========================================================
    WALLET
-===================================== */
+========================================================= */
 
 function openWallet() {
 
-  const user = getCurrentUser();
+  const modal =
+    document.getElementById(
+      "walletModal"
+    );
 
+  if (!modal) return;
 
-  if (!user) {
+  if (!player) {
 
     alert(
       "Please login or create a player account first."
@@ -872,23 +437,12 @@ function openWallet() {
     openAuth("login");
 
     return;
-
   }
 
 
-  updateWalletUI();
+  renderWallet();
 
-
-  const modal =
-    document.getElementById(
-      "walletModal"
-    );
-
-  if (modal) {
-
-    modal.classList.add("active");
-
-  }
+  modal.classList.add("active");
 
 }
 
@@ -900,131 +454,25 @@ function closeWallet() {
       "walletModal"
     );
 
-  if (modal) {
-
+  if (modal)
     modal.classList.remove("active");
 
-  }
-
 }
 
 
-/* =====================================
-   WALLET UI
-===================================== */
-
-function updateWalletUI() {
-
-  const user = getCurrentUser();
-
-
-  const walletBalance =
-    document.getElementById(
-      "walletBalance"
-    );
-
-
-  if (walletBalance) {
-
-    walletBalance.textContent =
-      user
-        ? formatMoney(user.balance)
-        : "₹0.00";
-
-  }
-
-
-  const transactionList =
-    document.getElementById(
-      "transactionList"
-    );
-
-
-  if (!transactionList) return;
-
-
-  if (!user || !user.transactions.length) {
-
-    transactionList.innerHTML = `
-      <p class="empty-wallet">
-        No transactions yet.
-      </p>
-    `;
-
-    return;
-
-  }
-
-
-  transactionList.innerHTML =
-    user.transactions
-      .slice()
-      .reverse()
-      .map(function (transaction) {
-
-        const isCredit =
-          transaction.type === "credit";
-
-
-        return `
-          <div class="transaction-item">
-
-            <div class="transaction-info">
-
-              <strong>
-                ${escapeHTML(
-                  transaction.title
-                )}
-              </strong>
-
-              <small>
-                ${escapeHTML(
-                  transaction.date
-                )}
-              </small>
-
-            </div>
-
-            <div
-              class="
-                transaction-amount
-                ${isCredit
-                  ? "credit"
-                  : "debit"}
-              "
-            >
-              ${isCredit ? "+" : "-"}
-              ${formatMoney(
-                transaction.amount
-              )}
-            </div>
-
-          </div>
-        `;
-
-      })
-      .join("");
-
-}
-
-
-/* =====================================
-   ADD MONEY MODAL
-===================================== */
+/* =========================================================
+   ADD MONEY
+========================================================= */
 
 function openAddMoney() {
 
-  const user = getCurrentUser();
-
-
-  if (!user) {
+  if (!player) {
 
     closeWallet();
 
     openAuth("login");
 
     return;
-
   }
 
 
@@ -1033,12 +481,8 @@ function openAddMoney() {
       "addMoneyModal"
     );
 
-
-  if (modal) {
-
+  if (modal)
     modal.classList.add("active");
-
-  }
 
 }
 
@@ -1050,36 +494,29 @@ function closeAddMoney() {
       "addMoneyModal"
     );
 
-
-  if (modal) {
-
+  if (modal)
     modal.classList.remove("active");
-
-  }
 
 }
 
 
-/* =====================================
-   ADD DEMO MONEY
-===================================== */
+/*
+   DEMO ONLY
+
+   This does NOT charge real money.
+*/
 
 function addDemoMoney(event) {
 
   event.preventDefault();
 
+  if (!player) {
 
-  const user = getCurrentUser();
-
-
-  if (!user) {
-
-    closeAddMoney();
-
-    openAuth("login");
+    alert(
+      "Please login first."
+    );
 
     return;
-
   }
 
 
@@ -1091,59 +528,59 @@ function addDemoMoney(event) {
     );
 
 
-  if (!amount || amount <= 0) {
+  if (
+    !amount ||
+    amount <= 0 ||
+    amount > 10000
+  ) {
 
     alert(
-      "Please enter a valid amount."
+      "Enter an amount between ₹1 and ₹10,000."
     );
 
     return;
-
   }
 
 
-  if (amount > 10000) {
-
-    alert(
-      "Maximum demo balance addition is ₹10,000."
-    );
-
-    return;
-
-  }
-
-
-  const players = getPlayers();
-
-
-  user.balance =
-    Number(user.balance || 0) +
+  player.wallet =
+    Number(player.wallet || 0) +
     amount;
 
 
-  user.transactions =
-    user.transactions || [];
+  saveData(
+    STORAGE_KEYS.player,
+    player
+  );
 
 
-  user.transactions.push({
+  transactions.push({
 
-    type: "credit",
+    id:
+      "TX-" +
+      Date.now(),
 
-    title: "Demo Wallet Top-up",
+    playerId:
+      player.id,
 
-    amount: amount,
+    type:
+      "credit",
 
-    date: getDateTime()
+    amount:
+      amount,
+
+    description:
+      "Demo wallet balance",
+
+    date:
+      new Date().toISOString()
 
   });
 
 
-  players[user.mobile] = user;
-
-
-  savePlayers(players);
-
-  saveCurrentUser(user);
+  saveData(
+    STORAGE_KEYS.transactions,
+    transactions
+  );
 
 
   document.getElementById(
@@ -1153,29 +590,244 @@ function addDemoMoney(event) {
 
   closeAddMoney();
 
-  updateUI();
+  renderPlayer();
 
-  updateDashboard();
+  renderWallet();
 
-  updateWalletUI();
-
+  renderDashboardTransactions();
 
   alert(
-    formatMoney(amount) +
-    " demo balance added to your wallet."
+    "Demo balance added: ₹" +
+    amount
   );
-
-
-  openWallet();
 
 }
 
 
-/* =====================================
-   JOIN TOURNAMENT
-===================================== */
+/* =========================================================
+   WALLET RENDER
+========================================================= */
 
-let selectedTournament = null;
+function renderWallet() {
+
+  const balanceElement =
+    document.getElementById(
+      "walletBalance"
+    );
+
+
+  if (!player) {
+
+    if (balanceElement)
+      balanceElement.textContent =
+        "₹0.00";
+
+    return;
+  }
+
+
+  if (balanceElement) {
+
+    balanceElement.textContent =
+      "₹" +
+      Number(player.wallet || 0).toFixed(2);
+
+  }
+
+
+  const list =
+    document.getElementById(
+      "transactionList"
+    );
+
+  if (!list) return;
+
+
+  const playerTransactions =
+    transactions
+      .filter(
+        tx =>
+          tx.playerId === player.id
+      )
+      .slice()
+      .reverse();
+
+
+  if (
+    playerTransactions.length === 0
+  ) {
+
+    list.innerHTML =
+      `<p class="empty-wallet">
+        No transactions yet.
+      </p>`;
+
+    return;
+  }
+
+
+  list.innerHTML =
+    playerTransactions
+      .map(tx => {
+
+        const sign =
+          tx.type === "credit"
+            ? "+"
+            : "-";
+
+
+        const amountClass =
+          tx.type === "credit"
+            ? "credit"
+            : "debit";
+
+
+        return `
+          <div class="transaction-item">
+
+            <div class="transaction-info">
+
+              <strong>
+                ${escapeHTML(tx.description)}
+              </strong>
+
+              <small>
+                ${formatDate(tx.date)}
+              </small>
+
+            </div>
+
+            <div class="transaction-amount ${amountClass}">
+              ${sign}₹${Number(tx.amount).toFixed(2)}
+            </div>
+
+          </div>
+        `;
+
+      })
+      .join("");
+
+}
+
+
+/* =========================================================
+   DASHBOARD TRANSACTIONS
+========================================================= */
+
+function renderDashboardTransactions() {
+
+  const container =
+    document.getElementById(
+      "dashboardTransactions"
+    );
+
+
+  if (!container) return;
+
+
+  if (!player) {
+
+    container.innerHTML =
+      `<div class="dashboard-empty">
+
+        <div>🔐</div>
+
+        <p>
+          Login to view transactions.
+        </p>
+
+      </div>`;
+
+    return;
+  }
+
+
+  const playerTransactions =
+    transactions
+      .filter(
+        tx =>
+          tx.playerId === player.id
+      )
+      .slice()
+      .reverse()
+      .slice(0, 4);
+
+
+  if (
+    playerTransactions.length === 0
+  ) {
+
+    container.innerHTML =
+      `<div class="dashboard-empty">
+
+        <div>💳</div>
+
+        <p>
+          No wallet transactions yet.
+        </p>
+
+      </div>`;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    `<div class="dashboard-transactions">
+
+      ${
+        playerTransactions
+          .map(tx => {
+
+            const sign =
+              tx.type === "credit"
+                ? "+"
+                : "-";
+
+
+            const cls =
+              tx.type === "credit"
+                ? "credit"
+                : "debit";
+
+
+            return `
+              <div class="dashboard-transaction">
+
+                <div class="dashboard-transaction-info">
+
+                  <strong>
+                    ${escapeHTML(tx.description)}
+                  </strong>
+
+                  <small>
+                    ${formatDate(tx.date)}
+                  </small>
+
+                </div>
+
+                <div class="dashboard-transaction-amount ${cls}">
+                  ${sign}₹${Number(tx.amount).toFixed(2)}
+                </div>
+
+              </div>
+            `;
+
+          })
+          .join("")
+      }
+
+    </div>`;
+
+}
+
+
+/* =========================================================
+   TOURNAMENT JOIN
+========================================================= */
+
+let selectedTournament =
+  null;
 
 
 function joinTournament(
@@ -1183,123 +835,74 @@ function joinTournament(
   entryFee
 ) {
 
-  const user = getCurrentUser();
-
-
-  if (!user) {
+  if (!player) {
 
     alert(
-      "Please create or login to your EsportO player account first."
+      "Please login or create a player account first."
     );
 
     openAuth("login");
 
     return;
-
   }
 
 
   selectedTournament = {
 
-    name: tournamentName,
+    name:
+      tournamentName,
 
-    entryFee: Number(entryFee)
+    entryFee:
+      Number(entryFee)
 
   };
 
 
-  const nameElement =
-    document.getElementById(
-      "joinTournamentName"
-    );
-
-  const feeElement =
-    document.getElementById(
-      "joinEntryFee"
-    );
-
-  const balanceElement =
-    document.getElementById(
-      "joinWalletBalance"
-    );
+  document.getElementById(
+    "joinTournamentName"
+  ).textContent =
+    tournamentName;
 
 
-  if (nameElement) {
-
-    nameElement.textContent =
-      tournamentName;
-
-  }
-
-
-  if (feeElement) {
-
-    feeElement.textContent =
-      formatMoney(entryFee);
-
-  }
+  document.getElementById(
+    "joinEntryFee"
+  ).textContent =
+    "₹" +
+    Number(entryFee).toFixed(2);
 
 
-  if (balanceElement) {
-
-    balanceElement.textContent =
-      formatMoney(user.balance);
-
-  }
-
-
-  const modal =
-    document.getElementById(
-      "joinModal"
-    );
+  document.getElementById(
+    "joinWalletBalance"
+  ).textContent =
+    "₹" +
+    Number(player.wallet || 0).toFixed(2);
 
 
-  if (modal) {
-
-    modal.classList.add("active");
-
-  }
+  document.getElementById(
+    "joinModal"
+  ).classList.add("active");
 
 }
 
 
 function closeJoinModal() {
 
-  const modal =
-    document.getElementById(
-      "joinModal"
-    );
-
-
-  if (modal) {
-
-    modal.classList.remove("active");
-
-  }
-
-
-  selectedTournament = null;
+  document.getElementById(
+    "joinModal"
+  ).classList.remove("active");
 
 }
 
 
-/* =====================================
-   CONFIRM TOURNAMENT JOIN
-===================================== */
-
 function confirmTournamentJoin() {
 
-  const user = getCurrentUser();
-
-
-  if (!user) {
+  if (!player) {
 
     closeJoinModal();
 
     openAuth("login");
 
     return;
-
   }
 
 
@@ -1310,44 +913,34 @@ function confirmTournamentJoin() {
     );
 
     return;
-
   }
 
 
-  const entryFee =
-    selectedTournament.entryFee;
+  const fee =
+    Number(
+      selectedTournament.entryFee
+    );
 
 
-  const tournamentName =
-    selectedTournament.name;
-
-
-  if (Number(user.balance) < entryFee) {
+  if (
+    Number(player.wallet || 0) < fee
+  ) {
 
     alert(
-      "Insufficient wallet balance.\n\n" +
-      "Required: " +
-      formatMoney(entryFee) +
-      "\n" +
-      "Available: " +
-      formatMoney(user.balance)
+      "Insufficient wallet balance. Please add balance first."
     );
 
     return;
-
   }
 
 
   const alreadyJoined =
-    (user.tournaments || [])
-      .some(function (tournament) {
-
-        return (
-          tournament.name ===
-          tournamentName
-        );
-
-      });
+    registrations.some(
+      registration =>
+        registration.playerId === player.id &&
+        registration.tournament ===
+          selectedTournament.name
+    );
 
 
   if (alreadyJoined) {
@@ -1359,88 +952,256 @@ function confirmTournamentJoin() {
     closeJoinModal();
 
     return;
-
   }
 
 
-  const players = getPlayers();
+  player.wallet =
+    Number(player.wallet || 0) -
+    fee;
 
 
-  user.balance =
-    Number(user.balance) -
-    entryFee;
+  player.tournaments =
+    Number(player.tournaments || 0) +
+    1;
 
 
-  user.tournaments =
-    user.tournaments || [];
+  saveData(
+    STORAGE_KEYS.player,
+    player
+  );
 
 
-  user.tournaments.push({
+  registrations.push({
 
-    name: tournamentName,
+    id:
+      "REG-" +
+      Date.now(),
 
-    entryFee: entryFee,
+    playerId:
+      player.id,
 
-    status: "JOINED",
+    playerName:
+      player.name,
 
-    joinedAt: getDateTime()
+    mobile:
+      player.mobile,
+
+    tournament:
+      selectedTournament.name,
+
+    entryFee:
+      fee,
+
+    status:
+      "Registered",
+
+    date:
+      new Date().toISOString()
 
   });
 
 
-  user.transactions =
-    user.transactions || [];
+  saveData(
+    STORAGE_KEYS.registrations,
+    registrations
+  );
 
 
-  user.transactions.push({
+  transactions.push({
 
-    type: "debit",
+    id:
+      "TX-" +
+      Date.now(),
 
-    title:
-      "Tournament Entry — " +
-      tournamentName,
+    playerId:
+      player.id,
 
-    amount: entryFee,
+    type:
+      "debit",
 
-    date: getDateTime()
+    amount:
+      fee,
+
+    description:
+      "Tournament entry — " +
+      selectedTournament.name,
+
+    date:
+      new Date().toISOString()
 
   });
 
 
-  players[user.mobile] = user;
-
-
-  savePlayers(players);
-
-  saveCurrentUser(user);
+  saveData(
+    STORAGE_KEYS.transactions,
+    transactions
+  );
 
 
   closeJoinModal();
 
-  updateUI();
+  renderPlayer();
 
-  updateDashboard();
+  renderWallet();
 
-  updateWalletUI();
+  renderDashboardTransactions();
+
+  renderMyTournaments();
+
+  renderAdminData();
 
 
   alert(
-    "Tournament joined successfully! 🎮"
+    "Tournament joined successfully!"
   );
-
-
-  scrollToDashboard();
 
 }
 
 
-/* =====================================
-   REGISTRATION FORM
-===================================== */
+/* =========================================================
+   MY TOURNAMENTS
+========================================================= */
+
+function renderMyTournaments() {
+
+  const container =
+    document.getElementById(
+      "myTournaments"
+    );
+
+
+  if (!container) return;
+
+
+  if (!player) {
+
+    container.innerHTML =
+      `<div class="dashboard-empty">
+
+        <div>🔐</div>
+
+        <p>
+          Login to view your tournaments.
+        </p>
+
+        <button
+          class="btn small"
+          onclick="openAuth('login')"
+        >
+          Login
+        </button>
+
+      </div>`;
+
+    return;
+  }
+
+
+  const myRegistrations =
+    registrations
+      .filter(
+        registration =>
+          registration.playerId ===
+          player.id
+      )
+      .slice()
+      .reverse();
+
+
+  if (
+    myRegistrations.length === 0
+  ) {
+
+    container.innerHTML =
+      `<div class="dashboard-empty">
+
+        <div>🎮</div>
+
+        <p>
+          You haven't joined any
+          tournaments yet.
+        </p>
+
+        <a
+          href="#tournaments"
+          class="btn small"
+        >
+          Find Tournament
+        </a>
+
+      </div>`;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    `<div class="my-tournaments">
+
+      ${
+        myRegistrations
+          .map(registration => {
+
+            return `
+              <div class="my-tournament-card">
+
+                <div class="my-tournament-info">
+
+                  <strong>
+                    ${escapeHTML(
+                      registration.tournament
+                    )}
+                  </strong>
+
+                  <small>
+                    Entry ₹${Number(
+                      registration.entryFee
+                    ).toFixed(2)}
+                    •
+                    ${formatDate(
+                      registration.date
+                    )}
+                  </small>
+
+                </div>
+
+                <span class="tournament-status">
+                  ${escapeHTML(
+                    registration.status
+                  )}
+                </span>
+
+              </div>
+            `;
+
+          })
+          .join("")
+      }
+
+    </div>`;
+
+}
+
+
+/* =========================================================
+   REGISTER FORM
+========================================================= */
 
 function submitForm(event) {
 
   event.preventDefault();
+
+
+  if (!player) {
+
+    alert(
+      "Please create/login to your player account first."
+    );
+
+    openAuth("signup");
+
+    return;
+  }
 
 
   const name =
@@ -1448,15 +1209,18 @@ function submitForm(event) {
       "name"
     ).value.trim();
 
+
   const game =
     document.getElementById(
       "game"
     ).value.trim();
 
+
   const contact =
     document.getElementById(
       "contact"
     ).value.trim();
+
 
   const tournament =
     document.getElementById(
@@ -1464,26 +1228,55 @@ function submitForm(event) {
     ).value;
 
 
-  if (
-    !name ||
-    !game ||
-    !contact ||
-    !tournament
-  ) {
+  if (!tournament) {
 
     alert(
-      "Please complete all registration fields."
+      "Please select a tournament."
     );
 
     return;
-
   }
 
 
-  alert(
-    "Registration submitted successfully!\n\n" +
-    "Tournament: " +
-    tournament
+  registrations.push({
+
+    id:
+      "REG-" +
+      Date.now(),
+
+    playerId:
+      player.id,
+
+    playerName:
+      name || player.name,
+
+    mobile:
+      player.mobile,
+
+    game:
+      game,
+
+    contact:
+      contact,
+
+    tournament:
+      tournament,
+
+    entryFee:
+      0,
+
+    status:
+      "Registration Pending",
+
+    date:
+      new Date().toISOString()
+
+  });
+
+
+  saveData(
+    STORAGE_KEYS.registrations,
+    registrations
   );
 
 
@@ -1503,44 +1296,944 @@ function submitForm(event) {
     "tournament"
   ).value = "";
 
+
+  renderMyTournaments();
+
+  renderAdminData();
+
+
+  alert(
+    "Registration submitted successfully!"
+  );
+
 }
 
 
-/* =====================================
-   SCROLL TO DASHBOARD
-===================================== */
+/* =========================================================
+   ADMIN LOGIN
+========================================================= */
 
-function scrollToDashboard() {
+function openAdminLogin() {
 
-  const dashboard =
+  const panel =
     document.getElementById(
-      "dashboard"
+      "adminLoginPanel"
+    );
+
+  if (panel) {
+
+    panel.style.display =
+      panel.style.display === "none"
+        ? "block"
+        : "none";
+
+  }
+
+}
+
+
+function closeAdminLogin() {
+
+  const panel =
+    document.getElementById(
+      "adminLoginPanel"
+    );
+
+  if (panel)
+    panel.style.display = "none";
+
+}
+
+
+/*
+   DEMO ADMIN LOGIN
+
+   IMPORTANT:
+   This is NOT secure production authentication.
+
+   Demo credentials:
+   Username: admin
+   Password: esporto123
+*/
+
+function adminLogin(event) {
+
+  event.preventDefault();
+
+
+  const username =
+    document.getElementById(
+      "adminUsername"
+    ).value.trim();
+
+
+  const password =
+    document.getElementById(
+      "adminPassword"
+    ).value;
+
+
+  if (
+    username === "admin" &&
+    password === "esporto123"
+  ) {
+
+    localStorage.setItem(
+      STORAGE_KEYS.admin,
+      "true"
     );
 
 
-  if (!dashboard) return;
+    document.getElementById(
+      "adminLoginPanel"
+    ).style.display =
+      "none";
 
 
-  setTimeout(function () {
+    document.getElementById(
+      "adminPanel"
+    ).style.display =
+      "block";
 
-    dashboard.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
 
-  }, 300);
+    renderAdminData();
+
+
+    alert(
+      "Admin login successful."
+    );
+
+  } else {
+
+    alert(
+      "Invalid admin username or password."
+    );
+
+  }
 
 }
 
 
-/* =====================================
-   SECURITY / HTML ESCAPE
-===================================== */
+function adminLogout() {
+
+  localStorage.removeItem(
+    STORAGE_KEYS.admin
+  );
+
+
+  document.getElementById(
+    "adminPanel"
+  ).style.display =
+    "none";
+
+
+  alert(
+    "Admin logged out."
+  );
+
+}
+
+
+/* =========================================================
+   ADMIN — CREATE TOURNAMENT
+========================================================= */
+
+function createTournament(event) {
+
+  event.preventDefault();
+
+
+  const name =
+    document.getElementById(
+      "adminTournamentName"
+    ).value.trim();
+
+
+  const game =
+    document.getElementById(
+      "adminTournamentGame"
+    ).value.trim();
+
+
+  const entry =
+    Number(
+      document.getElementById(
+        "adminTournamentEntry"
+      ).value
+    );
+
+
+  const prize =
+    Number(
+      document.getElementById(
+        "adminTournamentPrize"
+      ).value
+    );
+
+
+  const slots =
+    Number(
+      document.getElementById(
+        "adminTournamentSlots"
+      ).value
+    );
+
+
+  const date =
+    document.getElementById(
+      "adminTournamentDate"
+    ).value;
+
+
+  if (
+    !name ||
+    !game ||
+    entry < 0 ||
+    prize < 0 ||
+    slots < 1 ||
+    !date
+  ) {
+
+    alert(
+      "Please fill all tournament details correctly."
+    );
+
+    return;
+  }
+
+
+  const tournament = {
+
+    id:
+      "TOUR-" +
+      Date.now(),
+
+    name:
+      name,
+
+    game:
+      game,
+
+    entryFee:
+      entry,
+
+    prizePool:
+      prize,
+
+    slots:
+      slots,
+
+    filledSlots:
+      0,
+
+    date:
+      date,
+
+    status:
+      "Open",
+
+    createdAt:
+      new Date().toISOString()
+
+  };
+
+
+  tournaments.push(
+    tournament
+  );
+
+
+  saveData(
+    STORAGE_KEYS.tournaments,
+    tournaments
+  );
+
+
+  event.target.reset();
+
+  renderAdminData();
+
+  alert(
+    "Tournament created successfully!"
+  );
+
+}
+
+
+/* =========================================================
+   ADMIN — RENDER DATA
+========================================================= */
+
+function renderAdminData() {
+
+  const adminPanel =
+    document.getElementById(
+      "adminPanel"
+    );
+
+
+  if (!adminPanel) return;
+
+
+  const isAdmin =
+    localStorage.getItem(
+      STORAGE_KEYS.admin
+    ) === "true";
+
+
+  if (!isAdmin) {
+
+    adminPanel.style.display =
+      "none";
+
+    return;
+  }
+
+
+  adminPanel.style.display =
+    "block";
+
+
+  renderAdminStats();
+
+  renderAdminTournaments();
+
+  renderAdminPlayers();
+
+  renderAdminResults();
+
+}
+
+
+/* =========================================================
+   ADMIN — STATS
+========================================================= */
+
+function renderAdminStats() {
+
+  const players =
+    new Set(
+      registrations.map(
+        registration =>
+          registration.playerId
+      )
+    );
+
+
+  const activeTournaments =
+    tournaments.filter(
+      tournament =>
+        tournament.status === "Open"
+    );
+
+
+  const pendingResults =
+    results.filter(
+      result =>
+        result.status === "Pending Review"
+    );
+
+
+  const playerElement =
+    document.getElementById(
+      "adminPlayers"
+    );
+
+
+  const tournamentElement =
+    document.getElementById(
+      "adminTournaments"
+    );
+
+
+  const pendingElement =
+    document.getElementById(
+      "adminPendingResults"
+    );
+
+
+  const activeElement =
+    document.getElementById(
+      "adminActiveTournaments"
+    );
+
+
+  if (playerElement)
+    playerElement.textContent =
+      players.size;
+
+
+  if (tournamentElement)
+    tournamentElement.textContent =
+      tournaments.length;
+
+
+  if (pendingElement)
+    pendingElement.textContent =
+      pendingResults.length;
+
+
+  if (activeElement)
+    activeElement.textContent =
+      activeTournaments.length;
+
+}
+
+
+/* =========================================================
+   ADMIN — TOURNAMENT LIST
+========================================================= */
+
+function renderAdminTournaments() {
+
+  const container =
+    document.getElementById(
+      "adminTournamentList"
+    );
+
+
+  if (!container) return;
+
+
+  if (
+    tournaments.length === 0
+  ) {
+
+    container.innerHTML =
+      `<div class="dashboard-empty">
+
+        <div>🏆</div>
+
+        <p>
+          No tournaments created yet.
+        </p>
+
+      </div>`;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    tournaments
+      .slice()
+      .reverse()
+      .map(tournament => {
+
+        const registered =
+          registrations.filter(
+            registration =>
+              registration.tournament ===
+              tournament.name
+          ).length;
+
+
+        return `
+          <div class="admin-list-item">
+
+            <strong>
+              ${escapeHTML(
+                tournament.name
+              )}
+            </strong>
+
+            <small>
+
+              ${escapeHTML(
+                tournament.game
+              )}
+
+              <br>
+
+              Entry:
+              ₹${Number(
+                tournament.entryFee
+              ).toFixed(2)}
+
+              • Prize:
+              ₹${Number(
+                tournament.prizePool
+              ).toFixed(2)}
+
+              <br>
+
+              Slots:
+              ${registered}/${tournament.slots}
+
+              <br>
+
+              Date:
+              ${formatDate(
+                tournament.date
+              )}
+
+            </small>
+
+
+            <span class="admin-status">
+              ${escapeHTML(
+                tournament.status
+              )}
+            </span>
+
+
+            <div class="admin-list-actions">
+
+              <button
+                class="admin-action-btn"
+                onclick="toggleTournamentStatus(
+                  '${tournament.id}'
+                )"
+              >
+                ${
+                  tournament.status === "Open"
+                    ? "Close"
+                    : "Open"
+                }
+              </button>
+
+
+              <button
+                class="admin-action-btn danger"
+                onclick="deleteTournament(
+                  '${tournament.id}'
+                )"
+              >
+                Delete
+              </button>
+
+            </div>
+
+          </div>
+        `;
+
+      })
+      .join("");
+
+}
+
+
+/* =========================================================
+   ADMIN — TOURNAMENT STATUS
+========================================================= */
+
+function toggleTournamentStatus(
+  tournamentId
+) {
+
+  const tournament =
+    tournaments.find(
+      item =>
+        item.id === tournamentId
+    );
+
+
+  if (!tournament) return;
+
+
+  tournament.status =
+    tournament.status === "Open"
+      ? "Closed"
+      : "Open";
+
+
+  saveData(
+    STORAGE_KEYS.tournaments,
+    tournaments
+  );
+
+
+  renderAdminData();
+
+}
+
+
+/* =========================================================
+   ADMIN — DELETE TOURNAMENT
+========================================================= */
+
+function deleteTournament(
+  tournamentId
+) {
+
+  const tournament =
+    tournaments.find(
+      item =>
+        item.id === tournamentId
+    );
+
+
+  if (!tournament) return;
+
+
+  const confirmed =
+    confirm(
+      "Delete this tournament?"
+    );
+
+
+  if (!confirmed) return;
+
+
+  tournaments =
+    tournaments.filter(
+      item =>
+        item.id !== tournamentId
+    );
+
+
+  saveData(
+    STORAGE_KEYS.tournaments,
+    tournaments
+  );
+
+
+  renderAdminData();
+
+}
+
+
+/* =========================================================
+   ADMIN — PLAYERS
+========================================================= */
+
+function renderAdminPlayers() {
+
+  const container =
+    document.getElementById(
+      "adminPlayerList"
+    );
+
+
+  if (!container) return;
+
+
+  const uniquePlayers = [];
+
+
+  registrations.forEach(
+    registration => {
+
+      const exists =
+        uniquePlayers.some(
+          playerItem =>
+            playerItem.playerId ===
+            registration.playerId
+        );
+
+
+      if (!exists) {
+
+        uniquePlayers.push(
+          registration
+        );
+
+      }
+
+    }
+  );
+
+
+  if (
+    uniquePlayers.length === 0
+  ) {
+
+    container.innerHTML =
+      `<div class="dashboard-empty">
+
+        <div>👥</div>
+
+        <p>
+          No players registered yet.
+        </p>
+
+      </div>`;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    uniquePlayers
+      .map(playerItem => {
+
+        const playerRegistrations =
+          registrations.filter(
+            registration =>
+              registration.playerId ===
+              playerItem.playerId
+          );
+
+
+        return `
+          <div class="admin-list-item">
+
+            <strong>
+              ${escapeHTML(
+                playerItem.playerName
+              )}
+            </strong>
+
+
+            <small>
+
+              Mobile:
+              ${escapeHTML(
+                playerItem.mobile || "—"
+              )}
+
+              <br>
+
+              Tournaments:
+              ${playerRegistrations.length}
+
+            </small>
+
+
+            <span class="admin-status">
+              REGISTERED
+            </span>
+
+          </div>
+        `;
+
+      })
+      .join("");
+
+}
+
+
+/* =========================================================
+   ADMIN — RESULTS
+========================================================= */
+
+function renderAdminResults() {
+
+  const container =
+    document.getElementById(
+      "adminResultList"
+    );
+
+
+  if (!container) return;
+
+
+  const pending =
+    results.filter(
+      result =>
+        result.status ===
+        "Pending Review"
+    );
+
+
+  if (
+    pending.length === 0
+  ) {
+
+    container.innerHTML =
+      `<div class="dashboard-empty">
+
+        <div>📸</div>
+
+        <p>
+          No pending results.
+        </p>
+
+      </div>`;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    pending
+      .map(result => {
+
+        return `
+          <div class="admin-list-item">
+
+            <strong>
+              ${escapeHTML(
+                result.playerName
+              )}
+            </strong>
+
+            <small>
+
+              Tournament:
+              ${escapeHTML(
+                result.tournament
+              )}
+
+              <br>
+
+              Submitted:
+              ${formatDate(
+                result.date
+              )}
+
+            </small>
+
+
+            <span class="admin-status">
+              PENDING REVIEW
+            </span>
+
+
+            <div class="admin-list-actions">
+
+              <button
+                class="admin-action-btn"
+                onclick="approveResult(
+                  '${result.id}'
+                )"
+              >
+                Approve
+              </button>
+
+
+              <button
+                class="admin-action-btn danger"
+                onclick="rejectResult(
+                  '${result.id}'
+                )"
+              >
+                Reject
+              </button>
+
+            </div>
+
+          </div>
+        `;
+
+      })
+      .join("");
+
+}
+
+
+/* =========================================================
+   RESULT APPROVE
+========================================================= */
+
+function approveResult(resultId) {
+
+  const result =
+    results.find(
+      item =>
+        item.id === resultId
+    );
+
+
+  if (!result) return;
+
+
+  result.status =
+    "Approved";
+
+
+  saveData(
+    STORAGE_KEYS.results,
+    results
+  );
+
+
+  alert(
+    "Result approved."
+  );
+
+
+  renderAdminData();
+
+}
+
+
+/* =========================================================
+   RESULT REJECT
+========================================================= */
+
+function rejectResult(resultId) {
+
+  const result =
+    results.find(
+      item =>
+        item.id === resultId
+    );
+
+
+  if (!result) return;
+
+
+  result.status =
+    "Rejected";
+
+
+  saveData(
+    STORAGE_KEYS.results,
+    results
+  );
+
+
+  alert(
+    "Result rejected."
+  );
+
+
+  renderAdminData();
+
+}
+
+
+/* =========================================================
+   UTILITY — DATE
+========================================================= */
+
+function formatDate(date) {
+
+  if (!date)
+    return "—";
+
+
+  const parsed =
+    new Date(date);
+
+
+  if (
+    Number.isNaN(
+      parsed.getTime()
+    )
+  ) {
+
+    return "—";
+
+  }
+
+
+  return parsed.toLocaleString(
+    "en-IN",
+    {
+      day:"2-digit",
+      month:"short",
+      year:"numeric",
+      hour:"2-digit",
+      minute:"2-digit"
+    }
+  );
+
+}
+
+
+/* =========================================================
+   UTILITY — ESCAPE HTML
+========================================================= */
 
 function escapeHTML(value) {
 
-  if (value === null || value === undefined) {
+  if (value === null ||
+      value === undefined) {
+
     return "";
+
   }
 
 
@@ -1554,37 +2247,18 @@ function escapeHTML(value) {
 }
 
 
-/* =====================================
-   CLOSE MODALS BY BACKDROP
-===================================== */
+/* =========================================================
+   CLOSE MODALS ON BACKDROP
+========================================================= */
 
 document.addEventListener(
   "click",
-  function (event) {
-
-    const authModal =
-      document.getElementById(
-        "authModal"
-      );
-
-    const walletModal =
-      document.getElementById(
-        "walletModal"
-      );
-
-    const addMoneyModal =
-      document.getElementById(
-        "addMoneyModal"
-      );
-
-    const joinModal =
-      document.getElementById(
-        "joinModal"
-      );
-
+  function(event) {
 
     if (
-      event.target === authModal
+      event.target.classList.contains(
+        "auth-modal"
+      )
     ) {
 
       closeAuth();
@@ -1593,28 +2267,14 @@ document.addEventListener(
 
 
     if (
-      event.target === walletModal
+      event.target.classList.contains(
+        "wallet-modal"
+      )
     ) {
 
-      closeWallet();
-
-    }
-
-
-    if (
-      event.target === addMoneyModal
-    ) {
-
-      closeAddMoney();
-
-    }
-
-
-    if (
-      event.target === joinModal
-    ) {
-
-      closeJoinModal();
+      event.target.classList.remove(
+        "active"
+      );
 
     }
 
@@ -1622,17 +2282,17 @@ document.addEventListener(
 );
 
 
-/* =====================================
-   ESC KEY CLOSE
-===================================== */
+/* =========================================================
+   ESC KEY
+========================================================= */
 
 document.addEventListener(
   "keydown",
-  function (event) {
+  function(event) {
 
-    if (event.key !== "Escape") {
+    if (event.key !== "Escape")
       return;
-    }
+
 
     closeAuth();
 
