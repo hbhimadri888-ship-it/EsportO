@@ -25,9 +25,7 @@ select{
 }
 
 
-/* =====================================
-   HEADER
-===================================== */
+/* HEADER */
 
 header{
   min-height:74px;
@@ -83,7 +81,6 @@ nav a:hover{
   border-radius:7px;
   font-weight:800;
   cursor:pointer;
-  transition:.2s;
 }
 
 .wallet-header-btn:hover{
@@ -97,9 +94,7 @@ nav a:hover{
 }
 
 
-/* =====================================
-   BUTTONS
-===================================== */
+/* BUTTONS */
 
 .btn{
   display:inline-block;
@@ -135,9 +130,7 @@ nav a:hover{
 }
 
 
-/* =====================================
-   HERO
-===================================== */
+/* HERO */
 
 .hero{
   min-height:610px;
@@ -220,9 +213,7 @@ nav a:hover{
 }
 
 
-/* =====================================
-   SECTIONS
-===================================== */
+/* SECTIONS */
 
 .section{
   padding:90px 8%;
@@ -238,9 +229,7 @@ nav a:hover{
 }
 
 
-/* =====================================
-   PLAYER DASHBOARD
-===================================== */
+/* DASHBOARD */
 
 .dashboard-section{
   background:
@@ -376,7 +365,7 @@ nav a:hover{
 }
 
 
-/* DASHBOARD PANELS */
+/* PANELS */
 
 .dashboard-grid{
   display:grid;
@@ -389,7 +378,7 @@ nav a:hover{
   border:1px solid #292d38;
   border-radius:14px;
   padding:25px;
-  min-height:300px;
+  min-height:250px;
 }
 
 .panel-heading{
@@ -425,10 +414,10 @@ nav a:hover{
 }
 
 
-/* EMPTY DASHBOARD */
+/* EMPTY */
 
 .dashboard-empty{
-  min-height:200px;
+  min-height:150px;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -447,7 +436,7 @@ nav a:hover{
 }
 
 
-/* MY TOURNAMENTS */
+/* TOURNAMENTS */
 
 .my-tournaments{
   display:grid;
@@ -484,7 +473,7 @@ nav a:hover{
 }
 
 
-/* DASHBOARD TRANSACTIONS */
+/* TRANSACTIONS */
 
 .dashboard-transactions{
   display:grid;
@@ -588,9 +577,7 @@ nav a:hover{
 }
 
 
-/* =====================================
-   TOURNAMENT CARDS
-===================================== */
+/* TOURNAMENT CARDS */
 
 .grid{
   display:grid;
@@ -640,9 +627,7 @@ nav a:hover{
 }
 
 
-/* =====================================
-   GAMES
-===================================== */
+/* GAMES */
 
 .game-grid{
   display:grid;
@@ -672,9 +657,7 @@ nav a:hover{
 }
 
 
-/* =====================================
-   LEADERBOARD
-===================================== */
+/* LEADERBOARD */
 
 .table-wrap{
   overflow:auto;
@@ -707,16 +690,7 @@ td{
 }
 
 
-/* =====================================
-   REGISTER
-===================================== */
-
-.register{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:60px;
-  align-items:start;
-}
+/* FORMS */
 
 form{
   display:grid;
@@ -745,9 +719,17 @@ select:focus{
 }
 
 
-/* =====================================
-   RULES
-===================================== */
+/* REGISTER */
+
+.register{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:60px;
+  align-items:start;
+}
+
+
+/* RULES */
 
 .rules{
   display:grid;
@@ -763,22 +745,101 @@ select:focus{
 }
 
 
-/* =====================================
-   FOOTER
-===================================== */
+/* ADMIN */
 
-footer{
-  padding:35px 8%;
-  display:flex;
-  justify-content:space-between;
-  color:#777d8d;
-  border-top:1px solid #222630;
+#admin{
+  border-top:2px solid #8dff00;
+}
+
+#adminPanel{
+  animation:adminFade .25s ease;
+}
+
+@keyframes adminFade{
+  from{
+    opacity:0;
+    transform:translateY(8px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }
 
 
-/* =====================================
-   AUTH MODAL
-===================================== */
+/* ADMIN LIST */
+
+#adminTournamentList,
+#adminPlayerList,
+#adminResultList{
+  display:grid;
+  gap:10px;
+}
+
+.admin-list-item{
+  padding:15px;
+  background:#151821;
+  border:1px solid #292d38;
+  border-radius:9px;
+}
+
+.admin-list-item strong{
+  display:block;
+  font-size:14px;
+  margin-bottom:6px;
+}
+
+.admin-list-item small{
+  color:#777d8d;
+  line-height:1.5;
+}
+
+.admin-list-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+
+.admin-action-btn{
+  background:#20232d;
+  color:#fff;
+  border:1px solid #353947;
+  padding:8px 11px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:800;
+}
+
+.admin-action-btn:hover{
+  border-color:#8dff00;
+  color:#8dff00;
+}
+
+.admin-action-btn.danger:hover{
+  border-color:#ff6060;
+  color:#ff6060;
+}
+
+
+/* ADMIN STATUS */
+
+.admin-status{
+  display:inline-block;
+  margin-top:8px;
+  padding:5px 8px;
+  border-radius:5px;
+  background:#182000;
+  color:#8dff00;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.5px;
+}
+
+
+/* MODALS */
 
 .auth-modal,
 .wallet-modal{
@@ -886,9 +947,7 @@ footer{
 }
 
 
-/* =====================================
-   WALLET
-===================================== */
+/* WALLET */
 
 .wallet-box{
   max-width:460px;
@@ -982,9 +1041,7 @@ footer{
 }
 
 
-/* =====================================
-   JOIN TOURNAMENT
-===================================== */
+/* JOIN */
 
 .join-info{
   display:grid;
@@ -1016,9 +1073,18 @@ footer{
 }
 
 
-/* =====================================
-   MOBILE
-===================================== */
+/* FOOTER */
+
+footer{
+  padding:35px 8%;
+  display:flex;
+  justify-content:space-between;
+  color:#777d8d;
+  border-top:1px solid #222630;
+}
+
+
+/* MOBILE */
 
 @media(max-width:900px){
 
@@ -1035,6 +1101,7 @@ footer{
   }
 
 }
+
 
 @media(max-width:800px){
 
@@ -1163,6 +1230,7 @@ footer{
   }
 
 }
+
 
 @media(max-width:480px){
 
