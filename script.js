@@ -1,71 +1,187 @@
-// ========================================
-// ESPORTO PLAYER + WALLET SYSTEM
-// DEMO VERSION
-// ========================================
+/* =====================================
+   ESPORTO PLAYER SYSTEM
+   Demo / Frontend Version
+===================================== */
 
 
-// ========================================
-// HELPER FUNCTIONS
-// ========================================
+/* =====================================
+   STORAGE KEYS
+===================================== */
 
-function getPlayer(){
+const PLAYERS_KEY = "esportoPlayers";
+const CURRENT_USER_KEY = "esportoCurrentUser";
 
-  const data = localStorage.getItem("esportoPlayer");
 
-  if(!data){
-    return null;
+/* =====================================
+   BASIC HELPERS
+===================================== */
+
+function getPlayers() {
+  try {
+    return JSON.parse(localStorage.getItem(PLAYERS_KEY)) || {};
+  } catch (error) {
+    return {};
   }
+}
 
-  try{
-    return JSON.parse(data);
-  }catch(error){
+
+function savePlayers(players) {
+  localStorage.setItem(
+    PLAYERS_KEY,
+    JSON.stringify(players)
+  );
+}
+
+
+function getCurrentUser() {
+  try {
+    return JSON.parse(
+      localStorage.getItem(CURRENT_USER_KEY)
+    );
+  } catch (error) {
     return null;
   }
 }
 
 
-function isLoggedIn(){
+function saveCurrentUser(user) {
+  localStorage.setItem(
+    CURRENT_USER_KEY,
+    JSON.stringify(user)
+  );
+}
 
-  return localStorage.getItem("esportoLoggedIn") === "true";
+
+function removeCurrentUser() {
+  localStorage.removeItem(CURRENT_USER_KEY);
+}
+
+
+function formatMoney(amount) {
+  return "₹" + Number(amount || 0).toFixed(2);
+}
+
+
+function getDateTime() {
+  return new Date().toLocaleString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+
+/* =====================================
+   PLAYER DATA
+===================================== */
+
+function createDefaultPlayer(name, mobile, password) {
+
+  return {
+    name: name,
+    mobile: mobile,
+    password: password,
+
+    balance: 0,
+
+    wins: 0,
+
+    points: 0,
+
+    tournaments: [],
+
+    transactions: [],
+
+    createdAt: getDateTime()
+  };
+}
+
+
+/* =====================================
+   INITIAL PAGE LOAD
+===================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function () {
+
+    updateUI();
+
+    updateDashboard();
+
+    updateWalletUI();
+
+    setupMobileInputs();
+
+  }
+);
+
+
+/* =====================================
+   MOBILE INPUT
+===================================== */
+
+function setupMobileInputs() {
+
+  const mobileInputs = document.querySelectorAll(
+    'input[type="tel"]'
+  );
+
+  mobileInputs.forEach(function (input) {
+
+    input.addEventListener(
+      "input",
+      function () {
+
+        this.value = this.value
+          .replace(/\D/g, "")
+          .slice(0, 10);
+
+      }
+    );
+
+  });
 
 }
 
 
-// ========================================
-// LOGIN / SIGNUP MODAL
-// ========================================
+/* =====================================
+   AUTH MODAL
+===================================== */
 
-function openAuth(type){
+function openAuth(mode = "login") {
 
   const modal =
     document.getElementById("authModal");
 
-  if(!modal) return;
+  if (!modal) return;
 
   modal.classList.add("active");
 
-  if(type === "signup"){
+  if (mode === "signup") {
     showSignup();
-  }else{
+  } else {
     showLogin();
   }
 
 }
 
 
-function closeAuth(){
+function closeAuth() {
 
   const modal =
     document.getElementById("authModal");
 
-  if(modal){
-    modal.classList.remove("active");
-  }
+  if (!modal) return;
+
+  modal.classList.remove("active");
 
 }
 
 
-function showSignup(){
+function showSignup() {
 
   const loginBox =
     document.getElementById("loginBox");
@@ -73,18 +189,18 @@ function showSignup(){
   const signupBox =
     document.getElementById("signupBox");
 
-  if(loginBox){
+  if (loginBox) {
     loginBox.style.display = "none";
   }
 
-  if(signupBox){
+  if (signupBox) {
     signupBox.style.display = "block";
   }
 
 }
 
 
-function showLogin(){
+function showLogin() {
 
   const loginBox =
     document.getElementById("loginBox");
@@ -92,33 +208,22 @@ function showLogin(){
   const signupBox =
     document.getElementById("signupBox");
 
-  if(signupBox){
-    signupBox.style.display = "none";
-  }
-
-  if(loginBox){
+  if (loginBox) {
     loginBox.style.display = "block";
   }
 
-}
-
-
-// ========================================
-// MOBILE NUMBER VALIDATION
-// ========================================
-
-function validMobile(number){
-
-  return /^[6-9][0-9]{9}$/.test(number);
+  if (signupBox) {
+    signupBox.style.display = "none";
+  }
 
 }
 
 
-// ========================================
-// CREATE PLAYER ACCOUNT
-// ========================================
+/* =====================================
+   CREATE PLAYER ACCOUNT
+===================================== */
 
-function signupPlayer(event){
+function signupPlayer(event) {
 
   event.preventDefault();
 
@@ -131,109 +236,16 @@ function signupPlayer(event){
   const password =
     document.getElementById("signupPassword").value;
 
+  if (name.length < 2) {
 
-  if(!validMobile(mobile)){
-
-    alert(
-      "Please enter a valid 10 digit Indian mobile number."
-    );
+    alert("Please enter a valid player name.");
 
     return;
 
   }
 
 
-  if(password.length < 6){
-
-    alert(
-      "Password must contain at least 6 characters."
-    );
-
-    return;
-
-  }
-
-
-  const existingPlayer =
-    localStorage.getItem("esportoPlayer");
-
-
-  if(existingPlayer){
-
-    alert(
-      "An account already exists on this browser. Please login."
-    );
-
-    showLogin();
-
-    return;
-
-  }
-
-
-  const player = {
-
-    name:name,
-
-    mobile:mobile,
-
-    password:password,
-
-    joined:
-      new Date().toLocaleDateString(),
-
-    wallet:0,
-
-    transactions:[],
-
-    tournaments:[]
-
-  };
-
-
-  localStorage.setItem(
-    "esportoPlayer",
-    JSON.stringify(player)
-  );
-
-
-  localStorage.setItem(
-    "esportoLoggedIn",
-    "true"
-  );
-
-
-  alert(
-    "Account created successfully! Welcome to EsportO 🔥"
-  );
-
-
-  closeAuth();
-
-  updateAuthArea();
-
-  updateWalletUI();
-
-}
-
-
-// ========================================
-// LOGIN
-// ========================================
-
-function loginPlayer(event){
-
-  event.preventDefault();
-
-
-  const mobile =
-    document.getElementById("loginMobile").value.trim();
-
-  const password =
-    document.getElementById("loginPassword").value;
-
-
-  if(!validMobile(mobile)){
+  if (!/^\d{10}$/.test(mobile)) {
 
     alert(
       "Please enter a valid 10 digit mobile number."
@@ -244,71 +256,192 @@ function loginPlayer(event){
   }
 
 
-  const savedPlayer =
-    getPlayer();
-
-
-  if(!savedPlayer){
+  if (password.length < 6) {
 
     alert(
-      "No player account found. Please create an account first."
+      "Password must be at least 6 characters."
     );
-
-    showSignup();
 
     return;
 
   }
 
 
-  if(
-    savedPlayer.mobile === mobile &&
-    savedPlayer.password === password
-  ){
+  const players = getPlayers();
 
-    localStorage.setItem(
-      "esportoLoggedIn",
-      "true"
-    );
 
+  if (players[mobile]) {
 
     alert(
-      "Login successful! Welcome back " +
-      savedPlayer.name +
-      " 🔥"
+      "An account already exists with this mobile number."
     );
 
+    showLogin();
 
-    closeAuth();
+    document.getElementById(
+      "loginMobile"
+    ).value = mobile;
 
-    updateAuthArea();
-
-    updateWalletUI();
-
-
-  }else{
-
-    alert(
-      "Incorrect mobile number or password."
-    );
+    return;
 
   }
+
+
+  const player =
+    createDefaultPlayer(
+      name,
+      mobile,
+      password
+    );
+
+
+  players[mobile] = player;
+
+  savePlayers(players);
+
+  saveCurrentUser(player);
+
+
+  alert(
+    "Account created successfully! Welcome to EsportO."
+  );
+
+
+  document.getElementById(
+    "signupName"
+  ).value = "";
+
+  document.getElementById(
+    "signupMobile"
+  ).value = "";
+
+  document.getElementById(
+    "signupPassword"
+  ).value = "";
+
+
+  closeAuth();
+
+  updateUI();
+
+  updateDashboard();
+
+  updateWalletUI();
+
+
+  scrollToDashboard();
 
 }
 
 
-// ========================================
-// LOGOUT
-// ========================================
+/* =====================================
+   PLAYER LOGIN
+===================================== */
 
-function logoutPlayer(){
+function loginPlayer(event) {
 
-  localStorage.removeItem(
-    "esportoLoggedIn"
+  event.preventDefault();
+
+  const mobile =
+    document.getElementById("loginMobile").value.trim();
+
+  const password =
+    document.getElementById("loginPassword").value;
+
+
+  if (!/^\d{10}$/.test(mobile)) {
+
+    alert(
+      "Please enter your 10 digit mobile number."
+    );
+
+    return;
+
+  }
+
+
+  const players = getPlayers();
+
+  const player = players[mobile];
+
+
+  if (!player) {
+
+    alert(
+      "No EsportO account found with this mobile number."
+    );
+
+    return;
+
+  }
+
+
+  if (player.password !== password) {
+
+    alert(
+      "Incorrect password. Please try again."
+    );
+
+    return;
+
+  }
+
+
+  saveCurrentUser(player);
+
+
+  document.getElementById(
+    "loginPassword"
+  ).value = "";
+
+
+  closeAuth();
+
+  updateUI();
+
+  updateDashboard();
+
+  updateWalletUI();
+
+
+  alert(
+    "Login successful. Welcome back, " +
+    player.name +
+    "!"
   );
 
 
-  updateAuthArea();
+  scrollToDashboard();
+
+}
+
+
+/* =====================================
+   LOGOUT
+===================================== */
+
+function logoutPlayer() {
+
+  const user = getCurrentUser();
+
+  if (!user) return;
+
+
+  const confirmLogout =
+    confirm(
+      "Are you sure you want to logout?"
+    );
+
+
+  if (!confirmLogout) return;
+
+
+  removeCurrentUser();
+
+
+  updateUI();
+
+  updateDashboard();
 
   updateWalletUI();
 
@@ -317,77 +450,423 @@ function logoutPlayer(){
     "You have been logged out."
   );
 
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
 }
 
 
-// ========================================
-// UPDATE HEADER LOGIN AREA
-// ========================================
+/* =====================================
+   UPDATE HEADER
+===================================== */
 
-function updateAuthArea(){
+function updateUI() {
 
   const authArea =
     document.getElementById("authArea");
 
-  if(!authArea) return;
+  const headerBalance =
+    document.getElementById("headerBalance");
+
+  const user = getCurrentUser();
 
 
-  const player =
-    getPlayer();
+  if (headerBalance) {
+
+    headerBalance.textContent =
+      user
+        ? formatMoney(user.balance)
+        : "₹0";
+
+  }
 
 
-  if(
-    isLoggedIn() &&
-    player
-  ){
+  if (!authArea) return;
 
-    authArea.innerHTML = `
 
-      <div class="player-badge">
-
-        <span class="player-name">
-          👤 ${escapeHTML(player.name)}
-        </span>
-
-        <button
-          class="logout-btn"
-          onclick="logoutPlayer()"
-        >
-          Logout
-        </button>
-
-      </div>
-
-    `;
-
-  }else{
+  if (!user) {
 
     authArea.innerHTML = `
-
       <button
         class="btn small"
         onclick="openAuth('login')"
       >
         Login
       </button>
-
     `;
 
+    return;
+
   }
+
+
+  authArea.innerHTML = `
+    <div class="player-badge">
+
+      <span class="player-name">
+        ${escapeHTML(user.name)}
+      </span>
+
+      <button
+        class="logout-btn"
+        onclick="logoutPlayer()"
+      >
+        Logout
+      </button>
+
+    </div>
+  `;
 
 }
 
 
-// ========================================
-// WALLET
-// ========================================
+/* =====================================
+   UPDATE DASHBOARD
+===================================== */
 
-function openWallet(){
+function updateDashboard() {
 
-  if(!isLoggedIn()){
+  const user = getCurrentUser();
+
+
+  const dashboardName =
+    document.getElementById(
+      "dashboardPlayerName"
+    );
+
+  const dashboardMobile =
+    document.getElementById(
+      "dashboardPlayerMobile"
+    );
+
+  const dashboardWallet =
+    document.getElementById(
+      "dashboardWallet"
+    );
+
+  const dashboardWins =
+    document.getElementById(
+      "dashboardWins"
+    );
+
+  const dashboardTournaments =
+    document.getElementById(
+      "dashboardTournaments"
+    );
+
+  const dashboardPoints =
+    document.getElementById(
+      "dashboardPoints"
+    );
+
+
+  if (!user) {
+
+    if (dashboardName) {
+      dashboardName.textContent =
+        "Player";
+    }
+
+    if (dashboardMobile) {
+      dashboardMobile.textContent =
+        "Login to view your account";
+    }
+
+    if (dashboardWallet) {
+      dashboardWallet.textContent =
+        "₹0.00";
+    }
+
+    if (dashboardWins) {
+      dashboardWins.textContent =
+        "0";
+    }
+
+    if (dashboardTournaments) {
+      dashboardTournaments.textContent =
+        "0";
+    }
+
+    if (dashboardPoints) {
+      dashboardPoints.textContent =
+        "0";
+    }
+
+    renderMyTournaments([]);
+
+    renderDashboardTransactions([]);
+
+    return;
+
+  }
+
+
+  if (dashboardName) {
+
+    dashboardName.textContent =
+      user.name;
+
+  }
+
+
+  if (dashboardMobile) {
+
+    dashboardMobile.textContent =
+      maskMobile(user.mobile);
+
+  }
+
+
+  if (dashboardWallet) {
+
+    dashboardWallet.textContent =
+      formatMoney(user.balance);
+
+  }
+
+
+  if (dashboardWins) {
+
+    dashboardWins.textContent =
+      user.wins || 0;
+
+  }
+
+
+  if (dashboardTournaments) {
+
+    dashboardTournaments.textContent =
+      (user.tournaments || []).length;
+
+  }
+
+
+  if (dashboardPoints) {
+
+    dashboardPoints.textContent =
+      user.points || 0;
+
+  }
+
+
+  renderMyTournaments(
+    user.tournaments || []
+  );
+
+
+  renderDashboardTransactions(
+    user.transactions || []
+  );
+
+}
+
+
+/* =====================================
+   MASK MOBILE NUMBER
+===================================== */
+
+function maskMobile(mobile) {
+
+  if (!mobile) return "";
+
+  return (
+    mobile.substring(0, 2) +
+    "******" +
+    mobile.substring(8)
+  );
+
+}
+
+
+/* =====================================
+   DASHBOARD TOURNAMENTS
+===================================== */
+
+function renderMyTournaments(tournaments) {
+
+  const container =
+    document.getElementById(
+      "myTournaments"
+    );
+
+  if (!container) return;
+
+
+  if (!tournaments || tournaments.length === 0) {
+
+    container.innerHTML = `
+      <div class="dashboard-empty">
+
+        <div>
+          🎮
+        </div>
+
+        <p>
+          You haven't joined any tournaments yet.
+        </p>
+
+        <a
+          href="#tournaments"
+          class="btn small"
+        >
+          Find Tournament
+        </a>
+
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    tournaments
+      .slice()
+      .reverse()
+      .map(function (tournament) {
+
+        return `
+          <div class="my-tournament-card">
+
+            <div class="my-tournament-info">
+
+              <strong>
+                ${escapeHTML(
+                  tournament.name
+                )}
+              </strong>
+
+              <small>
+                Entry ${formatMoney(
+                  tournament.entryFee
+                )}
+                •
+                ${escapeHTML(
+                  tournament.joinedAt
+                )}
+              </small>
+
+            </div>
+
+            <span class="tournament-status">
+              JOINED
+            </span>
+
+          </div>
+        `;
+
+      })
+      .join("");
+
+}
+
+
+/* =====================================
+   DASHBOARD TRANSACTIONS
+===================================== */
+
+function renderDashboardTransactions(
+  transactions
+) {
+
+  const container =
+    document.getElementById(
+      "dashboardTransactions"
+    );
+
+  if (!container) return;
+
+
+  if (!transactions || transactions.length === 0) {
+
+    container.innerHTML = `
+      <div class="dashboard-empty">
+
+        <div>
+          💳
+        </div>
+
+        <p>
+          No wallet transactions yet.
+        </p>
+
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    transactions
+      .slice()
+      .reverse()
+      .slice(0, 5)
+      .map(function (transaction) {
+
+        const isCredit =
+          transaction.type === "credit";
+
+        return `
+          <div class="dashboard-transaction">
+
+            <div class="dashboard-transaction-info">
+
+              <strong>
+                ${escapeHTML(
+                  transaction.title
+                )}
+              </strong>
+
+              <small>
+                ${escapeHTML(
+                  transaction.date
+                )}
+              </small>
+
+            </div>
+
+            <div
+              class="
+                dashboard-transaction-amount
+                ${isCredit
+                  ? "credit"
+                  : "debit"}
+              "
+            >
+              ${isCredit ? "+" : "-"}
+              ${formatMoney(
+                transaction.amount
+              )}
+            </div>
+
+          </div>
+        `;
+
+      })
+      .join("");
+
+}
+
+
+/* =====================================
+   WALLET
+===================================== */
+
+function openWallet() {
+
+  const user = getCurrentUser();
+
+
+  if (!user) {
 
     alert(
-      "Please login to access your EsportO Wallet."
+      "Please login or create a player account first."
     );
 
     openAuth("login");
@@ -401,9 +880,11 @@ function openWallet(){
 
 
   const modal =
-    document.getElementById("walletModal");
+    document.getElementById(
+      "walletModal"
+    );
 
-  if(modal){
+  if (modal) {
 
     modal.classList.add("active");
 
@@ -412,12 +893,14 @@ function openWallet(){
 }
 
 
-function closeWallet(){
+function closeWallet() {
 
   const modal =
-    document.getElementById("walletModal");
+    document.getElementById(
+      "walletModal"
+    );
 
-  if(modal){
+  if (modal) {
 
     modal.classList.remove("active");
 
@@ -426,80 +909,115 @@ function closeWallet(){
 }
 
 
-// ========================================
-// UPDATE WALLET UI
-// ========================================
+/* =====================================
+   WALLET UI
+===================================== */
 
-function updateWalletUI(){
+function updateWalletUI() {
 
-  const player =
-    getPlayer();
-
-
-  let balance = 0;
-
-
-  if(player){
-
-    balance =
-      Number(player.wallet) || 0;
-
-  }
+  const user = getCurrentUser();
 
 
   const walletBalance =
-    document.getElementById("walletBalance");
-
-  const headerBalance =
-    document.getElementById("headerBalance");
-
-
-  if(walletBalance){
-
-    walletBalance.textContent =
-      formatMoney(balance);
-
-  }
-
-
-  if(headerBalance){
-
-    headerBalance.textContent =
-      formatMoney(balance);
-
-  }
-
-
-  renderTransactions();
-
-}
-
-
-// ========================================
-// MONEY FORMAT
-// ========================================
-
-function formatMoney(amount){
-
-  return "₹" +
-    Number(amount || 0).toLocaleString(
-      "en-IN",
-      {
-        minimumFractionDigits:2,
-        maximumFractionDigits:2
-      }
+    document.getElementById(
+      "walletBalance"
     );
 
+
+  if (walletBalance) {
+
+    walletBalance.textContent =
+      user
+        ? formatMoney(user.balance)
+        : "₹0.00";
+
+  }
+
+
+  const transactionList =
+    document.getElementById(
+      "transactionList"
+    );
+
+
+  if (!transactionList) return;
+
+
+  if (!user || !user.transactions.length) {
+
+    transactionList.innerHTML = `
+      <p class="empty-wallet">
+        No transactions yet.
+      </p>
+    `;
+
+    return;
+
+  }
+
+
+  transactionList.innerHTML =
+    user.transactions
+      .slice()
+      .reverse()
+      .map(function (transaction) {
+
+        const isCredit =
+          transaction.type === "credit";
+
+
+        return `
+          <div class="transaction-item">
+
+            <div class="transaction-info">
+
+              <strong>
+                ${escapeHTML(
+                  transaction.title
+                )}
+              </strong>
+
+              <small>
+                ${escapeHTML(
+                  transaction.date
+                )}
+              </small>
+
+            </div>
+
+            <div
+              class="
+                transaction-amount
+                ${isCredit
+                  ? "credit"
+                  : "debit"}
+              "
+            >
+              ${isCredit ? "+" : "-"}
+              ${formatMoney(
+                transaction.amount
+              )}
+            </div>
+
+          </div>
+        `;
+
+      })
+      .join("");
+
 }
 
 
-// ========================================
-// ADD MONEY WINDOW
-// ========================================
+/* =====================================
+   ADD MONEY MODAL
+===================================== */
 
-function openAddMoney(){
+function openAddMoney() {
 
-  if(!isLoggedIn()){
+  const user = getCurrentUser();
+
+
+  if (!user) {
 
     closeWallet();
 
@@ -511,10 +1029,12 @@ function openAddMoney(){
 
 
   const modal =
-    document.getElementById("addMoneyModal");
+    document.getElementById(
+      "addMoneyModal"
+    );
 
 
-  if(modal){
+  if (modal) {
 
     modal.classList.add("active");
 
@@ -523,13 +1043,15 @@ function openAddMoney(){
 }
 
 
-function closeAddMoney(){
+function closeAddMoney() {
 
   const modal =
-    document.getElementById("addMoneyModal");
+    document.getElementById(
+      "addMoneyModal"
+    );
 
 
-  if(modal){
+  if (modal) {
 
     modal.classList.remove("active");
 
@@ -538,57 +1060,19 @@ function closeAddMoney(){
 }
 
 
-// ========================================
-// DEMO ADD MONEY
-// ========================================
+/* =====================================
+   ADD DEMO MONEY
+===================================== */
 
-function addDemoMoney(event){
+function addDemoMoney(event) {
 
   event.preventDefault();
 
 
-  const input =
-    document.getElementById("demoAmount");
+  const user = getCurrentUser();
 
 
-  const amount =
-    Number(input.value);
-
-
-  if(
-    !Number.isFinite(amount) ||
-    amount <= 0
-  ){
-
-    alert(
-      "Please enter a valid amount."
-    );
-
-    return;
-
-  }
-
-
-  if(amount > 10000){
-
-    alert(
-      "Demo wallet limit is ₹10,000 per top-up."
-    );
-
-    return;
-
-  }
-
-
-  const player =
-    getPlayer();
-
-
-  if(!player){
-
-    alert(
-      "Please create an account first."
-    );
+  if (!user) {
 
     closeAddMoney();
 
@@ -599,41 +1083,79 @@ function addDemoMoney(event){
   }
 
 
-  player.wallet =
-    Number(player.wallet || 0) + amount;
+  const amount =
+    Number(
+      document.getElementById(
+        "demoAmount"
+      ).value
+    );
 
 
-  if(!Array.isArray(player.transactions)){
+  if (!amount || amount <= 0) {
 
-    player.transactions = [];
+    alert(
+      "Please enter a valid amount."
+    );
+
+    return;
 
   }
 
 
-  player.transactions.unshift({
+  if (amount > 10000) {
 
-    type:"credit",
+    alert(
+      "Maximum demo balance addition is ₹10,000."
+    );
 
-    title:"Demo Wallet Top-up",
+    return;
 
-    amount:amount,
+  }
 
-    date:
-      new Date().toLocaleString()
+
+  const players = getPlayers();
+
+
+  user.balance =
+    Number(user.balance || 0) +
+    amount;
+
+
+  user.transactions =
+    user.transactions || [];
+
+
+  user.transactions.push({
+
+    type: "credit",
+
+    title: "Demo Wallet Top-up",
+
+    amount: amount,
+
+    date: getDateTime()
 
   });
 
 
-  localStorage.setItem(
-    "esportoPlayer",
-    JSON.stringify(player)
-  );
+  players[user.mobile] = user;
 
 
-  input.value = "";
+  savePlayers(players);
+
+  saveCurrentUser(user);
+
+
+  document.getElementById(
+    "demoAmount"
+  ).value = "";
 
 
   closeAddMoney();
+
+  updateUI();
+
+  updateDashboard();
 
   updateWalletUI();
 
@@ -643,110 +1165,31 @@ function addDemoMoney(event){
     " demo balance added to your wallet."
   );
 
-}
 
-
-// ========================================
-// TRANSACTION HISTORY
-// ========================================
-
-function renderTransactions(){
-
-  const list =
-    document.getElementById("transactionList");
-
-
-  if(!list) return;
-
-
-  const player =
-    getPlayer();
-
-
-  if(
-    !player ||
-    !Array.isArray(player.transactions) ||
-    player.transactions.length === 0
-  ){
-
-    list.innerHTML = `
-
-      <p class="empty-wallet">
-        No transactions yet.
-      </p>
-
-    `;
-
-    return;
-
-  }
-
-
-  list.innerHTML =
-    player.transactions
-      .slice(0,20)
-      .map(function(transaction){
-
-        const credit =
-          transaction.type === "credit";
-
-
-        return `
-
-          <div class="transaction-item">
-
-            <div class="transaction-info">
-
-              <strong>
-                ${escapeHTML(transaction.title)}
-              </strong>
-
-              <small>
-                ${escapeHTML(transaction.date)}
-              </small>
-
-            </div>
-
-
-            <div
-              class="transaction-amount ${
-                credit ? "credit" : "debit"
-              }"
-            >
-
-              ${credit ? "+" : "-"}
-              ${formatMoney(transaction.amount)}
-
-            </div>
-
-          </div>
-
-        `;
-
-      })
-      .join("");
+  openWallet();
 
 }
 
 
-// ========================================
-// TOURNAMENT JOIN
-// ========================================
+/* =====================================
+   JOIN TOURNAMENT
+===================================== */
 
 let selectedTournament = null;
-
-let selectedEntryFee = 0;
 
 
 function joinTournament(
   tournamentName,
   entryFee
-){
+) {
 
-  if(!isLoggedIn()){
+  const user = getCurrentUser();
+
+
+  if (!user) {
 
     alert(
-      "Please login before joining a tournament."
+      "Please create or login to your EsportO player account first."
     );
 
     openAuth("login");
@@ -756,50 +1199,62 @@ function joinTournament(
   }
 
 
-  const player =
-    getPlayer();
+  selectedTournament = {
+
+    name: tournamentName,
+
+    entryFee: Number(entryFee)
+
+  };
 
 
-  if(!player){
+  const nameElement =
+    document.getElementById(
+      "joinTournamentName"
+    );
 
-    openAuth("login");
+  const feeElement =
+    document.getElementById(
+      "joinEntryFee"
+    );
 
-    return;
+  const balanceElement =
+    document.getElementById(
+      "joinWalletBalance"
+    );
+
+
+  if (nameElement) {
+
+    nameElement.textContent =
+      tournamentName;
 
   }
 
 
-  selectedTournament =
-    tournamentName;
+  if (feeElement) {
+
+    feeElement.textContent =
+      formatMoney(entryFee);
+
+  }
 
 
-  selectedEntryFee =
-    Number(entryFee);
+  if (balanceElement) {
 
+    balanceElement.textContent =
+      formatMoney(user.balance);
 
-  document.getElementById(
-    "joinTournamentName"
-  ).textContent =
-    tournamentName;
-
-
-  document.getElementById(
-    "joinEntryFee"
-  ).textContent =
-    formatMoney(entryFee);
-
-
-  document.getElementById(
-    "joinWalletBalance"
-  ).textContent =
-    formatMoney(player.wallet);
+  }
 
 
   const modal =
-    document.getElementById("joinModal");
+    document.getElementById(
+      "joinModal"
+    );
 
 
-  if(modal){
+  if (modal) {
 
     modal.classList.add("active");
 
@@ -808,17 +1263,36 @@ function joinTournament(
 }
 
 
-// ========================================
-// CONFIRM TOURNAMENT JOIN
-// ========================================
+function closeJoinModal() {
 
-function confirmTournamentJoin(){
-
-  const player =
-    getPlayer();
+  const modal =
+    document.getElementById(
+      "joinModal"
+    );
 
 
-  if(!player){
+  if (modal) {
+
+    modal.classList.remove("active");
+
+  }
+
+
+  selectedTournament = null;
+
+}
+
+
+/* =====================================
+   CONFIRM TOURNAMENT JOIN
+===================================== */
+
+function confirmTournamentJoin() {
+
+  const user = getCurrentUser();
+
+
+  if (!user) {
 
     closeJoinModal();
 
@@ -829,14 +1303,10 @@ function confirmTournamentJoin(){
   }
 
 
-  const balance =
-    Number(player.wallet || 0);
-
-
-  if(balance < selectedEntryFee){
+  if (!selectedTournament) {
 
     alert(
-      "Insufficient wallet balance. Please add demo balance first."
+      "Tournament information not found."
     );
 
     return;
@@ -844,227 +1314,305 @@ function confirmTournamentJoin(){
   }
 
 
-  player.wallet =
-    balance - selectedEntryFee;
+  const entryFee =
+    selectedTournament.entryFee;
 
 
-  if(!Array.isArray(player.transactions)){
+  const tournamentName =
+    selectedTournament.name;
 
-    player.transactions = [];
+
+  if (Number(user.balance) < entryFee) {
+
+    alert(
+      "Insufficient wallet balance.\n\n" +
+      "Required: " +
+      formatMoney(entryFee) +
+      "\n" +
+      "Available: " +
+      formatMoney(user.balance)
+    );
+
+    return;
 
   }
 
 
-  if(!Array.isArray(player.tournaments)){
+  const alreadyJoined =
+    (user.tournaments || [])
+      .some(function (tournament) {
 
-    player.tournaments = [];
+        return (
+          tournament.name ===
+          tournamentName
+        );
+
+      });
+
+
+  if (alreadyJoined) {
+
+    alert(
+      "You have already joined this tournament."
+    );
+
+    closeJoinModal();
+
+    return;
 
   }
 
 
-  player.transactions.unshift({
+  const players = getPlayers();
 
-    type:"debit",
+
+  user.balance =
+    Number(user.balance) -
+    entryFee;
+
+
+  user.tournaments =
+    user.tournaments || [];
+
+
+  user.tournaments.push({
+
+    name: tournamentName,
+
+    entryFee: entryFee,
+
+    status: "JOINED",
+
+    joinedAt: getDateTime()
+
+  });
+
+
+  user.transactions =
+    user.transactions || [];
+
+
+  user.transactions.push({
+
+    type: "debit",
 
     title:
       "Tournament Entry — " +
-      selectedTournament,
+      tournamentName,
 
-    amount:selectedEntryFee,
+    amount: entryFee,
 
-    date:
-      new Date().toLocaleString()
-
-  });
-
-
-  player.tournaments.push({
-
-    name:selectedTournament,
-
-    entryFee:selectedEntryFee,
-
-    joined:
-      new Date().toLocaleString(),
-
-    status:"Registered"
+    date: getDateTime()
 
   });
 
 
-  localStorage.setItem(
-    "esportoPlayer",
-    JSON.stringify(player)
-  );
+  players[user.mobile] = user;
+
+
+  savePlayers(players);
+
+  saveCurrentUser(user);
 
 
   closeJoinModal();
+
+  updateUI();
+
+  updateDashboard();
 
   updateWalletUI();
 
 
   alert(
-    "Tournament joined successfully! 🎮🔥\n\n" +
-    "Tournament: " +
-    selectedTournament +
-    "\nEntry: " +
-    formatMoney(selectedEntryFee) +
-    "\nRemaining Wallet: " +
-    formatMoney(player.wallet)
+    "Tournament joined successfully! 🎮"
   );
 
-}
 
-
-// ========================================
-// CLOSE JOIN MODAL
-// ========================================
-
-function closeJoinModal(){
-
-  const modal =
-    document.getElementById("joinModal");
-
-
-  if(modal){
-
-    modal.classList.remove("active");
-
-  }
-
-
-  selectedTournament = null;
-
-  selectedEntryFee = 0;
+  scrollToDashboard();
 
 }
 
 
-// ========================================
-// TOURNAMENT REGISTRATION FORM
-// ========================================
+/* =====================================
+   REGISTRATION FORM
+===================================== */
 
-function submitForm(event){
+function submitForm(event) {
 
   event.preventDefault();
 
 
-  if(!isLoggedIn()){
+  const name =
+    document.getElementById(
+      "name"
+    ).value.trim();
+
+  const game =
+    document.getElementById(
+      "game"
+    ).value.trim();
+
+  const contact =
+    document.getElementById(
+      "contact"
+    ).value.trim();
+
+  const tournament =
+    document.getElementById(
+      "tournament"
+    ).value;
+
+
+  if (
+    !name ||
+    !game ||
+    !contact ||
+    !tournament
+  ) {
 
     alert(
-      "Please login to register for a tournament."
+      "Please complete all registration fields."
     );
-
-    openAuth("login");
 
     return;
 
   }
 
 
-  const name =
-    document.getElementById("name").value.trim();
-
-
-  const game =
-    document.getElementById("game").value.trim();
-
-
-  const contact =
-    document.getElementById("contact").value.trim();
-
-
-  const tournament =
-    document.getElementById("tournament").value;
-
-
   alert(
-
-`Registration information saved for demo.
-
-Player/Team: ${name}
-Game: ${game}
-Contact: ${contact}
-Tournament: ${tournament}
-
-The real tournament registration system will be connected to the backend later.`
-
+    "Registration submitted successfully!\n\n" +
+    "Tournament: " +
+    tournament
   );
 
+
+  document.getElementById(
+    "name"
+  ).value = "";
+
+  document.getElementById(
+    "game"
+  ).value = "";
+
+  document.getElementById(
+    "contact"
+  ).value = "";
+
+  document.getElementById(
+    "tournament"
+  ).value = "";
+
 }
 
 
-// ========================================
-// SECURITY HELPER FOR DISPLAY TEXT
-// ========================================
+/* =====================================
+   SCROLL TO DASHBOARD
+===================================== */
 
-function escapeHTML(text){
+function scrollToDashboard() {
 
-  return String(text)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+  const dashboard =
+    document.getElementById(
+      "dashboard"
+    );
+
+
+  if (!dashboard) return;
+
+
+  setTimeout(function () {
+
+    dashboard.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+  }, 300);
 
 }
 
 
-// ========================================
-// CLOSE MODALS WHEN CLICKING BACKGROUND
-// ========================================
+/* =====================================
+   SECURITY / HTML ESCAPE
+===================================== */
+
+function escapeHTML(value) {
+
+  if (value === null || value === undefined) {
+    return "";
+  }
+
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* =====================================
+   CLOSE MODALS BY BACKDROP
+===================================== */
 
 document.addEventListener(
   "click",
-  function(event){
+  function (event) {
 
     const authModal =
-      document.getElementById("authModal");
+      document.getElementById(
+        "authModal"
+      );
 
     const walletModal =
-      document.getElementById("walletModal");
+      document.getElementById(
+        "walletModal"
+      );
 
     const addMoneyModal =
-      document.getElementById("addMoneyModal");
+      document.getElementById(
+        "addMoneyModal"
+      );
 
     const joinModal =
-      document.getElementById("joinModal");
+      document.getElementById(
+        "joinModal"
+      );
 
 
-    if(
-      authModal &&
+    if (
       event.target === authModal
-    ){
+    ) {
 
       closeAuth();
 
     }
 
 
-    if(
-      walletModal &&
+    if (
       event.target === walletModal
-    ){
+    ) {
 
       closeWallet();
 
     }
 
 
-    if(
-      addMoneyModal &&
+    if (
       event.target === addMoneyModal
-    ){
+    ) {
 
       closeAddMoney();
 
     }
 
 
-    if(
-      joinModal &&
+    if (
       event.target === joinModal
-    ){
+    ) {
 
       closeJoinModal();
 
@@ -1074,17 +1622,25 @@ document.addEventListener(
 );
 
 
-// ========================================
-// INITIALIZE WEBSITE
-// ========================================
+/* =====================================
+   ESC KEY CLOSE
+===================================== */
 
 document.addEventListener(
-  "DOMContentLoaded",
-  function(){
+  "keydown",
+  function (event) {
 
-    updateAuthArea();
+    if (event.key !== "Escape") {
+      return;
+    }
 
-    updateWalletUI();
+    closeAuth();
+
+    closeWallet();
+
+    closeAddMoney();
+
+    closeJoinModal();
 
   }
 );
