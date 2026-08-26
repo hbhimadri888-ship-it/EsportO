@@ -3,14 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EsportO — Tournaments</title>
+
+<title>EsportO — Gaming Tournament Platform</title>
+
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+<!-- ================================
+     HEADER
+================================= -->
+
 <header>
-  <div class="logo">ESPORT<span>O</span></div>
+
+  <div class="logo">
+    ESPORT<span>O</span>
+  </div>
 
   <nav>
     <a href="#tournaments">Tournaments</a>
@@ -19,19 +28,48 @@
     <a href="#rules">Rules</a>
   </nav>
 
-  <!-- PLAYER LOGIN -->
-  <div id="authArea">
-    <button class="btn small" onclick="openAuth('login')">Login</button>
+  <div class="header-actions">
+
+    <button
+      class="wallet-header-btn"
+      onclick="openWallet()"
+    >
+      💰 Wallet
+      <span id="headerBalance">₹0</span>
+    </button>
+
+    <div id="authArea">
+
+      <button
+        class="btn small"
+        onclick="openAuth('login')"
+      >
+        Login
+      </button>
+
+    </div>
+
   </div>
+
 </header>
 
 
-<!-- HERO SECTION -->
-<section class="hero">
-  <div>
-    <p class="eyebrow">YOUR GAME. YOUR ARENA.</p>
+<!-- ================================
+     HERO
+================================= -->
 
-    <h1>PLAY. COMPETE.<br><span>WIN.</span></h1>
+<section class="hero">
+
+  <div>
+
+    <p class="eyebrow">
+      YOUR GAME. YOUR ARENA.
+    </p>
+
+    <h1>
+      PLAY. COMPETE.<br>
+      <span>WIN.</span>
+    </h1>
 
     <p class="sub">
       Join EsportO tournaments, compete with players,
@@ -39,20 +77,46 @@
     </p>
 
     <div class="actions">
-      <a class="btn" href="#tournaments">Explore Tournaments</a>
-      <a class="btn ghost" href="#register">Register a Team</a>
+
+      <a
+        class="btn"
+        href="#tournaments"
+      >
+        Explore Tournaments
+      </a>
+
+      <a
+        class="btn ghost"
+        href="#register"
+      >
+        Register a Team
+      </a>
+
     </div>
+
   </div>
 
+
   <div class="hero-card">
-    <div class="live">● LIVE PLATFORM</div>
 
-    <h3>Next Tournament</h3>
-    <h2>ESPORTO OPEN #01</h2>
+    <div class="live">
+      ● LIVE PLATFORM
+    </div>
 
-    <p>FC Mobile • 1v1</p>
+    <h3>
+      Next Tournament
+    </h3>
+
+    <h2>
+      ESPORTO OPEN #01
+    </h2>
+
+    <p>
+      FC Mobile • 1v1
+    </p>
 
     <div class="stats">
+
       <div>
         <b>₹5,000</b>
         <small>Prize Pool</small>
@@ -62,175 +126,397 @@
         <b>32</b>
         <small>Slots</small>
       </div>
+
     </div>
+
   </div>
+
 </section>
 
 
-<!-- TOURNAMENTS -->
-<section id="tournaments" class="section">
+<!-- ================================
+     TOURNAMENTS
+================================= -->
+
+<section
+  id="tournaments"
+  class="section"
+>
 
   <div class="section-head">
+
     <div>
-      <p class="eyebrow">COMPETE NOW</p>
-      <h2>Upcoming Tournaments</h2>
+
+      <p class="eyebrow">
+        COMPETE NOW
+      </p>
+
+      <h2>
+        Upcoming Tournaments
+      </h2>
+
     </div>
+
   </div>
+
 
   <div class="grid">
 
-    <article class="card">
-      <div class="tag">FC MOBILE</div>
 
-      <h3>EsportO Open #01</h3>
+    <!-- TOURNAMENT 1 -->
 
-      <p>1v1 Knockout • 32 Slots</p>
+    <article class="card tournament-card">
 
-      <div class="row">
-        <b>₹640</b>
-        <span>Entry ₹20</span>
+      <div class="tag">
+        FC MOBILE
       </div>
 
-      <a class="btn full" href="#register">Register</a>
+      <h3>
+        EsportO Open #01
+      </h3>
+
+      <p>
+        1v1 Knockout • 32 Slots
+      </p>
+
+      <div class="row">
+
+        <b>
+          ₹640
+        </b>
+
+        <span>
+          Entry ₹20
+        </span>
+
+      </div>
+
+      <button
+        class="btn full"
+        onclick="joinTournament(
+          'EsportO Open #01',
+          20
+        )"
+      >
+        Join Tournament
+      </button>
+
     </article>
 
 
-    <article class="card">
-      <div class="tag">MOBA</div>
+    <!-- TOURNAMENT 2 -->
 
-      <h3>EsportO 5v5 Cup</h3>
+    <article class="card tournament-card">
 
-      <p>Team Battle • 8 Teams</p>
-
-      <div class="row">
-        <b>₹800</b>
-        <span>Entry ₹100/team</span>
+      <div class="tag">
+        MOBA
       </div>
 
-      <a class="btn full" href="#register">Register</a>
+      <h3>
+        EsportO 5v5 Cup
+      </h3>
+
+      <p>
+        Team Battle • 8 Teams
+      </p>
+
+      <div class="row">
+
+        <b>
+          ₹800
+        </b>
+
+        <span>
+          Entry ₹100/team
+        </span>
+
+      </div>
+
+      <button
+        class="btn full"
+        onclick="joinTournament(
+          'EsportO 5v5 Cup',
+          100
+        )"
+      >
+        Join Tournament
+      </button>
+
     </article>
 
 
-    <article class="card">
-      <div class="tag">BGMI</div>
+    <!-- TOURNAMENT 3 -->
 
-      <h3>EsportO Battle #01</h3>
+    <article class="card tournament-card">
 
-      <p>Squad • 24 Teams</p>
-
-      <div class="row">
-        <b>₹2400</b>
-        <span>Entry ₹100/team</span>
+      <div class="tag">
+        BGMI
       </div>
 
-      <a class="btn full" href="#register">Register</a>
+      <h3>
+        EsportO Battle #01
+      </h3>
+
+      <p>
+        Squad • 24 Teams
+      </p>
+
+      <div class="row">
+
+        <b>
+          ₹2400
+        </b>
+
+        <span>
+          Entry ₹100/team
+        </span>
+
+      </div>
+
+      <button
+        class="btn full"
+        onclick="joinTournament(
+          'EsportO Battle #01',
+          100
+        )"
+      >
+        Join Tournament
+      </button>
+
     </article>
 
   </div>
+
 </section>
 
 
-<!-- GAMES -->
-<section id="games" class="section dark">
+<!-- ================================
+     GAMES
+================================= -->
 
-  <p class="eyebrow">SUPPORTED GAMES</p>
+<section
+  id="games"
+  class="section dark"
+>
 
-  <h2>Choose Your Game</h2>
+  <p class="eyebrow">
+    SUPPORTED GAMES
+  </p>
+
+  <h2>
+    Choose Your Game
+  </h2>
+
 
   <div class="game-grid">
 
     <div>
+
       ⚽
-      <b>FC Mobile</b>
-      <span>Football</span>
+
+      <b>
+        FC Mobile
+      </b>
+
+      <span>
+        Football
+      </span>
+
     </div>
 
+
     <div>
+
       🎯
-      <b>BGMI</b>
-      <span>Battle Royale</span>
+
+      <b>
+        BGMI
+      </b>
+
+      <span>
+        Battle Royale
+      </span>
+
     </div>
 
+
     <div>
+
       ⚔️
-      <b>MOBA Legends</b>
-      <span>5v5 MOBA</span>
+
+      <b>
+        MOBA Legends
+      </b>
+
+      <span>
+        5v5 MOBA
+      </span>
+
     </div>
 
+
     <div>
+
       🏎️
-      <b>More Coming</b>
-      <span>Stay tuned</span>
+
+      <b>
+        More Coming
+      </b>
+
+      <span>
+        Stay tuned
+      </span>
+
     </div>
 
   </div>
+
 </section>
 
 
-<!-- LEADERBOARD -->
-<section id="leaderboard" class="section">
+<!-- ================================
+     LEADERBOARD
+================================= -->
 
-  <p class="eyebrow">TOP PLAYERS</p>
+<section
+  id="leaderboard"
+  class="section"
+>
 
-  <h2>Leaderboard</h2>
+  <p class="eyebrow">
+    TOP PLAYERS
+  </p>
+
+  <h2>
+    Leaderboard
+  </h2>
+
 
   <div class="table-wrap">
 
     <table>
 
       <tr>
-        <th>#</th>
-        <th>Player / Team</th>
-        <th>Wins</th>
-        <th>Points</th>
+
+        <th>
+          #
+        </th>
+
+        <th>
+          Player / Team
+        </th>
+
+        <th>
+          Wins
+        </th>
+
+        <th>
+          Points
+        </th>
+
       </tr>
 
-      <tr>
-        <td>1</td>
-        <td>Coming Soon</td>
-        <td>—</td>
-        <td>—</td>
-      </tr>
 
       <tr>
-        <td>2</td>
-        <td>Coming Soon</td>
-        <td>—</td>
-        <td>—</td>
+
+        <td>
+          1
+        </td>
+
+        <td>
+          Coming Soon
+        </td>
+
+        <td>
+          —
+        </td>
+
+        <td>
+          —
+        </td>
+
       </tr>
 
+
       <tr>
-        <td>3</td>
-        <td>Coming Soon</td>
-        <td>—</td>
-        <td>—</td>
+
+        <td>
+          2
+        </td>
+
+        <td>
+          Coming Soon
+        </td>
+
+        <td>
+          —
+        </td>
+
+        <td>
+          —
+        </td>
+
+      </tr>
+
+
+      <tr>
+
+        <td>
+          3
+        </td>
+
+        <td>
+          Coming Soon
+        </td>
+
+        <td>
+          —
+        </td>
+
+        <td>
+          —
+        </td>
+
       </tr>
 
     </table>
 
   </div>
+
 </section>
 
 
-<!-- TOURNAMENT REGISTRATION -->
-<section id="register" class="section register">
+<!-- ================================
+     TOURNAMENT REGISTRATION
+================================= -->
+
+<section
+  id="register"
+  class="section register"
+>
 
   <div>
 
-    <p class="eyebrow">JOIN THE ARENA</p>
+    <p class="eyebrow">
+      JOIN THE ARENA
+    </p>
 
-    <h2>Register for a Tournament</h2>
+    <h2>
+      Register for a Tournament
+    </h2>
 
     <p class="muted">
-      This demo form opens your email app.
-      For real registrations and payments,
-      connect a backend later.
+      Create your player account first,
+      then join tournaments using your
+      EsportO account.
     </p>
 
   </div>
 
 
-  <form onsubmit="submitForm(event)">
+  <form
+    onsubmit="submitForm(event)"
+  >
 
     <input
       id="name"
@@ -238,19 +524,25 @@
       required
     >
 
+
     <input
       id="game"
       placeholder="Game"
       required
     >
 
+
     <input
       id="contact"
-      placeholder="Contact / Discord / WhatsApp"
+      placeholder="Contact / WhatsApp"
       required
     >
 
-    <select id="tournament" required>
+
+    <select
+      id="tournament"
+      required
+    >
 
       <option value="">
         Select Tournament
@@ -270,7 +562,11 @@
 
     </select>
 
-    <button class="btn" type="submit">
+
+    <button
+      class="btn"
+      type="submit"
+    >
       Submit Registration
     </button>
 
@@ -279,12 +575,23 @@
 </section>
 
 
-<!-- RULES -->
-<section id="rules" class="section dark">
+<!-- ================================
+     RULES
+================================= -->
 
-  <p class="eyebrow">FAIR PLAY</p>
+<section
+  id="rules"
+  class="section dark"
+>
 
-  <h2>Basic Rules</h2>
+  <p class="eyebrow">
+    FAIR PLAY
+  </p>
+
+  <h2>
+    Basic Rules
+  </h2>
+
 
   <div class="rules">
 
@@ -313,8 +620,14 @@
 </section>
 
 
-<!-- PLAYER LOGIN / SIGNUP MODAL -->
-<div id="authModal" class="auth-modal">
+<!-- ================================
+     PLAYER AUTH MODAL
+================================= -->
+
+<div
+  id="authModal"
+  class="auth-modal"
+>
 
   <div class="auth-box">
 
@@ -332,27 +645,35 @@
 
 
     <!-- LOGIN -->
+
     <div id="loginBox">
 
       <p class="eyebrow">
         WELCOME BACK
       </p>
 
-      <h2>Player Login</h2>
+      <h2>
+        Player Login
+      </h2>
 
       <p class="muted">
-        Login to access your EsportO player account.
+        Login using your mobile number.
       </p>
 
 
-      <form onsubmit="loginPlayer(event)">
+      <form
+        onsubmit="loginPlayer(event)"
+      >
 
         <input
-          id="loginEmail"
-          type="email"
-          placeholder="Email Address"
+          id="loginMobile"
+          type="tel"
+          inputmode="numeric"
+          maxlength="10"
+          placeholder="10 Digit Mobile Number"
           required
         >
+
 
         <input
           id="loginPassword"
@@ -360,6 +681,7 @@
           placeholder="Password"
           required
         >
+
 
         <button
           class="btn full"
@@ -372,17 +694,22 @@
 
 
       <p class="auth-switch">
+
         Don't have an account?
 
-        <button onclick="showSignup()">
+        <button
+          onclick="showSignup()"
+        >
           Create Account
         </button>
+
       </p>
 
     </div>
 
 
     <!-- SIGN UP -->
+
     <div
       id="signupBox"
       style="display:none;"
@@ -392,14 +719,18 @@
         JOIN ESPORTO
       </p>
 
-      <h2>Create Player Account</h2>
+      <h2>
+        Create Player Account
+      </h2>
 
       <p class="muted">
-        Create your free EsportO player profile.
+        Create your EsportO player account.
       </p>
 
 
-      <form onsubmit="signupPlayer(event)">
+      <form
+        onsubmit="signupPlayer(event)"
+      >
 
         <input
           id="signupName"
@@ -407,12 +738,16 @@
           required
         >
 
+
         <input
-          id="signupEmail"
-          type="email"
-          placeholder="Email Address"
+          id="signupMobile"
+          type="tel"
+          inputmode="numeric"
+          maxlength="10"
+          placeholder="10 Digit Mobile Number"
           required
         >
+
 
         <input
           id="signupPassword"
@@ -421,6 +756,7 @@
           minlength="6"
           required
         >
+
 
         <button
           class="btn full"
@@ -433,11 +769,15 @@
 
 
       <p class="auth-switch">
+
         Already have an account?
 
-        <button onclick="showLogin()">
+        <button
+          onclick="showLogin()"
+        >
           Login
         </button>
+
       </p>
 
     </div>
@@ -447,7 +787,205 @@
 </div>
 
 
-<!-- FOOTER -->
+<!-- ================================
+     WALLET MODAL
+================================= -->
+
+<div
+  id="walletModal"
+  class="wallet-modal"
+>
+
+  <div class="wallet-box">
+
+    <button
+      class="close-auth"
+      onclick="closeWallet()"
+    >
+      ×
+    </button>
+
+
+    <p class="eyebrow">
+      ESPORTO WALLET
+    </p>
+
+    <h2>
+      My Wallet
+    </h2>
+
+
+    <div class="wallet-balance-card">
+
+      <span>
+        Available Balance
+      </span>
+
+      <strong id="walletBalance">
+        ₹0
+      </strong>
+
+    </div>
+
+
+    <button
+      class="btn full wallet-add-btn"
+      onclick="openAddMoney()"
+    >
+      + Add Money
+    </button>
+
+
+    <h3 class="wallet-history-title">
+      Recent Transactions
+    </h3>
+
+
+    <div
+      id="transactionList"
+      class="transaction-list"
+    >
+
+      <p class="empty-wallet">
+        No transactions yet.
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ================================
+     ADD MONEY DEMO MODAL
+================================= -->
+
+<div
+  id="addMoneyModal"
+  class="wallet-modal"
+>
+
+  <div class="wallet-box small-wallet-box">
+
+    <button
+      class="close-auth"
+      onclick="closeAddMoney()"
+    >
+      ×
+    </button>
+
+
+    <p class="eyebrow">
+      WALLET
+    </p>
+
+    <h2>
+      Add Money
+    </h2>
+
+    <p class="muted">
+      Demo wallet only. Real-money payments
+      are not connected yet.
+    </p>
+
+
+    <form
+      onsubmit="addDemoMoney(event)"
+    >
+
+      <input
+        id="demoAmount"
+        type="number"
+        min="1"
+        max="10000"
+        placeholder="Enter Amount"
+        required
+      >
+
+
+      <button
+        class="btn full"
+        type="submit"
+      >
+        Add Demo Balance
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- ================================
+     JOIN TOURNAMENT MODAL
+================================= -->
+
+<div
+  id="joinModal"
+  class="wallet-modal"
+>
+
+  <div class="wallet-box small-wallet-box">
+
+    <button
+      class="close-auth"
+      onclick="closeJoinModal()"
+    >
+      ×
+    </button>
+
+
+    <p class="eyebrow">
+      TOURNAMENT ENTRY
+    </p>
+
+    <h2 id="joinTournamentName">
+      Tournament
+    </h2>
+
+
+    <div class="join-info">
+
+      <div>
+        Entry Fee
+        <strong id="joinEntryFee">
+          ₹0
+        </strong>
+      </div>
+
+      <div>
+        Wallet Balance
+        <strong id="joinWalletBalance">
+          ₹0
+        </strong>
+      </div>
+
+    </div>
+
+
+    <button
+      class="btn full"
+      onclick="confirmTournamentJoin()"
+    >
+      Join Using Wallet
+    </button>
+
+
+    <p class="muted join-note">
+      Demo wallet flow. No real payment is processed.
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- ================================
+     FOOTER
+================================= -->
+
 <footer>
 
   <div class="logo">
@@ -460,6 +998,8 @@
 
 </footer>
 
+
+<!-- JAVASCRIPT -->
 
 <script src="script.js"></script>
 
