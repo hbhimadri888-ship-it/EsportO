@@ -66,9 +66,6 @@ nav a:hover{
   color:#fff;
 }
 
-
-/* HEADER ACTIONS */
-
 .header-actions{
   display:flex;
   align-items:center;
@@ -238,6 +235,356 @@ nav a:hover{
 .section h2{
   font-size:40px;
   margin:8px 0 35px;
+}
+
+
+/* =====================================
+   PLAYER DASHBOARD
+===================================== */
+
+.dashboard-section{
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      #142300 0,
+      transparent 30%
+    ),
+    #08090d;
+}
+
+.dashboard-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:25px;
+  margin-bottom:35px;
+}
+
+
+/* PLAYER PROFILE */
+
+.dashboard-profile{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  padding:25px;
+  background:#11131a;
+  border:1px solid #292d38;
+  border-radius:15px;
+  margin-bottom:20px;
+}
+
+.profile-avatar{
+  width:70px;
+  height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#172000;
+  border:1px solid #526b25;
+  border-radius:50%;
+  font-size:32px;
+  flex-shrink:0;
+}
+
+.profile-main{
+  flex:1;
+}
+
+.profile-main h3{
+  margin:0 0 7px;
+  font-size:23px;
+}
+
+.profile-main p{
+  margin:0 0 10px;
+  color:#9297a6;
+  font-size:14px;
+}
+
+.profile-status{
+  display:inline-block;
+  color:#8dff00;
+  font-size:12px;
+  font-weight:800;
+}
+
+.dashboard-logout{
+  background:transparent;
+  border:1px solid #353947;
+  color:#fff;
+  padding:10px 15px;
+  border-radius:7px;
+  cursor:pointer;
+  font-weight:800;
+}
+
+.dashboard-logout:hover{
+  border-color:#ff6060;
+  color:#ff6060;
+}
+
+
+/* DASHBOARD STATS */
+
+.dashboard-stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.dashboard-stat{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:20px;
+  background:#11131a;
+  border:1px solid #292d38;
+  border-radius:12px;
+  transition:.2s;
+}
+
+.dashboard-stat:hover{
+  border-color:#3b462a;
+  transform:translateY(-2px);
+}
+
+.stat-icon{
+  width:45px;
+  height:45px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#151821;
+  border-radius:10px;
+  font-size:21px;
+  flex-shrink:0;
+}
+
+.dashboard-stat small{
+  display:block;
+  color:#777d8d;
+  font-size:12px;
+  margin-bottom:5px;
+}
+
+.dashboard-stat strong{
+  display:block;
+  color:#fff;
+  font-size:20px;
+}
+
+
+/* DASHBOARD PANELS */
+
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.dashboard-panel{
+  background:#11131a;
+  border:1px solid #292d38;
+  border-radius:14px;
+  padding:25px;
+  min-height:300px;
+}
+
+.panel-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  border-bottom:1px solid #292d38;
+  padding-bottom:18px;
+  margin-bottom:18px;
+}
+
+.panel-heading .eyebrow{
+  margin:0 0 5px;
+}
+
+.panel-heading h3{
+  margin:0;
+  font-size:21px;
+}
+
+.panel-link{
+  background:none;
+  border:0;
+  color:#8dff00;
+  font-weight:800;
+  cursor:pointer;
+  font-size:13px;
+}
+
+.panel-link:hover{
+  text-decoration:underline;
+}
+
+
+/* EMPTY DASHBOARD */
+
+.dashboard-empty{
+  min-height:200px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:#777d8d;
+}
+
+.dashboard-empty > div{
+  font-size:35px;
+  margin-bottom:10px;
+}
+
+.dashboard-empty p{
+  margin:0 0 18px;
+}
+
+
+/* MY TOURNAMENTS */
+
+.my-tournaments{
+  display:grid;
+  gap:10px;
+}
+
+.my-tournament-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:15px;
+  background:#151821;
+  border:1px solid #292d38;
+  border-radius:9px;
+}
+
+.my-tournament-info strong{
+  display:block;
+  font-size:14px;
+  margin-bottom:5px;
+}
+
+.my-tournament-info small{
+  color:#777d8d;
+  font-size:12px;
+}
+
+.tournament-status{
+  color:#8dff00;
+  font-size:11px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+
+/* DASHBOARD TRANSACTIONS */
+
+.dashboard-transactions{
+  display:grid;
+  gap:10px;
+}
+
+.dashboard-transaction{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:14px;
+  background:#151821;
+  border:1px solid #292d38;
+  border-radius:9px;
+}
+
+.dashboard-transaction-info strong{
+  display:block;
+  font-size:13px;
+}
+
+.dashboard-transaction-info small{
+  display:block;
+  color:#777d8d;
+  font-size:11px;
+  margin-top:4px;
+}
+
+.dashboard-transaction-amount{
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.dashboard-transaction-amount.credit{
+  color:#8dff00;
+}
+
+.dashboard-transaction-amount.debit{
+  color:#ff7070;
+}
+
+
+/* QUICK ACTIONS */
+
+.quick-actions{
+  margin-top:25px;
+}
+
+.quick-actions > h3{
+  margin:0 0 15px;
+  font-size:20px;
+}
+
+.quick-action-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
+
+.quick-action{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  padding:20px;
+  background:#11131a;
+  border:1px solid #292d38;
+  border-radius:12px;
+  color:#fff;
+  cursor:pointer;
+  text-align:left;
+  transition:.2s;
+}
+
+.quick-action:hover{
+  border-color:#8dff00;
+  transform:translateY(-2px);
+}
+
+.quick-action > span{
+  width:45px;
+  height:45px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#151821;
+  border-radius:10px;
+  font-size:21px;
+  flex-shrink:0;
+}
+
+.quick-action strong{
+  display:block;
+  font-size:14px;
+  margin-bottom:5px;
+}
+
+.quick-action small{
+  color:#777d8d;
+  font-size:11px;
 }
 
 
@@ -430,7 +777,7 @@ footer{
 
 
 /* =====================================
-   LOGIN / SIGNUP MODAL
+   AUTH MODAL
 ===================================== */
 
 .auth-modal,
@@ -673,6 +1020,22 @@ footer{
    MOBILE
 ===================================== */
 
+@media(max-width:900px){
+
+  .dashboard-stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .quick-action-grid{
+    grid-template-columns:1fr;
+  }
+
+  .dashboard-grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
 @media(max-width:800px){
 
   header{
@@ -737,6 +1100,51 @@ footer{
     gap:8px;
   }
 
+  .dashboard-header{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .dashboard-profile{
+    align-items:flex-start;
+    flex-wrap:wrap;
+  }
+
+  .profile-main{
+    min-width:0;
+  }
+
+  .dashboard-logout{
+    width:100%;
+  }
+
+  .dashboard-stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .dashboard-stat{
+    padding:15px;
+  }
+
+  .stat-icon{
+    width:38px;
+    height:38px;
+    font-size:18px;
+  }
+
+  .dashboard-stat strong{
+    font-size:17px;
+  }
+
+  .dashboard-panel{
+    padding:20px;
+  }
+
+  .my-tournament-card,
+  .dashboard-transaction{
+    align-items:flex-start;
+  }
+
   .auth-box,
   .wallet-box{
     padding:28px 22px;
@@ -752,6 +1160,40 @@ footer{
 
   .join-info{
     grid-template-columns:1fr;
+  }
+
+}
+
+@media(max-width:480px){
+
+  .logo{
+    font-size:20px;
+  }
+
+  .dashboard-stats{
+    grid-template-columns:1fr;
+  }
+
+  .dashboard-profile{
+    padding:20px;
+  }
+
+  .profile-avatar{
+    width:55px;
+    height:55px;
+    font-size:25px;
+  }
+
+  .profile-main h3{
+    font-size:19px;
+  }
+
+  .dashboard-header h2{
+    font-size:32px;
+  }
+
+  .quick-action{
+    padding:16px;
   }
 
 }
