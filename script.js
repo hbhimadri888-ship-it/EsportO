@@ -1,1 +1,661 @@
-/* ========================================================= ESPORTO — MAIN WEBSITE + ADMIN DASHBOARD FRONTEND DEMO VERSION ========================================================= */ /* ========================================================= STORAGE ========================================================= */ const STORAGE_KEYS = { tournaments: "esporto_tournaments", registrations: "esporto_registrations", results: "esporto_results", admin: "esporto_admin_logged" }; /* ========================================================= STORAGE FUNCTIONS ========================================================= */ function getData(key, fallback){ try{ const data = localStorage.getItem(key); return data ? JSON.parse(data) : fallback; }catch(error){ return fallback; } } function saveData(key,data){ localStorage.setItem( key, JSON.stringify(data) ); } /* ========================================================= GLOBAL DATA ========================================================= */ let tournaments = getData( STORAGE_KEYS.tournaments, [] ); let registrations = getData( STORAGE_KEYS.registrations, [] ); let results = getData( STORAGE_KEYS.results, [] ); /* ========================================================= PAGE LOAD ========================================================= */ document.addEventListener( "DOMContentLoaded", function(){ renderHomepage(); renderAdminData(); } ); /* ========================================================= HOMEPAGE ========================================================= */ function renderHomepage(){ tournaments = getData( STORAGE_KEYS.tournaments, [] ); registrations = getData( STORAGE_KEYS.registrations, [] ); renderHeroTournament(); renderTournamentCards(); renderPlatformStats(); } /* ========================================================= HERO TOURNAMENT ========================================================= */ function renderHeroTournament(){ const name = document.getElementById( "heroTournamentName" ); const game = document.getElementById( "heroTournamentGame" ); const prize = document.getElementById( "heroPrize" ); const slots = document.getElementById( "heroSlots" ); const active = tournaments .filter( tournament => tournament.status === "Open" ) .sort( (a,b) => new Date(a.date) - new Date(b.date) ); if(active.length === 0){ if(name) name.textContent = "No tournaments yet"; if(game) game.textContent = "Create a tournament from Admin Dashboard."; if(prize) prize.textContent = "₹0"; if(slots) slots.textContent = "0"; return; } const tournament = active[0]; const registered = registrations.filter( registration => registration.tournamentId === tournament.id ).length; if(name) name.textContent = tournament.name; if(game) game.textContent = tournament.game + " • " + formatDate(tournament.date); if(prize) prize.textContent = "₹" + Number( tournament.prizePool ).toLocaleString("en-IN"); if(slots) slots.textContent = registered + "/" + tournament.slots; } /* ========================================================= TOURNAMENT CARDS ========================================================= */ function renderTournamentCards(){ const container = document.getElementById( "tournamentGrid" ); if(!container) return; const active = tournaments .filter( tournament => tournament.status === "Open" ) .sort( (a,b) => new Date(a.date) - new Date(b.date) ); if(active.length === 0){ container.innerHTML = ` <div class="empty-card"> <div>🏆</div> <h3> No tournaments yet </h3> <p> Tournament information will appear here when the EsportO Admin creates one. </p> </div> `; return; } container.innerHTML = active .map( tournament => { const registered = registrations.filter( registration => registration.tournamentId === tournament.id ).length; const remaining = Math.max( 0, tournament.slots - registered ); return ` <div class="card"> <div class="tag"> ${escapeHTML( tournament.status )} </div> <h3> ${escapeHTML( tournament.name )} </h3> <p> ${escapeHTML( tournament.game )} </p> <div class="row"> <div> <span> Prize Pool </span> <b> ₹${Number( tournament.prizePool ).toLocaleString("en-IN")} </b> </div> <div> <span> Slots </span> <b> ${registered}/${tournament.slots} </b> </div> </div> <p class="muted"> 📅 ${formatDate( tournament.date )} <br> ${remaining} slots remaining </p> <a href="player.html" class="btn full" > Join Tournament </a> </div> `; } ) .join(""); } /* ========================================================= PLATFORM STATS ========================================================= */ function renderPlatformStats(){ const activeElement = document.getElementById( "activeTournamentCount" ); const registrationElement = document.getElementById( "totalRegistrationCount" ); const gameElement = document.getElementById( "gameCount" ); const active = tournaments.filter( tournament => tournament.status === "Open" ); const games = new Set( tournaments.map( tournament => tournament.game ) ); if(activeElement) activeElement.textContent = active.length; if(registrationElement) registrationElement.textContent = registrations.length; if(gameElement){ gameElement.textContent = Math.max( games.size, 3 ); } } /* ========================================================= ADMIN LOGIN ========================================================= */ function openAdminLogin(){ const panel = document.getElementById( "adminLoginPanel" ); if(panel) panel.classList.add( "active" ); } function closeAdminLogin(){ const panel = document.getElementById( "adminLoginPanel" ); if(panel) panel.classList.remove( "active" ); } /* DEMO ADMIN CREDENTIALS Username: admin Password: esporto123 This is NOT secure production authentication. */ function adminLogin(event){ event.preventDefault(); const username = document.getElementById( "adminUsername" ).value.trim(); const password = document.getElementById( "adminPassword" ).value; if( username === "admin" && password === "esporto123" ){ localStorage.setItem( STORAGE_KEYS.admin, "true" ); closeAdminLogin(); const adminPanel = document.getElementById( "admin" ); if(adminPanel){ adminPanel.scrollIntoView({ behavior:"smooth" }); } renderAdminData(); alert( "Admin login successful." ); }else{ alert( "Invalid admin username or password." ); } } /* ========================================================= ADMIN LOGOUT ========================================================= */ function adminLogout(){ localStorage.removeItem( STORAGE_KEYS.admin ); const adminPanel = document.getElementById( "admin" ); if(adminPanel){ adminPanel.scrollIntoView({ behavior:"smooth" }); } alert( "Admin logged out." ); } /* ========================================================= ADMIN DATA ========================================================= */ function renderAdminData(){ const isAdmin = localStorage.getItem( STORAGE_KEYS.admin ) === "true"; const adminSection = document.getElementById( "admin" ); if(!adminSection) return; if(!isAdmin){ adminSection.style.display = "none"; return; } adminSection.style.display = "block"; tournaments = getData( STORAGE_KEYS.tournaments, [] ); registrations = getData( STORAGE_KEYS.registrations, [] ); results = getData( STORAGE_KEYS.results, [] ); renderAdminStats(); renderAdminTournaments(); renderAdminPlayers(); renderAdminResults(); } /* ========================================================= ADMIN STATS ========================================================= */ function renderAdminStats(){ const uniquePlayers = new Set( registrations.map( registration => registration.playerId ) ); const activeTournaments = tournaments.filter( tournament => tournament.status === "Open" ); const pendingResults = results.filter( result => result.status === "Pending Review" ); const players = document.getElementById( "adminPlayers" ); const tournamentCount = document.getElementById( "adminTournaments" ); const pending = document.getElementById( "adminPendingResults" ); const active = document.getElementById( "adminActiveTournaments" ); if(players) players.textContent = uniquePlayers.size; if(tournamentCount) tournamentCount.textContent = tournaments.length; if(pending) pending.textContent = pendingResults.length; if(active) active.textContent = activeTournaments.length; } /* ========================================================= CREATE TOURNAMENT ========================================================= */ function createTournament(event){ event.preventDefault(); const name = document.getElementById( "adminTournamentName" ).value.trim(); const game = document.getElementById( "adminTournamentGame" ).value.trim(); const entry = Number( document.getElementById( "adminTournamentEntry" ).value ); const prize = Number( document.getElementById( "adminTournamentPrize" ).value ); const slots = Number( document.getElementById( "adminTournamentSlots" ).value ); const date = document.getElementById( "adminTournamentDate" ).value; if( !name || !game || entry < 0 || prize < 0 || slots < 1 || !date ){ alert( "Please fill all tournament details correctly." ); return; } const tournament = { id: "TOUR-" + Date.now(), name: name, game: game, entryFee: entry, prizePool: prize, slots: slots, date: date, status: "Open", createdAt: new Date().toISOString() }; tournaments.push( tournament ); saveData( STORAGE_KEYS.tournaments, tournaments ); event.target.reset(); renderHomepage(); renderAdminData(); alert( "Tournament created successfully!" ); } /* ========================================================= ADMIN TOURNAMENT LIST ========================================================= */ function renderAdminTournaments(){ const container = document.getElementById( "adminTournamentList" ); if(!container) return; if(tournaments.length === 0){ container.innerHTML = ` <div class="dashboard-empty"> <div>🏆</div> <p> No tournaments created yet. </p> </div> `; return; } container.innerHTML = tournaments .slice() .reverse() .map( tournament => { const registered = registrations.filter( registration => registration.tournamentId === tournament.id ).length; return ` <div class="admin-list-item"> <strong> ${escapeHTML( tournament.name )} </strong> <small> Game: ${escapeHTML( tournament.game )} <br> Entry: ₹${Number( tournament.entryFee ).toFixed(2)} • Prize: ₹${Number( tournament.prizePool ).toFixed(2)} <br> Slots: ${registered}/${tournament.slots} <br> Date: ${formatDate( tournament.date )} </small> <span class="admin-status"> ${escapeHTML( tournament.status )} </span> <div class="admin-list-actions"> <button class="admin-action-btn" onclick="toggleTournamentStatus( '${tournament.id}' )" > ${ tournament.status === "Open" ? "Close" : "Open" } </button> <button class="admin-action-btn danger" onclick="deleteTournament( '${tournament.id}' )" > Delete </button> </div> </div> `; } ) .join(""); } /* ========================================================= TOGGLE TOURNAMENT ========================================================= */ function toggleTournamentStatus( tournamentId ){ const tournament = tournaments.find( item => item.id === tournamentId ); if(!tournament) return; tournament.status = tournament.status === "Open" ? "Closed" : "Open"; saveData( STORAGE_KEYS.tournaments, tournaments ); renderHomepage(); renderAdminData(); } /* ========================================================= DELETE TOURNAMENT ========================================================= */ function deleteTournament( tournamentId ){ const tournament = tournaments.find( item => item.id === tournamentId ); if(!tournament) return; const confirmed = confirm( "Delete this tournament?" ); if(!confirmed) return; tournaments = tournaments.filter( item => item.id !== tournamentId ); saveData( STORAGE_KEYS.tournaments, tournaments ); renderHomepage(); renderAdminData(); } /* ========================================================= ADMIN PLAYERS ========================================================= */ function renderAdminPlayers(){ const container = document.getElementById( "adminPlayerList" ); if(!container) return; const uniquePlayers = []; registrations.forEach( registration => { const exists = uniquePlayers.some( player => player.playerId === registration.playerId ); if(!exists){ uniquePlayers.push( registration ); } } ); if(uniquePlayers.length === 0){ container.innerHTML = ` <div class="dashboard-empty"> <div>👥</div> <p> No players registered yet. </p> </div> `; return; } container.innerHTML = uniquePlayers .map( player => { const playerRegistrations = registrations.filter( registration => registration.playerId === player.playerId ); return ` <div class="admin-list-item"> <strong> ${escapeHTML( player.playerName || "Player" )} </strong> <small> Mobile: ${escapeHTML( player.mobile || "—" )} <br> Tournaments: ${playerRegistrations.length} </small> <span class="admin-status"> REGISTERED </span> </div> `; } ) .join(""); } /* ========================================================= ADMIN RESULTS ========================================================= */ function renderAdminResults(){ const container = document.getElementById( "adminResultList" ); if(!container) return; const pending = results.filter( result => result.status === "Pending Review" ); if(pending.length === 0){ container.innerHTML = ` <div class="dashboard-empty"> <div>📸</div> <p> No pending results. </p> </div> `; return; } container.innerHTML = pending .map( result => { return ` <div class="admin-list-item"> <strong> ${escapeHTML( result.playerName )} </strong> <small> Tournament: ${escapeHTML( result.tournament )} <br> Submitted: ${formatDate( result.date )} </small> <span class="admin-status"> PENDING REVIEW </span> <div class="admin-list-actions"> <button class="admin-action-btn" onclick="approveResult( '${result.id}' )" > Approve </button> <button class="admin-action-btn danger" onclick="rejectResult( '${result.id}' )" > Reject </button> </div> </div> `; } ) .join(""); } /* ========================================================= APPROVE RESULT ========================================================= */ function approveResult(resultId){ const result = results.find( item => item.id === resultId ); if(!result) return; result.status = "Approved"; saveData( STORAGE_KEYS.results, results ); renderAdminData(); alert( "Result approved." ); } /* ========================================================= REJECT RESULT ========================================================= */ function rejectResult(resultId){ const result = results.find( item => item.id === resultId ); if(!result) return; result.status = "Rejected"; saveData( STORAGE_KEYS.results, results ); renderAdminData(); alert( "Result rejected." ); } /* ========================================================= DATE FORMAT ========================================================= */ function formatDate(date){ if(!date) return "—"; const parsed = new Date(date); if( Number.isNaN( parsed.getTime() ) ){ return "—"; } return parsed.toLocaleString( "en-IN", { day:"2-digit", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit" } ); } /* ========================================================= ESCAPE HTML ========================================================= */ function escapeHTML(value){ if( value === null || value === undefined ){ return ""; } return String(value) .replace( /&/g, "&amp;" ) .replace( /</g, "&lt;" ) .replace( />/g, "&gt;" ) .replace( /"/g, "&quot;" ) .replace( /'/g, "&#039;" ); } /* ========================================================= BACKDROP CLOSE ========================================================= */ document.addEventListener( "click", function(event){ if( event.target.id === "adminLoginPanel" ){ closeAdminLogin(); } } ); /* ========================================================= ESC KEY ========================================================= */ document.addEventListener( "keydown", function(event){ if( event.key === "Escape" ){ closeAdminLogin(); } } );
+/* =========================================================
+   ESPORTO — HOME PAGE JAVASCRIPT
+========================================================= */
+
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+const STORAGE_KEYS = {
+
+  tournaments:
+    "esporto_tournaments",
+
+  registrations:
+    "esporto_registrations"
+
+};
+
+
+/* =========================================================
+   GET DATA
+========================================================= */
+
+function getData(key, fallback){
+
+  try{
+
+    const data =
+      localStorage.getItem(key);
+
+    return data
+      ? JSON.parse(data)
+      : fallback;
+
+  }catch(error){
+
+    return fallback;
+
+  }
+
+}
+
+
+/* =========================================================
+   LOAD DATA
+========================================================= */
+
+let tournaments =
+  getData(
+    STORAGE_KEYS.tournaments,
+    []
+  );
+
+let registrations =
+  getData(
+    STORAGE_KEYS.registrations,
+    []
+  );
+
+
+/* =========================================================
+   PAGE LOAD
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    renderTournaments();
+
+    renderPlatformStats();
+
+    renderHeroTournament();
+
+  }
+);
+
+
+/* =========================================================
+   TOURNAMENTS
+========================================================= */
+
+function renderTournaments(){
+
+  const grid =
+    document.getElementById(
+      "tournamentGrid"
+    );
+
+  const empty =
+    document.getElementById(
+      "noTournaments"
+    );
+
+  if(!grid) return;
+
+
+  const openTournaments =
+    tournaments.filter(
+      tournament =>
+        tournament.status === "Open"
+    );
+
+
+  if(openTournaments.length === 0){
+
+    grid.innerHTML = "";
+
+    if(empty)
+      empty.style.display =
+        "block";
+
+    return;
+
+  }
+
+
+  if(empty)
+    empty.style.display =
+      "none";
+
+
+  grid.innerHTML =
+    openTournaments
+      .slice()
+      .reverse()
+      .map(
+        tournament => {
+
+          const registered =
+            registrations.filter(
+              registration =>
+                registration.tournament ===
+                tournament.name
+            ).length;
+
+
+          return `
+
+            <div class="tournament-card">
+
+              <div class="tournament-top">
+
+                <span class="game-tag">
+                  ${escapeHTML(
+                    tournament.game
+                  )}
+                </span>
+
+                <span class="open-tag">
+                  OPEN
+                </span>
+
+              </div>
+
+
+              <h3>
+                ${escapeHTML(
+                  tournament.name
+                )}
+              </h3>
+
+
+              <p class="tournament-game">
+                ${escapeHTML(
+                  tournament.game
+                )}
+                • Competitive Tournament
+              </p>
+
+
+              <div class="tournament-info">
+
+                <div>
+
+                  <small>
+                    Prize Pool
+                  </small>
+
+                  <strong class="tournament-prize">
+                    ₹${Number(
+                      tournament.prizePool || 0
+                    ).toLocaleString("en-IN")}
+                  </strong>
+
+                </div>
+
+
+                <div>
+
+                  <small>
+                    Entry
+                  </small>
+
+                  <strong>
+                    ₹${Number(
+                      tournament.entryFee || 0
+                    ).toLocaleString("en-IN")}
+                  </strong>
+
+                </div>
+
+
+                <div>
+
+                  <small>
+                    Players
+                  </small>
+
+                  <strong>
+                    ${registered}/${Number(
+                      tournament.slots || 0
+                    )}
+                  </strong>
+
+                </div>
+
+
+                <div>
+
+                  <small>
+                    Status
+                  </small>
+
+                  <strong>
+                    LIVE
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <div class="tournament-footer">
+
+                <span class="tournament-date">
+                  ${formatDate(
+                    tournament.date
+                  )}
+                </span>
+
+                <button
+                  class="join-btn"
+                  onclick="openTournament(
+                    '${escapeAttribute(
+                      tournament.name
+                    )}'
+                  )"
+                >
+                  JOIN →
+                </button>
+
+              </div>
+
+            </div>
+
+          `;
+
+        }
+      )
+      .join("");
+
+}
+
+
+/* =========================================================
+   TOURNAMENT CLICK
+========================================================= */
+
+function openTournament(name){
+
+  const tournament =
+    tournaments.find(
+      item =>
+        item.name === name
+    );
+
+
+  if(!tournament)
+    return;
+
+
+  window.location.href =
+    "player.html";
+
+}
+
+
+/* =========================================================
+   HERO TOURNAMENT
+========================================================= */
+
+function renderHeroTournament(){
+
+  const name =
+    document.getElementById(
+      "heroTournamentName"
+    );
+
+  const game =
+    document.getElementById(
+      "heroTournamentGame"
+    );
+
+  const prize =
+    document.getElementById(
+      "heroPrize"
+    );
+
+  const slots =
+    document.getElementById(
+      "heroSlots"
+    );
+
+
+  const openTournaments =
+    tournaments.filter(
+      tournament =>
+        tournament.status === "Open"
+    );
+
+
+  if(openTournaments.length === 0){
+
+    if(name)
+      name.textContent =
+        "Coming Soon";
+
+    if(game)
+      game.textContent =
+        "New tournaments will appear here.";
+
+    if(prize)
+      prize.textContent =
+        "₹0";
+
+    if(slots)
+      slots.textContent =
+        "0";
+
+    return;
+
+  }
+
+
+  const tournament =
+    openTournaments[0];
+
+
+  if(name)
+    name.textContent =
+      tournament.name;
+
+
+  if(game)
+    game.textContent =
+      tournament.game;
+
+
+  if(prize)
+    prize.textContent =
+      "₹" +
+      Number(
+        tournament.prizePool || 0
+      ).toLocaleString("en-IN");
+
+
+  if(slots){
+
+    const registered =
+      registrations.filter(
+        registration =>
+          registration.tournament ===
+          tournament.name
+      ).length;
+
+    slots.textContent =
+      registered +
+      "/" +
+      Number(
+        tournament.slots || 0
+      );
+
+  }
+
+}
+
+
+/* =========================================================
+   PLATFORM STATS
+========================================================= */
+
+function renderPlatformStats(){
+
+  const active =
+    tournaments.filter(
+      tournament =>
+        tournament.status === "Open"
+    ).length;
+
+
+  const totalRegistrations =
+    registrations.length;
+
+
+  const games = new Set();
+
+
+  tournaments.forEach(
+    tournament => {
+
+      if(tournament.game){
+
+        games.add(
+          tournament.game
+        );
+
+      }
+
+    }
+  );
+
+
+  const activeElement =
+    document.getElementById(
+      "activeTournamentCount"
+    );
+
+  const registrationsElement =
+    document.getElementById(
+      "totalRegistrationCount"
+    );
+
+  const gamesElement =
+    document.getElementById(
+      "gameCount"
+    );
+
+
+  if(activeElement)
+    activeElement.textContent =
+      active;
+
+
+  if(registrationsElement)
+    registrationsElement.textContent =
+      totalRegistrations;
+
+
+  if(gamesElement){
+
+    gamesElement.textContent =
+      Math.max(
+        games.size,
+        3
+      ) + "+";
+
+  }
+
+
+  const miniPlayers =
+    document.getElementById(
+      "heroMiniPlayers"
+    );
+
+  const miniTournaments =
+    document.getElementById(
+      "heroMiniTournaments"
+    );
+
+  const miniGames =
+    document.getElementById(
+      "heroMiniGames"
+    );
+
+
+  if(miniPlayers)
+    miniPlayers.textContent =
+      totalRegistrations;
+
+
+  if(miniTournaments)
+    miniTournaments.textContent =
+      tournaments.length;
+
+
+  if(miniGames)
+    miniGames.textContent =
+      Math.max(
+        games.size,
+        3
+      ) + "+";
+
+}
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+function formatDate(date){
+
+  if(!date)
+    return "Date TBA";
+
+
+  const parsed =
+    new Date(date);
+
+
+  if(
+    Number.isNaN(
+      parsed.getTime()
+    )
+  ){
+
+    return "Date TBA";
+
+  }
+
+
+  return parsed.toLocaleString(
+    "en-IN",
+    {
+      day:"2-digit",
+      month:"short",
+      year:"numeric",
+      hour:"2-digit",
+      minute:"2-digit"
+    }
+  );
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value){
+
+  if(
+    value === null ||
+    value === undefined
+  ){
+
+    return "";
+
+  }
+
+
+  return String(value)
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =========================================================
+   ESCAPE ATTRIBUTE
+========================================================= */
+
+function escapeAttribute(value){
+
+  return String(value)
+    .replace(
+      /\\/g,
+      "\\\\"
+    )
+    .replace(
+      /'/g,
+      "\\'"
+    );
+
+}
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+function toggleMobileMenu(){
+
+  const menu =
+    document.getElementById(
+      "mobileMenu"
+    );
+
+  if(!menu)
+    return;
+
+  menu.classList.toggle(
+    "active"
+  );
+
+}
+
+
+function closeMobileMenu(){
+
+  const menu =
+    document.getElementById(
+      "mobileMenu"
+    );
+
+  if(menu)
+    menu.classList.remove(
+      "active"
+    );
+
+}
+
+
+/* =========================================================
+   STORAGE CHANGE
+   Updates homepage when admin creates tournament
+========================================================= */
+
+window.addEventListener(
+  "storage",
+  function(){
+
+    tournaments =
+      getData(
+        STORAGE_KEYS.tournaments,
+        []
+      );
+
+    registrations =
+      getData(
+        STORAGE_KEYS.registrations,
+        []
+      );
+
+    renderTournaments();
+
+    renderPlatformStats();
+
+    renderHeroTournament();
+
+  }
+);
